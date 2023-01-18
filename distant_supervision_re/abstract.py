@@ -7,14 +7,16 @@ form collections import OrderedDict
 import benepar, spacy
 import nltk
 from nltk import Tree, ParentedTree
+import bert_embeddings as be
 
 
 class Abstract():
     """
     Contains the text and annotations for one abstract.
     """
-    def __init__(text, sentences, entities):
+    def __init__(dygiepp, text, sentences, entities):
 
+        self.dygiepp = dygiepp
         self.text = text
         self.sentences = sentences
         self.entities = entities
@@ -49,12 +51,11 @@ class Abstract():
             entities = pred_dict["ner"]
 
         # Initialize Abstract instance
-        abst = Abstract(text, sentences, entities)
+        abst = Abstract(pred_dict, text, sentences, entities)
 
         # Perform the higher functions of the class
         abst.set_candidate_sents()
         abst.set_const_parse_and_spacy_doc()
-        abst.set_relations()
 
         return abst
 
@@ -80,18 +81,22 @@ class Abstract():
             self.constituency_parse_strings.append(sent._.parse_string)
         self.spacy_doc = doc
 
-    def extract_rels(self, bert_model, label_embeddings):
+    def extract_rels(self, tokenizer, model, label_embeddings):
         """
         For each candidate sentence, calls a helper function to get the
         candidate relation phrase from the constituency parse, and uses
         the sentence to generate a contextualized embedding for that phrase.
         Using context-averaged representations of the four relation types,
-        performs clustering to assign each of the candidate relation phrases
-        to a label group. Sets an attribute of DyGIE++-formatted list for
-        relation annotations.
+        computes distance between phrase embedding and label embeddings,
+        assigning a label based on which label embedding is closer for each
+        of the candidate relation phrases. Distance must be less than 0.5 to
+        be assigned a label, otherwise no relation is recorded. Sets an
+        attribute of DyGIE++-formatted list for relation annotations.
 
         parameters:
-            bert_model, huggingface BertModel: the model to use to
+            tokenizer, huggingface Bert tokenizer: the tokenizer to use
+                with the model
+            model, huggingface Bert Model: the model to use to
                 generate embeddings
             label_embeddings, dict: keys are strings representing the
                 relation labels that we want to use, values are their
@@ -99,19 +104,19 @@ class Abstract():
                 elsewhere in order to have consistent embeddings for these
                 labels across all abstracts on which this method is used.
         """
-        phrase_embeddings = {k:{} for k in self.candidate_sents}
+        phrase_labels = {k:{} for k in self.candidate_sents}
         for sent in self.candidate_sents:
-
-            # Prep the sentence for BERT
-
-            # Then, generate the embeddings
 
             # Use helper to get the phrase to embed
             phrase = pick_phrase(sent)
 
             # Get this embedding out of the BERT output and add to dict
-            embedding = 
+            embedding = be.get_phrase_embedding(sent, phrase, tokenizer, model)
             phrase_embeddings[sent][phrase] = embedding
+
+            # Get distances to choose label
+            
+        # Format the relations in DyGIE++ format
 
     def pick_phrase(self, sent_idx):
         """
@@ -207,11 +212,76 @@ class Abstract():
             to_walk = to_walk[0]
             walk_VP(phrase, to_walk)
 
+    def format_rels(self, phrase_labels):
+        """
+        Formats relations in DyGIE++ format.
+
+        This is where the choice to only label one relation per sentence is
+        implemented, will need to come back here to make this process more
+        nuanced.
+
+        parameters:
+            phrase_labels, dict: keys are sentence indices, values are labels
+
+        returns:
+            relations, list of list: DyGIE++ formatted relations
+        """
+        # Will need to update to allow multiples
+        relations = []
+        for i, sent in enumerate(self.sents):
+            try:
+                label = phrase_labels[i]
+                start_ent = choose_ent(phrase, sent, 'start')
+                end_ent = choose_ent(phrase, sent, 'end')
+                rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
+                        label]
+                sent_rels = [rel]
+                relations.append(sent_rels)
+            except KeyError:
+                relations.append([])
+
+        return relations
+
+    def choose_ent(phrase, sent, loc):
+        """
+        Choose an entity for a relation. Meant to ensure that the first
+        entity in the relation is before the relation's VP, and the second
+        is after.
+
+        NOTE: This enforces unidirectional relations, and doesn't allow
+        reverse direction relations. However, in my current evaluation
+        paradigm, all relations are treated as symmetric, so this doesn't
+        matter. However, adding nuance here would be good.
+
+        This is also related to the "only-one-relation-per-sentence" paradigm,
+        and will have to be updated accordingly.
+
+        parameters:
+            phrase, str: relation phrase
+            sent, list of str: sentence tokens
+            loc, str: options are "start" and "end", indicates whether the
+                chosen token should come before or after the phrase
+
+        returns:
+            entity, list: DyGIE++ formatted entity
+        """
+        pass
+
     def set_relations(self, relations):
         """
         Set the output of the relation extraction process as an attribute.
         """
         self.relations = relations
+
+    def rels_to_dygiepp(self):
+        """
+        Adds relation predictions to DyGIE++ formatted version of the
+        abstract. Returns the new dict in addition to updating the
+        attribute.
+        """
+        self.dygiepp["predicted_relations"] = self.relations
+
+        return self.dygiepp
 
     @staticmethod
     def visualize_parse(parse_string):
