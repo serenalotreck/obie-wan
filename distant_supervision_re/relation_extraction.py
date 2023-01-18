@@ -37,12 +37,13 @@ def main(documents_path label_path, bert_name, out_loc, out_prefix):
     verboseprint('\nEmbedding relation labels...')
     label_dict = json.load(label_path)
     label_embed_dict = be.embed_labels(label_dict, tokenizer, model)
+    label_df = pd.DataFrame.from_dict(label_embed_dict, orient='index')
 
     # Perform relation extraction
     verboseprint('\nPerforming relation extraction...')
     pred_output = []
     for abst in abstracts:
-        abst.extract_rels(tokenizer, model, label_embed_dict)
+        abst.extract_rels(tokenizer, model, label_df)
         output = abst.rels_to_dygiepp()
         pred_output.append(output)
 

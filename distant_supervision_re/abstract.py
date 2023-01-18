@@ -8,6 +8,8 @@ import benepar, spacy
 import nltk
 from nltk import Tree, ParentedTree
 import bert_embeddings as be
+import nump as np
+from numpy.linalg import norm
 
 
 class Abstract():
@@ -81,7 +83,7 @@ class Abstract():
             self.constituency_parse_strings.append(sent._.parse_string)
         self.spacy_doc = doc
 
-    def extract_rels(self, tokenizer, model, label_embeddings):
+    def extract_rels(self, tokenizer, model, label_df):
         """
         For each candidate sentence, calls a helper function to get the
         candidate relation phrase from the constituency parse, and uses
@@ -98,8 +100,8 @@ class Abstract():
                 with the model
             model, huggingface Bert Model: the model to use to
                 generate embeddings
-            label_embeddings, dict: keys are strings representing the
-                relation labels that we want to use, values are their
+            label_df, df: index is strings representing the
+                relation labels that we want to use, rows are their
                 context-averaged embeddings. These should be generated
                 elsewhere in order to have consistent embeddings for these
                 labels across all abstracts on which this method is used.
@@ -112,11 +114,15 @@ class Abstract():
 
             # Get this embedding out of the BERT output and add to dict
             embedding = be.get_phrase_embedding(sent, phrase, tokenizer, model)
-            phrase_embeddings[sent][phrase] = embedding
 
             # Get distances to choose label
-            
+            label = compute_label(label_df, embedding)
+            if label != '':
+                phrase_labels[sent][phrase] = label
+
         # Format the relations in DyGIE++ format
+        relations = format_rels(phrase_labels)
+        self.set_relations(relations)
 
     def pick_phrase(self, sent_idx):
         """
@@ -212,6 +218,33 @@ class Abstract():
             to_walk = to_walk[0]
             walk_VP(phrase, to_walk)
 
+    @staticmethod
+    def compute_label(label_df, embedding):
+        """
+        Computes cosine distance between phrase embedding and all labels,
+        choosing the label with the highest similarity as the label for this
+        phrase. Must have a similarity of at least 0.5 to get a label.
+
+        parameters:
+            label_df, df: index is labels, rows are embeddings
+            embedding, vector: embedding for the phrase
+
+        returns:
+            label, str: chosen label, empty string if no label chosen
+        """
+        label_mat = np.asarray(label_df)
+        cosine = np.dot(label_mat,
+                embedding)/(norm(label_mat, axis=1)*norm(embedding))
+        label_idx = np.argmax(cosine)
+        assert len(label_idx) == 1
+        try:
+            assert label_idx[0] > 0.5
+            label = label_df.index.values().tolist()[label_idx]
+        except AssertionError:
+            label = ''
+
+        return label
+
     def format_rels(self, phrase_labels):
         """
         Formats relations in DyGIE++ format.
@@ -231,8 +264,7 @@ class Abstract():
         for i, sent in enumerate(self.sents):
             try:
                 label = phrase_labels[i]
-                start_ent = choose_ent(phrase, sent, 'start')
-                end_ent = choose_ent(phrase, sent, 'end')
+                start_ent, end_ent = choose_ent(phrase, i)
                 rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
                         label]
                 sent_rels = [rel]
@@ -242,30 +274,40 @@ class Abstract():
 
         return relations
 
-    def choose_ent(phrase, sent, loc):
+    def choose_ents(phrase, sent_idx):
         """
         Choose an entity for a relation. Meant to ensure that the first
         entity in the relation is before the relation's VP, and the second
         is after.
 
-        NOTE: This enforces unidirectional relations, and doesn't allow
-        reverse direction relations. However, in my current evaluation
-        paradigm, all relations are treated as symmetric, so this doesn't
-        matter. However, adding nuance here would be good.
+        NOTE: The current implementation here is to randomly choose two
+        entities, in order to simplify the process of choosing relations.
+        Therefore, nothing is actually enforced except that the two entities
+        be different from one another. This is related to the
+        "only one relation per sentence" paradigm, as there's not really a
+        good way to choose only one pair if there are multiple relations.
+        This also means that relations should be treated as undirected
+        (as in my current evaluation paradigm for PICKLE), since the ordering
+        of the entities is random.
 
-        This is also related to the "only-one-relation-per-sentence" paradigm,
-        and will have to be updated accordingly.
+        TODO improve this
 
         parameters:
             phrase, str: relation phrase
-            sent, list of str: sentence tokens
-            loc, str: options are "start" and "end", indicates whether the
-                chosen token should come before or after the phrase
+            sent_idx, int: sentence index
 
         returns:
-            entity, list: DyGIE++ formatted entity
+            entities, list of list: two DyGIE++ formatted entities
         """
-        pass
+        # Get the sentence's entities
+        sent_ents = self.entities[sent_idx]
+
+        # Randomly choose two
+        ## TODO improve
+        # Importing this here because I won't need it when this isn't random
+        from random import sample
+        entities = sample(sent_ents)
+        return entities
 
     def set_relations(self, relations):
         """
