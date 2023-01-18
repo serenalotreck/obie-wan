@@ -16,7 +16,7 @@ class Abstract():
     """
     Contains the text and annotations for one abstract.
     """
-    def __init__(dygiepp, text, sentences, entities):
+    def __init__(dygiepp={}, text='', sentences=[], entities=[]):
 
         self.dygiepp = dygiepp
         self.text = text
