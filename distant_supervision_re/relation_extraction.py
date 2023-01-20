@@ -8,7 +8,7 @@ import argparse
 from os.path import abspath
 import json
 import jsonlines
-
+import pandas as pd
 from abstract import Abstract
 import bert_embeddings as be
 
@@ -31,15 +31,17 @@ def main(documents_path, label_path, bert_name, out_loc, out_prefix):
 
     # Load BERT model
     verboseprint('\nLoading BERT model...')
+    print(f'model name: {bert_name}')
     tokenizer, model = be.load_model(pretrained=bert_name)
 
     # Embed relation labels
     verboseprint('\nEmbedding relation labels...')
     with open(label_path) as infile:
         label_dict = json.load(infile)
-    print(type(label_dict))
-    print(label_dict)
     label_embed_dict = be.embed_labels(label_dict, tokenizer, model)
+    print(f'embed dict keys: {label_embed_dict.keys()}')
+    print('length and type of the values:'
+    f'{[len(v) for k,v in label_embed_dict.items()], [type(v) for k,v in label_embed_dict.items()]}')
     label_df = pd.DataFrame.from_dict(label_embed_dict, orient='index')
 
     # Perform relation extraction

@@ -6,8 +6,11 @@ https://github.com/arushiprakash/MachineLearning/blob/main/BERT%20Word%20Embeddi
 
 Author: Serena G. Lotreck
 """
-from transformers import AutoTokenizer, AutoModelForTokenClassification
+import numpy as np
+#from transformers import AutoTokenizer, AutoModelForTokenClassification
+from transformers import BertTokenizer, BertModel
 import torch
+
 
 def load_model(pretrained="alvaroalon2/biobert_genetic_ner"):
     """
@@ -24,9 +27,9 @@ def load_model(pretrained="alvaroalon2/biobert_genetic_ner"):
     """
     # Note: I'm not sure that these classes work with all models,
     # may need to change to include other models later
-    tokenizer = AutoTokenizer.from_pretrained(pretrained)
+    tokenizer = BertTokenizer.from_pretrained(pretrained)
 
-    model = AutoModelForTokenClassification.from_pretrained(pretrained)
+    model = BertModel.from_pretrained(pretrained)
 
     return tokenizer, model
 
@@ -51,6 +54,7 @@ def embed_labels(label_dict, tokenizer, model):
             embed = get_phrase_embedding(sent, label, tokenizer, model)
             total_embeds.append(embed)
         avg_embed = np.mean(np.asarray(total_embeds), axis=0)
+        print(f'avg embed: {avg_embed}')
         label_embed_dict[label] = avg_embed
 
     return label_embed_dict
@@ -71,6 +75,8 @@ def get_phrase_embedding(sent, phrase, tokenizer, model):
     returns:
         embedding, vector: embedding for the phrase.
     """
+    print(f'sent to embed: {sent}')
+    print(f'phrase to embed: {phrase}')
     # Get the embeddings for all tokens in the 
     tokenized_sent, tokens_tensor, segments_tensors = bert_text_preparation(
             sent, tokenizer)
@@ -143,9 +149,9 @@ def get_bert_embeddings(tokens_tensor, segments_tensors, model):
     # Gradient calculation id disabled
     # Model is in inference mode
     with torch.no_grad():
-        outputs = model(tokens_tensor, segments_tensors)
-        print(f'length of outputs: {len(outputs)}')
-        print(f'outputs: {outputs}')
+        outputs = model(tokens_tensor, segments_tensors,
+                output_hidden_states=True) # Added this, not sure how tutorial
+                                            # code works without it
         # Removing the first hidden state
         # The first state is the input state
         hidden_states = outputs[2][1:]
