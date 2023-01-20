@@ -13,7 +13,7 @@ from abstract import Abstract
 import bert_embeddings as be
 
 
-def main(documents_path label_path, bert_name, out_loc, out_prefix):
+def main(documents_path, label_path, bert_name, out_loc, out_prefix):
 
     # Read in the documents
     verboseprint('\nReading in documents...')
@@ -35,7 +35,10 @@ def main(documents_path label_path, bert_name, out_loc, out_prefix):
 
     # Embed relation labels
     verboseprint('\nEmbedding relation labels...')
-    label_dict = json.load(label_path)
+    with open(label_path) as infile:
+        label_dict = json.load(infile)
+    print(type(label_dict))
+    print(label_dict)
     label_embed_dict = be.embed_labels(label_dict, tokenizer, model)
     label_df = pd.DataFrame.from_dict(label_embed_dict, orient='index')
 
@@ -59,10 +62,10 @@ def main(documents_path label_path, bert_name, out_loc, out_prefix):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Extract relations')
 
-    parser.add_argument('-documents_path', type=str,
+    parser.add_argument('documents_path', type=str,
             help='DyGIE++ formatted jsonl file with entity annotations '
             'or predictions for all documents')
-    parser.add_argument('-label_path', type=str,
+    parser.add_argument('label_path', type=str,
             help='Path to a json file where keys are the relation '
             'labels, and values are lists of strings, where each string '
             'is an example sentence that literally uses the relation label.')
@@ -80,7 +83,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    verboseprint = print if verbose else lambda *a, **k: None
+    verboseprint = print if args.verbose else lambda *a, **k: None
 
     args.documents_path = abspath(args.documents_path)
     args.label_path = abspath(args.label_path)

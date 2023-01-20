@@ -3,12 +3,11 @@ Defines the Abstract class.
 
 Author: Serena G. Lotreck
 """
-form collections import OrderedDict
+from collections import OrderedDict
 import benepar, spacy
-import nltk
-from nltk import Tree, ParentedTree
+from nltk import ParentedTree
 import bert_embeddings as be
-import nump as np
+import numpy as np
 from numpy.linalg import norm
 
 
@@ -16,16 +15,49 @@ class Abstract():
     """
     Contains the text and annotations for one abstract.
     """
-    def __init__(dygiepp={}, text='', sentences=[], entities=[]):
+    def __init__(self, dygiepp={}, text='', sentences=[],
+            entities=[], candidate_sents=[], const_parse_str=[],
+            spacy_doc=None, relations=[]):
 
         self.dygiepp = dygiepp
         self.text = text
         self.sentences = sentences
         self.entities = entities
-        self.candidate_sents = []
-        self.constituency_parse_strings = []
-        self.spacy_doc = None
-        self.relations = []
+        self.candidate_sents = candidate_sents
+        self.const_parse_str = const_parse_str
+        self.spacy_doc = spacy_doc
+        self.relations = relations
+
+    def __eq__(self, other):
+        """
+        Allows instances to be compared by the == operator, for
+        enabling tests.
+        """
+        assert isinstance(other, Abstract)
+
+        checks = [self.dygiepp == other.dygiepp,
+                self.text == other.text,
+                self.sentences == other.sentences,
+                self.entities == other.entities,
+                self.candidate_sents == other.candidate_sents,
+                self.const_parse_str ==
+                other.const_parse_str,
+                #self.spacy_doc == other.spacy_doc, # This doesn't work,
+                                # as far as I can tell they haven't overwritten
+                                # the __eq__ method, which seems weird to me
+                                ## TODO write something to compare two docs
+                self.relations == other.relations]
+        match = set(checks)
+        if (len(match) == 1) and list(match)[0]:
+            return True
+        else:
+            names = ['dygiepp', 'text', 'sentences','entities',
+                    'candidate_sents','const_parse_str', 'spacy_doc',
+                    'relations']
+            print('The attributes in disagreement are:')
+            print({attr:boolval for attr,boolval in zip(names, checks) if not
+                boolval})
+            return False
 
     @staticmethod
     def parse_pred_dict(pred_dict):
@@ -42,8 +74,11 @@ class Abstract():
             abst, Abstract instance: instance of abstract class
         """
         # Get information to initialize an Abstract instance
-        text = ' '.join(pred_dict["sentences"])
-        sentences = pred_dict["sentences"])
+        all_tokens = []
+        for sent in pred_dict["sentences"]:
+            all_tokens.extend(sent)
+        text = ' '.join(all_tokens)
+        sentences = pred_dict["sentences"]
 
         # Allow documents with both predicted or gold standard NER
         # Use predictions by default, unless there are none
@@ -66,11 +101,11 @@ class Abstract():
         Identifies sentences with two or more entities and creates a list
         of their indices in the sentence list attribute.
         """
-        for i in len(self.entities):
+        for i in range(len(self.entities)):
             if len(self.entities[i]) >= 2:
                 self.candidate_sents.append(i)
 
-    def set_const_parse_strings_and_spacy_doc(self):
+    def set_const_parse_and_spacy_doc(self):
         """
         Performs constituency parse using the benepar pipe of spacy,
         and assigns the parse strings and spacy doc containing parse
@@ -78,9 +113,9 @@ class Abstract():
         """
         nlp = spacy.load('en_core_sci_sm')
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
-        doc = nlp(text)
+        doc = nlp(self.text)
         for sent in doc.sents:
-            self.constituency_parse_strings.append(sent._.parse_string)
+            self.const_parse_str.append(sent._.parse_string)
         self.spacy_doc = doc
 
     def extract_rels(self, tokenizer, model, label_df):
@@ -170,7 +205,7 @@ class Abstract():
             if (len(label) == 1) and (label[0] == 'VP'):
                 top_vp = child
         # Then, we walk, and keep anything that's not the terminal NP
-        phrase = walk_VP('', top_vp)
+        phrase = Abstract.walk_VP('', top_vp)
 
         return phrase
 
@@ -201,22 +236,22 @@ class Abstract():
         # Base case
         if 'NP' in next_labels:
             phrase_add = [child_dict[l].text for l in next_labels if l != 'NP']
-            phrase += ' '.join(phrase_add)
-            return phrase
+            phrase += ' ' + ' '.join(phrase_add)
+            return phrase.strip() # Removes leading whitespace
         # Recursive case
         else:
             # Add anything that doesn't have a child
             # Leaf nodes have no labels in benepar
-            phrase_add = [child_dict[l] for l in next_labels
+            phrase_add = [child_dict[l].text for l in next_labels
                     if l == 'NO_LABEL']
-            phrase += ' '.join(phrase_add)
+            phrase += ' ' + ' '.join(phrase_add)
             # Continue down the one that does
             ## TODO what to do if there's more than one on the same level
             ## that has children? Is that possible?
             to_walk = [child_dict[l] for l in next_labels if l != 'NO_LABEL']
             assert len(to_walk) == 1 # Make sure only one has children
             to_walk = to_walk[0]
-            walk_VP(phrase, to_walk)
+            return Abstract.walk_VP(phrase, to_walk)
 
     @staticmethod
     def compute_label(label_df, embedding):
@@ -236,10 +271,10 @@ class Abstract():
         cosine = np.dot(label_mat,
                 embedding)/(norm(label_mat, axis=1)*norm(embedding))
         label_idx = np.argmax(cosine)
-        assert len(label_idx) == 1
+        assert isinstance(label_idx, np.int64)
         try:
-            assert label_idx[0] > 0.5
-            label = label_df.index.values().tolist()[label_idx]
+            assert cosine[label_idx] > 0.5
+            label = label_df.index.values.tolist()[label_idx]
         except AssertionError:
             label = ''
 
@@ -254,17 +289,21 @@ class Abstract():
         nuanced.
 
         parameters:
-            phrase_labels, dict: keys are sentence indices, values are labels
+            phrase_labels, dict of dict : keys are sentence indices,
+                values are dictionaries, where keys are the phrase strings
+                and values are the corresponding chosen label
 
         returns:
             relations, list of list: DyGIE++ formatted relations
         """
         # Will need to update to allow multiples
         relations = []
-        for i, sent in enumerate(self.sents):
+        for i, sent in enumerate(self.sentences):
             try:
-                label = phrase_labels[i]
-                start_ent, end_ent = choose_ent(phrase, i)
+                phrase_and_label = phrase_labels[i]
+                phrase = list(phrase_and_label.keys())[0]
+                label = phrase_and_label[phrase]
+                start_ent, end_ent = self.choose_ents(phrase, i)
                 rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
                         label]
                 sent_rels = [rel]
@@ -274,7 +313,7 @@ class Abstract():
 
         return relations
 
-    def choose_ents(phrase, sent_idx):
+    def choose_ents(self, phrase, sent_idx):
         """
         Choose an entity for a relation. Meant to ensure that the first
         entity in the relation is before the relation's VP, and the second
@@ -306,7 +345,7 @@ class Abstract():
         ## TODO improve
         # Importing this here because I won't need it when this isn't random
         from random import sample
-        entities = sample(sent_ents)
+        entities = sample(sent_ents, 2)
         return entities
 
     def set_relations(self, relations):

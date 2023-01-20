@@ -7,7 +7,7 @@ https://github.com/arushiprakash/MachineLearning/blob/main/BERT%20Word%20Embeddi
 Author: Serena G. Lotreck
 """
 from transformers import AutoTokenizer, AutoModelForTokenClassification
-
+import torch
 
 def load_model(pretrained="alvaroalon2/biobert_genetic_ner"):
     """
@@ -24,11 +24,9 @@ def load_model(pretrained="alvaroalon2/biobert_genetic_ner"):
     """
     # Note: I'm not sure that these classes work with all models,
     # may need to change to include other models later
-    tokenizer = AutoTokenizer.from_pretrained(
-            "alvaroalon2/biobert_genetic_ner")
+    tokenizer = AutoTokenizer.from_pretrained(pretrained)
 
-    model = AutoModelForTokenClassification.from_pretrained(
-            "alvaroalon2/biobert_genetic_ner")
+    model = AutoModelForTokenClassification.from_pretrained(pretrained)
 
     return tokenizer, model
 
@@ -142,11 +140,12 @@ def get_bert_embeddings(tokens_tensor, segments_tensors, model):
             containing embeddings for each token
 
     """
-
     # Gradient calculation id disabled
     # Model is in inference mode
     with torch.no_grad():
         outputs = model(tokens_tensor, segments_tensors)
+        print(f'length of outputs: {len(outputs)}')
+        print(f'outputs: {outputs}')
         # Removing the first hidden state
         # The first state is the input state
         hidden_states = outputs[2][1:]
