@@ -54,7 +54,6 @@ def embed_labels(label_dict, tokenizer, model):
             embed = get_phrase_embedding(sent, label, tokenizer, model)
             total_embeds.append(embed)
         avg_embed = np.mean(np.asarray(total_embeds), axis=0)
-        print(f'avg embed: {avg_embed}')
         label_embed_dict[label] = avg_embed
 
     return label_embed_dict
@@ -75,8 +74,6 @@ def get_phrase_embedding(sent, phrase, tokenizer, model):
     returns:
         embedding, vector: embedding for the phrase.
     """
-    print(f'sent to embed: {sent}')
-    print(f'phrase to embed: {phrase}')
     # Get the embeddings for all tokens in the 
     tokenized_sent, tokens_tensor, segments_tensors = bert_text_preparation(
             sent, tokenizer)
@@ -91,7 +88,7 @@ def get_phrase_embedding(sent, phrase, tokenizer, model):
     start_idx, end_idx = find_sub_list(tokenized_phrase, tokenized_sent)
 
     # Get all embedings and average
-    embed_mat = np.asarray(list_token_embeddings[start_idx:end_idx])
+    embed_mat = np.asarray(list_token_embeddings[start_idx:end_idx+1])
     embedding = np.mean(embed_mat, axis=0)
 
     return embedding

@@ -15,18 +15,18 @@ class Abstract():
     """
     Contains the text and annotations for one abstract.
     """
-    def __init__(self, dygiepp={}, text='', sentences=[],
-            entities=[], candidate_sents=[], const_parse_str=[],
-            spacy_doc=None, relations=[]):
+    def __init__(self, dygiepp=None, text='', sentences=None,
+            entities=None, cand_sents=None, const_parse=None,
+            spacy_doc=None, relations=None):
 
-        self.dygiepp = dygiepp
+        self.dygiepp = {} if dygiepp is None else dygiepp
         self.text = text
-        self.sentences = sentences
-        self.entities = entities
-        self.candidate_sents = candidate_sents
-        self.const_parse_str = const_parse_str
+        self.sentences = [] if sentences is None else sentences
+        self.entities = [] if entities is None else entities
+        self.cand_sents = [] if cand_sents is None else cand_sents
+        self.const_parse = [] if const_parse is None else const_parse
         self.spacy_doc = spacy_doc
-        self.relations = relations
+        self.relations = [] if relations is None else relations
 
     def __eq__(self, other):
         """
@@ -39,9 +39,8 @@ class Abstract():
                 self.text == other.text,
                 self.sentences == other.sentences,
                 self.entities == other.entities,
-                self.candidate_sents == other.candidate_sents,
-                self.const_parse_str ==
-                other.const_parse_str,
+                self.cand_sents == other.cand_sents,
+                self.const_parse == other.const_parse,
                 #self.spacy_doc == other.spacy_doc, # This doesn't work,
                                 # as far as I can tell they haven't overwritten
                                 # the __eq__ method, which seems weird to me
@@ -52,15 +51,15 @@ class Abstract():
             return True
         else:
             names = ['dygiepp', 'text', 'sentences','entities',
-                    'candidate_sents','const_parse_str', 'spacy_doc',
+                    'cand_sents','const_parse', 'spacy_doc',
                     'relations']
             print('The attributes in disagreement are:')
             print({attr:boolval for attr,boolval in zip(names, checks) if not
                 boolval})
             return False
 
-    @staticmethod
-    def parse_pred_dict(pred_dict):
+    @classmethod
+    def parse_pred_dict(cls, pred_dict):
         """
         Pulls input from a dictionary in the DyGIE++ prediction format
         (see https://github.com/dwadden/dygiepp/blob/master/doc/data.md)
@@ -88,22 +87,22 @@ class Abstract():
             entities = pred_dict["ner"]
 
         # Initialize Abstract instance
-        abst = Abstract(pred_dict, text, sentences, entities)
+        abst = cls(pred_dict, text, sentences, entities)
 
         # Perform the higher functions of the class
-        abst.set_candidate_sents()
+        abst.set_cand_sents()
         abst.set_const_parse_and_spacy_doc()
 
         return abst
 
-    def set_candidate_sents(self):
+    def set_cand_sents(self):
         """
         Identifies sentences with two or more entities and creates a list
         of their indices in the sentence list attribute.
         """
         for i in range(len(self.entities)):
             if len(self.entities[i]) >= 2:
-                self.candidate_sents.append(i)
+                self.cand_sents.append(i)
 
     def set_const_parse_and_spacy_doc(self):
         """
@@ -115,7 +114,7 @@ class Abstract():
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
         doc = nlp(self.text)
         for sent in doc.sents:
-            self.const_parse_str.append(sent._.parse_string)
+            self.const_parse.append(sent._.parse_string)
         self.spacy_doc = doc
 
     def extract_rels(self, tokenizer, model, label_df):
@@ -141,13 +140,14 @@ class Abstract():
                 elsewhere in order to have consistent embeddings for these
                 labels across all abstracts on which this method is used.
         """
-        phrase_labels = {k:{} for k in self.candidate_sents}
-        for sent in self.candidate_sents:
+        phrase_labels = {k:{} for k in self.cand_sents}
+        for sent in self.cand_sents:
 
             # Use helper to get the phrase to embed
-            phrase = pick_phrase(sent)
+            phrase = self.pick_phrase(sent)
 
             # Get this embedding out of the BERT output and add to dict
+            #sent_text = 
             embedding = be.get_phrase_embedding(sent, phrase, tokenizer, model)
 
             # Get distances to choose label

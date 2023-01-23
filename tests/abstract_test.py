@@ -23,11 +23,11 @@ class TestAbstractSetup:
     def nlp(self):
         nlp = spacy.load("en_core_sci_sm")
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
-        yield nlp
+        return nlp
 
     @pytest.fixture
     def dygiepp_gold(self):
-        yield {'doc_key':'doc1',
+        return {'doc_key':'doc1',
                 'dataset':'scierc',
                 'sentences':[['Hello', 'world', '.'],
                     ['My', 'name', 'is', 'Sparty', 'and', 'I',
@@ -36,10 +36,7 @@ class TestAbstractSetup:
 
     @pytest.fixture
     def dygiepp_pred(self):
-        import inspect
-        signature = inspect.signature(Abstract)
-        print(f'signature in the dygiepp_pred fixture: {signature}')
-        yield {'doc_key':'doc1',
+        return {'doc_key':'doc1',
                 'dataset':'scierc',
                 'sentences':[['Hello', 'world', '.'], # spacy doesn't separate
                                                     # sentences on !
@@ -52,55 +49,47 @@ class TestAbstractSetup:
 
     @pytest.fixture
     def text(self):
-        yield 'Hello world . My name is Sparty and I work at MSU .'
+        return 'Hello world . My name is Sparty and I work at MSU .'
 
     @pytest.fixture
     def sentences(self, dygiepp_gold):
-        yield dygiepp_gold["sentences"]
+        return dygiepp_gold["sentences"]
 
     @pytest.fixture
     def entities(self, dygiepp_gold):
-        yield dygiepp_gold["ner"]
+        return dygiepp_gold["ner"]
 
     @pytest.fixture
-    def candidate_sents(self):
-        yield [1]
+    def cand_sents(self):
+        return [1]
 
     @pytest.fixture
-    def const_parse_str(self):
-        yield ['(NP (UH Hello) (NN world) (. .))',
+    def const_parse(self):
+        return ['(NP (UH Hello) (NN world) (. .))',
                 '(S (S (NP (PRP$ My) (NN name)) (VP (VBZ is) (NP (NNP '
                 'Sparty)))) (CC and) (S (NP (PRP I)) (VP (VBP work) (PP '
                 '(IN at) (NP (NNP MSU))))) (. .))']
 
     @pytest.fixture
     def spacy_doc(self, nlp, text):
-        yield nlp(text)
+        return nlp(text)
 
     @pytest.fixture
     def abst_gold(self, dygiepp_gold, text, sentences, entities,
-            candidate_sents, const_parse_str, spacy_doc):
-        yield Abstract(dygiepp_gold, text, sentences, entities,
-                candidate_sents, const_parse_str, spacy_doc)
+            cand_sents, const_parse, spacy_doc):
+        return Abstract(dygiepp_gold, text, sentences, entities,
+                cand_sents, const_parse, spacy_doc)
 
     @pytest.fixture
     def abst_pred(self, dygiepp_pred, text, sentences, entities,
-            candidate_sents, const_parse_str, spacy_doc):
-        print('inside pred fixture, heres whats passed as candidate sents:')
-        print(candidate_sents)
-        yield Abstract(dygiepp_pred, text, sentences, entities,
-                candidate_sents, const_parse_str, spacy_doc)
+            cand_sents, const_parse, spacy_doc):
+        return Abstract(dygiepp_pred, text, sentences, entities,
+                cand_sents, const_parse, spacy_doc)
 
     @pytest.fixture
     def abst_set_cand_sents(self, dygiepp_gold, text, sentences, entities):
-        import inspect
-        signature = inspect.signature(Abstract.__init__)
-        print('Abstract init default args:', signature)
-        within_fix = Abstract(dygiepp=dygiepp_gold, text=text,
+        return Abstract(dygiepp=dygiepp_gold, text=text,
                 sentences=sentences, entities=entities)
-        print('Within the fixture, here is the candidate sent attribute:')
-        print(within_fix.candidate_sents)
-        yield within_fix
 
     ############################### Tests ################################
 
@@ -108,9 +97,6 @@ class TestAbstractSetup:
         """
         Test for when the entity key is "ner"
         """
-        import inspect
-        signature = inspect.signature(Abstract.__init__)
-        print('Abstract init default args:', signature)
         abst = Abstract.parse_pred_dict(dygiepp_gold)
 
         assert abst == abst_gold
@@ -120,25 +106,17 @@ class TestAbstractSetup:
         Test for when the entity key is "predicted_ner", allowing there
         to also be a key for "ner" that we ignore
         """
-        import inspect
-        signature = inspect.signature(Abstract.__init__)
-        print('Abstract init default args:', signature)
         abst = Abstract.parse_pred_dict(dygiepp_pred)
 
         assert abst == abst_pred
 
-    def test_set_candidate_sents(self, abst_set_cand_sents, candidate_sents):
+    def test_set_cand_sents(self, abst_set_cand_sents, cand_sents):
         """
         Make sure that the correct sentence indices are returned
         """
-        print('STARTING TEST for candidate sentence setting')
-        print('Candidate sentence attribute before doing anything:')
-        print(abst_set_cand_sents.candidate_sents)
-        abst_set_cand_sents.set_candidate_sents()
-        print('And after setting them:')
-        print(abst_set_cand_sents.candidate_sents)
+        abst_set_cand_sents.set_cand_sents()
 
-        assert abst_set_cand_sents.candidate_sents == candidate_sents
+        assert abst_set_cand_sents.cand_sents == cand_sents
 
     # Note that there's no test for the other method,
     # set_const_parse_and_spacy_doc; this is because to set up
@@ -158,7 +136,7 @@ class TestRelHelpers:
 
     @pytest.fixture
     def dygiepp(self):
-        yield {'doc_key': 'doc2',
+        return {'doc_key': 'doc2',
                 'dataset': 'scierc',
                 'sentences': [['Jasmonic', 'acid', 'is', 'a', 'hormone', '.'],
                     ['Jasmonic', 'acid', 'upregulates', 'Protein', '1', '.'],
@@ -173,33 +151,33 @@ class TestRelHelpers:
     def nlp(self):
         nlp = spacy.load("en_core_sci_sm")
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
-        yield nlp
+        return nlp
 
     @pytest.fixture
     def abstract(self, dygiepp):
-        yield Abstract.parse_pred_dict(dygiepp)
+        return Abstract.parse_pred_dict(dygiepp)
 
     @pytest.fixture
     def top_VP_one_word(self, nlp):
         text = 'upregulates Protein 1'
         doc = nlp(text)
         sent = list(doc.sents)[0]
-        yield sent
+        return sent
 
     @pytest.fixture
     def top_VP_multi_word(self, nlp):
         text = 'is found in Arabidopsis thaliana'
         doc = nlp(text)
         sent = list(doc.sents)[0]
-        yield sent
+        return sent
 
     @pytest.fixture
     def candidate_phrase_one_word(self):
-        yield 'upregulates'
+        return 'upregulates'
 
     @pytest.fixture
     def candidate_phrase_multi_word(self):
-        yield 'is found in'
+        return 'is found in'
 
     @pytest.fixture
     def label_df(self):
@@ -212,25 +190,25 @@ class TestRelHelpers:
                 'interacts': [1, 1],
                 'is_in': [0.1, 1]}
 
-        yield pd.DataFrame.from_dict(label_dict, orient='index')
+        return pd.DataFrame.from_dict(label_dict, orient='index')
 
     @pytest.fixture
     def embed_gets_label(self):
-        yield [0.3, 0.1]
+        return [0.3, 0.1]
 
     @pytest.fixture
     def embed_no_label(self):
         # I'm not sure this is a legitimate scenario, but I wanted to
         # test the scenario where the similarity is less than 0.5
-        yield [-0.1, -0.5]
+        return [-0.1, -0.5]
 
     @pytest.fixture
     def correct_label(self):
-        yield 'activates'
+        return 'activates'
 
     @pytest.fixture
     def phrase_labels(self):
-        yield {1:{'upregulates':'activates'}, 2:{'is found in':'is_in'}}
+        return {1:{'upregulates':'activates'}, 2:{'is found in':'is_in'}}
 
     ############################### Tests ################################
 
@@ -242,9 +220,7 @@ class TestRelHelpers:
 
     def test_walk_VP_multi_word(self, top_VP_multi_word,
             candidate_phrase_multi_word):
-        print(f'inside test, top_VP_multi_word is {top_VP_multi_word}')
         phrase = Abstract.walk_VP('', top_VP_multi_word)
-        print(f'phrase inside test: {phrase}')
         assert phrase == candidate_phrase_multi_word
 
     def pick_phrase_one_word(self, abstract, candidate_phrase_one_word):
