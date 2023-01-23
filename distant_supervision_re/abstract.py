@@ -139,7 +139,14 @@ class Abstract():
                 context-averaged embeddings. These should be generated
                 elsewhere in order to have consistent embeddings for these
                 labels across all abstracts on which this method is used.
+
+        returns:
+            skipped, int: number of sentences whose candidate phrases
+                couldn't be resolved to their tokenizations
+            total, int: the total number of candidate sentences
         """
+        skipped = 0
+        total = 0
         phrase_labels = {k:{} for k in self.cand_sents}
         for sent in self.cand_sents:
 
@@ -147,17 +154,25 @@ class Abstract():
             phrase = self.pick_phrase(sent)
 
             # Get this embedding out of the BERT output and add to dict
-            #sent_text = 
-            embedding = be.get_phrase_embedding(sent, phrase, tokenizer, model)
+            sent_text = ' '.join(self.sentences[sent])
+            try:
+                embedding = be.get_phrase_embedding(sent_text, phrase,
+                    tokenizer, model)
+                # Get distances to choose label
+                label = self.compute_label(label_df, embedding)
+                if label != '':
+                    phrase_labels[sent][phrase] = label
+            except TypeError:
+               skipped += 1 ## See TODO note in pick_phrase
 
-            # Get distances to choose label
-            label = compute_label(label_df, embedding)
-            if label != '':
-                phrase_labels[sent][phrase] = label
+
+            total += 1
 
         # Format the relations in DyGIE++ format
-        relations = format_rels(phrase_labels)
+        relations = self.format_rels(phrase_labels)
         self.set_relations(relations)
+
+        return skipped, total
 
     def pick_phrase(self, sent_idx):
         """
@@ -196,6 +211,11 @@ class Abstract():
         # Get the spacy object version of the sentence
         sent = list(self.spacy_doc.sents)[sent_idx]
 
+        ## TODO: This fails catastrophically on sentences with multiple
+        ## NPs within a VP, as well as sentences whose parse trees have
+        ## multiple nodes with children on the same level. Need to refine
+        ## this quite a bit, for now I'm just tracking failures and skipping
+        ## them
         # Walk the tree and its labels
         # We want everything from the VP besides the nested NP 
         # First, get the VP
@@ -223,13 +243,25 @@ class Abstract():
             phrase, str: updated phrase
         """
         ## TODO confirm it's safe to assume there's only one label per tuple
+        ### UPDATE: It's not -- need to decide what to do about it, implemented the
+        ### elif's below as a stopgap measure
         next_labels = []
         for c in next_child._.children:
             if len(c._.labels) == 0:
                 next_labels.append('NO_LABEL')
-            else:
-                assert len(c._.labels) == 1
+            elif len(c._.labels) == 1:
                 next_labels.append(c._.labels[0])
+
+            ## This is a hideous stopgap measure, TODO fix
+            elif len(c._.labels) > 1:
+                if 'NP' in c._.labels and 'S' not in c._.labels:
+                    next_labels.append('NP')
+                elif 'S' in c._.labels:
+                    other_labs = list(c._.labels)
+                    other_labs.remove('S')
+                    assert len(other_labs) == 1
+                    next_labels.append(other_labs[0])
+
         kids = next_child._.children
         child_dict = OrderedDict({lab:c for lab, c in zip(next_labels, kids)})
 
@@ -249,9 +281,14 @@ class Abstract():
             ## TODO what to do if there's more than one on the same level
             ## that has children? Is that possible?
             to_walk = [child_dict[l] for l in next_labels if l != 'NO_LABEL']
-            assert len(to_walk) == 1 # Make sure only one has children
-            to_walk = to_walk[0]
-            return Abstract.walk_VP(phrase, to_walk)
+            if len(to_walk) == 1:
+                to_walk = to_walk[0]
+                return Abstract.walk_VP(phrase, to_walk)
+            elif len(to_walk) == 0:
+                return phrase.strip()
+            else:
+                print('It is possible for there to be more than one level '
+                        'with kids')
 
     @staticmethod
     def compute_label(label_df, embedding):
@@ -308,7 +345,10 @@ class Abstract():
                         label]
                 sent_rels = [rel]
                 relations.append(sent_rels)
-            except KeyError:
+            except (KeyError, IndexError): # Catching IndexError is a stopgap
+                                            # for the bigger problem of complex
+                                            # sentences resulting in mismatches
+                                            # of tokenizations (walk_VP bug)
                 relations.append([])
 
         return relations
