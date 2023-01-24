@@ -59,7 +59,7 @@ class Abstract():
             return False
 
     @classmethod
-    def parse_pred_dict(cls, pred_dict):
+    def parse_pred_dict(cls, pred_dict, nlp):
         """
         Pulls input from a dictionary in the DyGIE++ prediction format
         (see https://github.com/dwadden/dygiepp/blob/master/doc/data.md)
@@ -68,6 +68,7 @@ class Abstract():
         parameters:
             pred_dict, dict: dygiepp formatted dictionary with entity
                 predictions
+            nlp, spacy model: nlp model with constituency parser loaded
 
         returns:
             abst, Abstract instance: instance of abstract class
@@ -91,7 +92,7 @@ class Abstract():
 
         # Perform the higher functions of the class
         abst.set_cand_sents()
-        abst.set_const_parse_and_spacy_doc()
+        abst.set_const_parse_and_spacy_doc(nlp)
 
         return abst
 
@@ -104,14 +105,12 @@ class Abstract():
             if len(self.entities[i]) >= 2:
                 self.cand_sents.append(i)
 
-    def set_const_parse_and_spacy_doc(self):
+    def set_const_parse_and_spacy_doc(self, nlp):
         """
-        Performs constituency parse using the benepar pipe of spacy,
+        Performs constituency parse using provided model,
         and assigns the parse strings and spacy doc containing parse
         information to attributes.
         """
-        nlp = spacy.load('en_core_sci_sm')
-        nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
         doc = nlp(self.text)
         for sent in doc.sents:
             self.const_parse.append(sent._.parse_string)
@@ -151,7 +150,12 @@ class Abstract():
         for sent in self.cand_sents:
 
             # Use helper to get the phrase to embed
-            phrase = self.pick_phrase(sent)
+            try:
+                phrase = self.pick_phrase(sent)
+            except AttributeError:
+                skipped += 1
+                total += 1
+                continue
 
             # Get this embedding out of the BERT output and add to dict
             sent_text = ' '.join(self.sentences[sent])

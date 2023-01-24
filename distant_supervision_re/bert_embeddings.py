@@ -171,8 +171,12 @@ def find_sub_list(sl,l):
     Code from https://stackoverflow.com/a/17870684/13340814
     """
     sll=len(sl)
-    for ind in (i for i,e in enumerate(l) if e==sl[0]):
-        if l[ind:ind+sll]==sl:
-            return ind,ind+sll-1
-        else:
-            return None, None
+    ## TODO fix the rest of the issues causing this to fail, this is a stopgap
+    try:
+        for ind in (i for i,e in enumerate(l) if e==sl[0]):
+            if l[ind:ind+sll]==sl:
+                return ind,ind+sll-1
+            else:
+                return None, None
+    except IndexError:
+        return None, None

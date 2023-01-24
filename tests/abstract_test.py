@@ -93,20 +93,20 @@ class TestAbstractSetup:
 
     ############################### Tests ################################
 
-    def test_parse_pred_dict_gold(self, dygiepp_gold, abst_gold):
+    def test_parse_pred_dict_gold(self, dygiepp_gold, abst_gold, nlp):
         """
         Test for when the entity key is "ner"
         """
-        abst = Abstract.parse_pred_dict(dygiepp_gold)
+        abst = Abstract.parse_pred_dict(dygiepp_gold, nlp)
 
         assert abst == abst_gold
 
-    def test_parse_pred_dict_pred(self, dygiepp_pred, abst_pred):
+    def test_parse_pred_dict_pred(self, dygiepp_pred, abst_pred, nlp):
         """
         Test for when the entity key is "predicted_ner", allowing there
         to also be a key for "ner" that we ignore
         """
-        abst = Abstract.parse_pred_dict(dygiepp_pred)
+        abst = Abstract.parse_pred_dict(dygiepp_pred, nlp)
 
         assert abst == abst_pred
 
@@ -154,8 +154,8 @@ class TestRelHelpers:
         return nlp
 
     @pytest.fixture
-    def abstract(self, dygiepp):
-        return Abstract.parse_pred_dict(dygiepp)
+    def abstract(self, dygiepp, nlp):
+        return Abstract.parse_pred_dict(dygiepp, nlp)
 
     @pytest.fixture
     def top_VP_one_word(self, nlp):

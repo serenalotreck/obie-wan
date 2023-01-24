@@ -10,6 +10,8 @@ import json
 import jsonlines
 import pandas as pd
 from tqdm import tqdm
+import spacy
+import benepar
 from abstract import Abstract
 import bert_embeddings as be
 
@@ -23,11 +25,16 @@ def main(documents_path, label_path, bert_name, out_loc, out_prefix):
         for obj in reader:
             docs.append(obj)
 
+    # Load spacy model for constituency parsing
+    verboseprint('\nLoading spacy constituency parser...')
+    nlp = spacy.load('en_core_sci_sm')
+    nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
+
     # Create Abstract instances for each document
     verboseprint('\nGenerating abstract objects for each document...')
     abstracts = []
     for doc in tqdm(docs):
-        abst = Abstract.parse_pred_dict(doc)
+        abst = Abstract.parse_pred_dict(doc, nlp)
         abstracts.append(abst)
 
     # Load BERT model
