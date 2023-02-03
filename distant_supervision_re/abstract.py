@@ -27,6 +27,11 @@ class Abstract():
         self.const_parse = [] if const_parse is None else const_parse
         self.spacy_doc = spacy_doc
         self.relations = [] if relations is None else relations
+        self.skipped_sents = []
+        self.skipped_cats = {} # keys are sent_idx, values are dicts
+                                    # with list of labels at each level. Num
+                                    # of levels depends on what's passed to
+                                    # set_skip type
 
     def __eq__(self, other):
         """
@@ -153,6 +158,9 @@ class Abstract():
             try:
                 phrase = self.pick_phrase(sent)
             except AttributeError:
+                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
+                self.skipped_sents.append(sent)
+                self.skipped_cats[sent] = struct_dict
                 skipped += 1
                 total += 1
                 continue
@@ -167,7 +175,10 @@ class Abstract():
                 if label != '':
                     phrase_labels[sent][phrase] = label
             except TypeError:
-               skipped += 1 ## See TODO note in pick_phrase
+                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
+                self.skipped_sents.append(sent)
+                self.skipped_cats[sent] = struct_dict
+                skipped += 1 ## See TODO note in pick_phrase
 
 
             total += 1
@@ -392,6 +403,7 @@ class Abstract():
         entities = sample(sent_ents, 2)
         return entities
 
+
     def set_relations(self, relations):
         """
         Set the output of the relation extraction process as an attribute.
@@ -407,6 +419,30 @@ class Abstract():
         self.dygiepp["predicted_relations"] = self.relations
 
         return self.dygiepp
+
+    @staticmethod
+    def parse_by_level(parse_string):
+        """
+        Turns a parse string into a dictionary that contains the labels for
+        each level. The tree cannot be reconstructed form the output of this
+        function, as it doesn't preserve parents within a level.
+
+        parameters:
+            parse_string, str: parse string to parse
+        """
+        # Make parse tree
+        parse_tree = ParentedTree.fromstring(parse_string)
+
+        # Get label dictionary
+        mylabs = defaultdict(list)
+        for pos in atree.treepositions():
+            try:
+                    mylabs[len(pos)].append(atree[pos].label())
+            except AttributeError:
+                    if atree[pos].isupper():
+                            mylabs[len(pos)].append(atree[pos])
+        return mylabs
+
 
     @staticmethod
     def visualize_parse(parse_string):
