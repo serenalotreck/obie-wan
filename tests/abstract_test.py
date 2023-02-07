@@ -267,3 +267,89 @@ class TestRelHelpers:
         assert (rels[1][0][0], rels[1][0][1]) != (rels[1][0][2], rels[1][0][3])
         assert (rels[2][0][0], rels[2][0][1]) != (rels[2][0][2], rels[2][0][3])
 
+class TestCategoryTracking:
+    """
+    Test the functions that keep track of sentence structures for
+    categorization.
+    """
+
+    ############################ Fixtures ################################
+
+    @pytest.fixture
+    def nlp(self):
+        nlp = spacy.load("en_core_sci_sm")
+        nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
+        return nlp
+
+    @pytest.fixture
+    def sent1(self):
+        return 'Jasmonic acid is a hormone.'
+
+    @pytest.fixture
+    def sent2(self):
+        return ('JAs biosynthesis, perception, transport, signal transduction '
+                'and action have been extensively investigated.')
+
+    @pytest.fixture
+    def sent3(self):
+        return ('In particular, as a signaling molecule, JAs can effectively '
+                'mediate responses against environmental stresses by inducing '
+                'a series of genes expression.')
+
+    @pytest.fixture
+    def sent1_cat_dict(self):
+        return {
+                0: ['S'],
+                1: ['NP', 'VP', '.'],
+                2: ['JJ', 'NN', 'VBZ', 'NP'],
+                3: ['DT', 'NN']
+                }
+
+    @pytest.fixture
+    def sent2_cat_dict(self):
+        return {
+                0: ['S'],
+                1: ['NP', 'VP', '.'],
+                2: ['NNP', 'NN', ',', 'NP', ',', 'NP', ',', 'NP', 'CC', 'NP',
+                    'VBP', 'VP'],
+                3: ['NN', 'NN', 'NN', 'NN', 'NN', 'VBN', 'ADVP', 'VP'],
+                4: ['RB', 'VBN']
+                }
+
+    @pytest.fixture
+    def sent3_cat_dict(self):
+        return {
+                0: ['S'],
+                1: ['PP', ',', 'PP', ',', 'NP', 'VP', '.'],
+                2: ['IN', 'ADJP', 'IN', 'NP', 'NNP', 'MD', 'ADVP', 'VP'],
+                3: ['JJ', 'DT', 'NN', 'NN', 'RB', 'VB', 'NP', 'PP'],
+                4: ['NP', 'PP', 'IN', 'S'],
+                5: ['NNS', 'IN', 'NP', 'VP'],
+                6: ['JJ', 'NNS', 'VBG', 'NP'],
+                7: ['NP', 'PP'],
+                8: ['DT', 'NN', 'IN', 'NP'],
+                9: ['NNS', 'NN']
+                }
+
+    ############################### Tests ################################
+
+    def test_parse_by_level_sent1(self, nlp, sent1, sent1_cat_dict):
+
+        parse_string = list(nlp(sent1).sents)[0]._.parse_string
+        mylabs = Abstract.parse_by_level(parse_string)
+
+        assert mylabs == sent1_cat_dict
+
+    def test_parse_by_level_sent2(self, nlp, sent2, sent2_cat_dict):
+
+        parse_string = list(nlp(sent2).sents)[0]._.parse_string
+        mylabs = Abstract.parse_by_level(parse_string)
+
+        assert mylabs == sent2_cat_dict
+
+    def test_parse_by_level_sent3(self, nlp, sent3, sent3_cat_dict):
+
+        parse_string = list(nlp(sent3).sents)[0]._.parse_string
+        mylabs = Abstract.parse_by_level(parse_string)
+
+        assert mylabs == sent3_cat_dict

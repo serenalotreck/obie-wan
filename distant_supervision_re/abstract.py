@@ -9,6 +9,7 @@ from nltk import ParentedTree
 import bert_embeddings as be
 import numpy as np
 from numpy.linalg import norm
+from collections import defaultdict
 
 
 class Abstract():
@@ -28,6 +29,7 @@ class Abstract():
         self.spacy_doc = spacy_doc
         self.relations = [] if relations is None else relations
         self.skipped_sents = []
+        self.success_cats = {}
         self.skipped_cats = {} # keys are sent_idx, values are dicts
                                     # with list of labels at each level. Num
                                     # of levels depends on what's passed to
@@ -157,6 +159,8 @@ class Abstract():
             # Use helper to get the phrase to embed
             try:
                 phrase = self.pick_phrase(sent)
+                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
+                self.success_cats[sent] = struct_dict
             except AttributeError:
                 struct_dict = Abstract.parse_by_level(self.const_parse[sent])
                 self.skipped_sents.append(sent)
@@ -429,18 +433,28 @@ class Abstract():
 
         parameters:
             parse_string, str: parse string to parse
+
+        returns:
+            mylabs, dict of list: keys are level indices, values are lists
+                of the labels at that level in the parse tree
         """
         # Make parse tree
         parse_tree = ParentedTree.fromstring(parse_string)
 
         # Get label dictionary
         mylabs = defaultdict(list)
-        for pos in atree.treepositions():
+        for pos in parse_tree.treepositions():
             try:
-                    mylabs[len(pos)].append(atree[pos].label())
+                mylabs[len(pos)].append(parse_tree[pos].label())
             except AttributeError:
-                    if atree[pos].isupper():
-                            mylabs[len(pos)].append(atree[pos])
+                if parse_tree[pos].isupper():
+                    mylabs[len(pos)].append(parse_tree[pos])
+
+        # Check for and remove empty list in last key
+        max_key = max(list(mylabs.keys()))
+        if mylabs[max_key] == []:
+            del mylabs[max_key]
+
         return mylabs
 
 

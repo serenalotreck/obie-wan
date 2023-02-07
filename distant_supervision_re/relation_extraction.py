@@ -55,22 +55,29 @@ def main(documents_path, label_path, bert_name, out_loc, out_prefix):
     skipped = 0
     totals = 0
     skipped_cats = {}
+    success_cats = {}
     for abst in tqdm(abstracts):
         skip, total = abst.extract_rels(tokenizer, model, label_df)
         skipped += skip
         totals += total
-        skipped_cats[abst] = abst.skipped_cats
+        doc_key = abst.dygiepp["doc_key"]
+        skipped_cats[doc_key] = abst.skipped_cats
+        success_cats[doc_key] = abst.success_cats
         output = abst.rels_to_dygiepp()
         pred_output.append(output)
     skipped_cat_out = f'{out_loc}/{out_prefix}_skipped_sentence_cats.json'
+    success_cat_out = f'{out_loc}/{out_prefix}_success_sentence_cats.json'
     verboseprint(f'{skipped} of {totals} candidate sentences  were dropped '
             'due to tokenization mismatches. Dropped sentence categorizations '
-            f'are being saved to {skipped_cat_out}')
+            f'are being saved to {skipped_cat_out}, and successful sentence '
+            f'categorizations are being saved to {success_cat_out}')
 
     # Save out the output
     verboseprint('\nSaving results...')
     with open(skipped_cat_out, "w") as outfile:
         json.dump(skipped_cats, outfile)
+    with open(success_cat_out, "w") as outfile:
+        json.dump(success_cats, outfile)
     out_path = f'{out_loc}/{out_prefix}_rels.jsonl'
     with jsonlines.open(out_path, 'w') as writer:
         writer.write_all(pred_output)
