@@ -6,8 +6,11 @@ Author: Serena G. Lotreck
 import argparse
 from os import getenv, listdir
 from os.path import abspath, isfile
+from ast import literal_eval
+import spacy
 import openai
 from tqdm import tqdm
+import jsonlines
 import sys
 sys.path.append('../distant_supervision_re/')
 import bert_embeddings as be
@@ -57,6 +60,7 @@ def find_sent(dygiepp_doc, triple_tok):
                 for sli in sublist_idxs]
         if (len(set(all_present)) == 1) & (list(set(all_present))[0]):
             sent_cands.append(sent_idx)
+    print(f'sent_cands: {sent_cands}')
     assert len(sent_cands) == 1 # Need to know if this method doens't uniquely
                                 # identify the sentence from whence it came
     sent_idx = sent_cands[0]
@@ -95,7 +99,7 @@ def format_dygiepp_doc(doc_key, abstract_txt, triples, nlp, embed_rels=False,
             'relations': []}
 
     # Tokenize the abstract text
-    doc = nlp(abstract_txt)
+    doc = nlp(abstract_txt[0])
     dygiepp_doc['sentences'] = [[tok.text for tok in sent] for sent in doc.sents]
     dygiepp_doc['ner'] = [[] for i in range(len(dygiepp_doc['sentences']))]
     dygiepp_doc['relations'] = [[] for i in range(len(dygiepp_doc['sentences']))]
@@ -179,6 +183,10 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
             label_dict = json.load(infile)
         label_embed_dict = be.embed_labels(label_dict, tokenizer, model)
         label_df = pd.DataFrame.from_dict(label_embed_dict, orient='index')
+    else:
+        tokenizer = None
+        model = None
+        label_df = None
 
     # Load the scispacy model to use for tokenization
     nlp = spacy.load("en_core_sci_sm")
@@ -191,7 +199,10 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         # Pull out the text from the prediction
         pred_text = abstract_pred['choices'][0]['text']
         # Read the output literally to get triples
-        doc_triples = [literal_eval(t) for t in pred_text.split('\n')]
+        print(f'abstract_pred:\n{abstract_pred}')
+        print(f'pred_text:\n{pred_text}')
+        doc_triples = [literal_eval(t) for t in pred_text.split('\n')
+                if t != '']
         # Pass triples and abstract text to helper to get tokenizations
         doc_dygiepp = format_dygiepp_doc(fname, abstracts[fname], doc_triples,
                 nlp, embed_rels, label_df, tokenizer, model)
@@ -216,9 +227,10 @@ def gpt3_predict(abstracts):
     raw_preds = {}
     for fname, abstract_txt in tqdm(abstracts.items()):
         prompt = ('Extract the biological relationships from '
-        'the following text as (Subject, Predicate, Object) triples: '
+        'the following text as (Subject, Predicate, Object) triples, and '
+        'include the index of the sentence from which the triple is extracted: '
         f'{abstract_txt}.\nExample relationship triple:\n("Protein 1", '
-        '"regulates", "Protein 2")')
+        '"regulates", "Protein 2"), "Sentence 0"')
         response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
@@ -226,7 +238,8 @@ def gpt3_predict(abstracts):
             temperature=0
                 )
         raw_preds[fname] = response
-
+        print(response)
+        print(response['choices'][0]['text'])
     return raw_preds
 
 
@@ -239,7 +252,7 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
         if isfile(f'{text_dir}/{f}'):
             path = f'{text_dir}/{f}'
             with open(path) as myf:
-                abstract = [l.strip() for l in myf.readlines()]
+                abstract =[l.strip() for l in  myf.readlines()]
                 abstracts[f] = abstract
 
     # Prompt GPT3 for each abstract
@@ -248,8 +261,8 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
 
     # Format output in dygiepp format
     verboseprint('\nFormatting predictions...')
-    final_preds = process_preds(abstracts, raw_preds, bert_name, label_path,
-            embed_rels)
+    #final_preds = process_preds(abstracts, raw_preds, bert_name, label_path,
+    #        embed_rels)
 
     # Save output
     verboseprint('\nSaving output...')
@@ -269,7 +282,7 @@ if __name__ == "__main__":
     parser.add_argument('--embed_rels', action='store_true',
             help='Whether or not to embed relations to get standardized '
             'labels. If passed, must also pass label_path')
-    parser.add_argument('label_path', type=str, default='',
+    parser.add_argument('-label_path', type=str, default='',
             help='Path to a json file where keys are the relation '
             'labels, and values are lists of strings, where each string '
             'is an example sentence that literally uses the relation label.')
