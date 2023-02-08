@@ -55,7 +55,7 @@ def find_sent(dygiepp_doc, triple_tok):
             sublist_idxs.append(idxs)
         all_present = [True if sli != (None, None) else False
                 for sli in sublist_idxs]
-        if set(all_present)[0]:
+        if (len(set(all_present)) == 1) & (list(set(all_present))[0]):
             sent_cands.append(sent_idx)
     assert len(sent_cands) == 1 # Need to know if this method doens't uniquely
                                 # identify the sentence from whence it came
@@ -113,15 +113,28 @@ def format_dygiepp_doc(doc_key, abstract_txt, triples, nlp, embed_rels=False,
         # For both entities, get the document wide indices
         entities = [] # Keep here to use for relations
         for ent in [triple_tok[0], triple_tok[2]]:
-            start_idx = dygiepp_doc['sentences'][sent_idx].index(ent[0]) + \
-                    prev_tok_num
-            end_idx = dygiepp_doc['sentences'][sent_idx].index(ent[-1]) + \
-                    prev_tok_num
+            sent_text = dygiepp_doc["sentences"][sent_idx]
+            # Check to see if we already have an entity that starts with the
+            # same text in this sentence
+            iters_prev = 0
+            for p_ent in dygiepp_doc["ner"][sent_idx]:
+                p_toks = sent_text[p_ent[0] - prev_tok_num]
+                if p_toks == ent[0]:
+                    iters_prev += 1
+            # Look for the instance of the first entity that corresponds with
+            # the number of the same start tokens we've previously seen
+            start_idx = [i for i, n in enumerate(sent_text)
+                    if n == ent[0]][iters_prev] + prev_tok_num
+            # Then starting at the start token, look for the first instance of
+            # the end token
+            end_idx = [i for i, n in enumerate(sent_text)
+                    if n == ent[-1] and i + prev_tok_num >= start_idx
+                    ][0] + prev_tok_num
             entities.append([start_idx, end_idx, 'ENTITY'])
         # Place entities in the correct sentence
         dygiepp_doc['ner'][sent_idx].extend(entities)
         # Get the relation label
-        if embed_label:
+        if embed_rels:
             label = embed_relation(dygiepp_doc['ner'][sent_idx], triple_tok[1],
                     label_df)
             if label is None:

@@ -171,12 +171,23 @@ def find_sub_list(sl,l):
     Code from https://stackoverflow.com/a/17870684/13340814
     """
     sll=len(sl)
-    ## TODO fix the rest of the issues causing this to fail, this is a stopgap
+    ## TODO fix the rest of the issues causing this to fail, try/except
+    ## is a stopgap
     try:
+        # Keeping track of found is the only way that I thought of to get
+        # around the fact that if the first element of the sublist isn't in
+        # the list at all, it will skip the whole for loop and return only one
+        # None instead of (None, None), which breaks code that expects two
+        # outputs
+        found = False
         for ind in (i for i,e in enumerate(l) if e==sl[0]):
             if l[ind:ind+sll]==sl:
+                found = True
                 return ind,ind+sll-1
             else:
+                found = True
                 return None, None
+        if not found:
+            return None, None
     except IndexError:
         return None, None
