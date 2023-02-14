@@ -13,6 +13,8 @@ from os.path import abspath
 import json
 import spacy
 import pandas as pd
+import numpy as np
+from tqdm import tqdm
 
 
 def calculate_CI(prec_samples, rec_samples, f1_samples):
@@ -168,13 +170,14 @@ def get_f1_input(preds, gold, nlp, check_rel_labels=False):
     return (predicted, gold, matched)
 
 
-def draw_boot_samples(preds, gold, num_boot=500, check_rel_labels=False):
+def draw_boot_samples(preds, gold, nlp, num_boot=500, check_rel_labels=False):
     """
     Draw bootstrap samples.
 
     parameters:
         preds, dict: model predictions
         gold, dict: gold standard annotations
+        nlp, spacy nlp object: tokenizer to use
         num_boot, int: number of bootstrap samples to draw
         check_rel_labels, bool: whether or not to check the identity of
             relation text when evaluating performance
@@ -188,19 +191,18 @@ def draw_boot_samples(preds, gold, num_boot=500, check_rel_labels=False):
     rec_samples = []
     f1_samples = []
 
-    nlp = spacy.load("en_core_sci_sm")
-
     # Draw the boot samples
-    for _ in range(num_boot):
+    verboseprint('\nDrawing boot samples...')
+    for _ in tqdm(range(num_boot)):
         # Sample prediction dicts with replacement
-        samp_ids = np.random.choice(preds.keys(),
+        samp_ids = np.random.choice(list(preds.keys()),
                 size=len(preds.keys()), replace=True)
         pred_samp = {k:v for k,v in preds.items() if k in samp_ids}
         gold_samp = {k:v for k,v in gold.items() if k in samp_ids}
         # Calculate performance for the sample
-        pred, gold, match = get_f1_input(pred_samp, gold_samp,
-                check_rel_labels, nlp)
-        prec, rec, f1 = compute_f1(pred, gold, match)
+        pred, golds, match = get_f1_input(pred_samp, gold_samp,
+                nlp, check_rel_labels)
+        prec, rec, f1 = compute_f1(pred, golds, match)
         # Append each of the performance values to their respective sample lists
         prec_samples.append(prec)
         rec_samples.append(rec)
@@ -212,12 +214,14 @@ def draw_boot_samples(preds, gold, num_boot=500, check_rel_labels=False):
 def main(preds, gold, out_loc, out_prefix, check_rel_labels, num_boot):
 
     # Read in the preds and gold
+    verboseprint('\nReading in documents...')
     with open(preds) as myf:
         preds = json.load(myf)
     with open(gold) as myf:
         gold = json.load(myf)
 
     # Compare and calculate performance
+    verboseprint('\nCalculating performance...')
     prec_samples, rec_samples, f1_samples = draw_boot_samples(preds, gold,
             num_boot, check_rel_labels)
     prec_CI, rec_CI, f1_CI = calculate_CI(prec_samples, rec_samples,
@@ -233,9 +237,10 @@ def main(preds, gold, out_loc, out_prefix, check_rel_labels, num_boot):
     perf_df = pd.DataFrame.from_dict(perf_dict)
 
     # Save output
+    verboseprint('\nSaving output...')
     out_name = f'{out_loc}/{out_prefix}_performance.csv'
     perf_df.to_csv(out_name)
-    print(f'Saved output as {out_name}')
+    verboseprint(f'Saved output as {out_name}')
 
 
 if __name__ == "__main__":
@@ -256,12 +261,16 @@ if __name__ == "__main__":
     parser.add_argument('--check_rel_labels', action='store_true',
             help='Whether or not to include the identity of relations when '
             'evaluating performance')
+    parser.add_argument('--verbose', '-v', action='store_true',
+            help='Whether or not to print updates')
 
     args = parser.parse_args()
 
     args.preds = abspath(args.preds)
     args.gold = abspath(args.gold)
     args.out_loc = abspath(args.out_loc)
+
+    verboseprint = print if args.verbose else lambda *a, **k: None
 
     main(args.preds, args.gold, args.out_loc, args.out_prefix,
             args.check_rel_labels, args.num_boot)
