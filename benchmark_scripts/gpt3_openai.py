@@ -212,13 +212,22 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
     return formatted_preds
 
 
-def gpt3_predict(abstracts):
+def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
+        max_tokens=2048):
     """
     Passes each abstract to gpt3 and returns the raw output.
 
     parameters:
        abstracts, dict: keys are file names and values are lines from the
             abstracts
+        prompt, str: string to pass as the prompt. If it includes the substring
+            "{abstract_txt}" in order to be able to use with each abstract
+            separately, must provide fmt=True
+        fmt, bool: whether or not the prompt string needs to be formatted
+        model, str: name of the model to use, default is the full GPT3 model
+        max_tokens, int: maximum number of tokens to request from model. Will
+            change based on what model is requested, and must be larger than
+            (number of tokens in request + number of tokens in respose)
 
     returns:
         raw_preds, dict: keys are file names and values are the output of gpt3
@@ -226,19 +235,19 @@ def gpt3_predict(abstracts):
     """
     raw_preds = {}
     for fname, abstract_txt in tqdm(abstracts.items()):
-        prompt = ('Extract the biological relationships from '
-        'the following text as (Subject, Predicate, Object) triples, and '
-        'include the index of the sentence from which the triple is extracted: '
-        f'{abstract_txt}.\nExample relationship triple:\n("Protein 1", '
-        '"regulates", "Protein 2"), "Sentence 0"')
+        if fmt:
+            prompt = prompt.format(abstract_txt=abstract_txt)
         response = openai.Completion.create(
-            model="text-davinci-003",
+            model=model,
             prompt=prompt,
-            max_tokens=2048,
+            max_tokens=max_tokens,
             temperature=0
                 )
         raw_preds[fname] = response
+        print(f'\nResponse and prediction for {fname}:')
+        print('------------------------------------------')
         print(response)
+        print('------------------------------------------')
         print(response['choices'][0]['text'])
     return raw_preds
 
@@ -257,7 +266,12 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
 
     # Prompt GPT3 for each abstract
     verboseprint('\nGenerating predictions...')
-    raw_preds = gpt3_predict(abstracts)
+    prompt = ('Extract the biological relationships from '
+    'the following text as (Subject, Predicate, Object) triples, and '
+    'include the index of the sentence from which the triple is extracted: '
+    '{abstract_txt}.\nExample relationship triple:\n("Protein 1", '
+    '"regulates", "Protein 2"), "Sentence 0"')
+    raw_preds = gpt3_predict(abstracts, prompt)
 
     # Format output in dygiepp format
     verboseprint('\nFormatting predictions...')
