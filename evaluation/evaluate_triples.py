@@ -222,24 +222,25 @@ def main(preds, gold, out_loc, out_prefix, check_rel_labels, num_boot):
 
     # Compare and calculate performance
     verboseprint('\nCalculating performance...')
+    nlp = spacy.load("en_core_sci_sm")
     prec_samples, rec_samples, f1_samples = draw_boot_samples(preds, gold,
-            num_boot, check_rel_labels)
+            nlp, num_boot, check_rel_labels)
     prec_CI, rec_CI, f1_CI = calculate_CI(prec_samples, rec_samples,
             f1_samples)
     perf_dict = {
-            'precision': np.mean(prec_samples),
-            'precision_CI': prec_CI,
-            'recall': np.mean(rec_samples),
-            'recall_CI': rec_CI,
-            'F1': np.mean(f1_samples),
-            'F1_CI': f1_CI
+            'precision': [np.mean(prec_samples)],
+            'precision_CI': [prec_CI],
+            'recall': [np.mean(rec_samples)],
+            'recall_CI': [rec_CI],
+            'F1': [np.mean(f1_samples)],
+            'F1_CI': [f1_CI]
             }
     perf_df = pd.DataFrame.from_dict(perf_dict)
 
     # Save output
     verboseprint('\nSaving output...')
     out_name = f'{out_loc}/{out_prefix}_performance.csv'
-    perf_df.to_csv(out_name)
+    perf_df.to_csv(out_name, index=False)
     verboseprint(f'Saved output as {out_name}')
 
 
