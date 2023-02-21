@@ -28,12 +28,8 @@ class Abstract():
         self.const_parse = [] if const_parse is None else const_parse
         self.spacy_doc = spacy_doc
         self.relations = [] if relations is None else relations
-        self.skipped_sents = []
-        self.success_cats = {}
-        self.skipped_cats = {} # keys are sent_idx, values are dicts
-                                    # with list of labels at each level. Num
-                                    # of levels depends on what's passed to
-                                    # set_skip type
+        self.skipped_sents = {'parse':[], 'phrase':[]}
+        self.success_sents = {'parse':[], 'phrase':[]}
 
     def __eq__(self, other):
         """
@@ -151,22 +147,16 @@ class Abstract():
                 couldn't be resolved to their tokenizations
             total, int: the total number of candidate sentences
         """
-        skipped = 0
-        total = 0
         phrase_labels = {k:{} for k in self.cand_sents}
         for sent in self.cand_sents:
 
             # Use helper to get the phrase to embed
             try:
                 phrase = self.pick_phrase(sent)
-                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
-                self.success_cats[sent] = struct_dict
+            # Happens for some reason that I need to dig into
             except AttributeError:
-                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
-                self.skipped_sents.append(sent)
-                self.skipped_cats[sent] = struct_dict
-                skipped += 1
-                total += 1
+                self.skipped_sents['parse'].append(self.const_parse[sent])
+                self.skipped_sents['phrase'].append('NO PHRASE')
                 continue
 
             # Get this embedding out of the BERT output and add to dict
@@ -178,18 +168,21 @@ class Abstract():
                 label = self.compute_label(label_df, embedding)
                 if label != '':
                     phrase_labels[sent][phrase] = label
+                self.success_sents['parse'].append(self.const_parse[sent])
+                self.success_sents['phrase'].append(phrase)
+            # If there are gaps in the phrase, the tokenization won't align
             except TypeError:
-                struct_dict = Abstract.parse_by_level(self.const_parse[sent])
-                self.skipped_sents.append(sent)
-                self.skipped_cats[sent] = struct_dict
-                skipped += 1 ## See TODO note in pick_phrase
-
-
-            total += 1
+                self.skipped_sents['parse'].append(self.const_parse[sent])
+                self.skipped_sents['phrase'].append(phrase)
 
         # Format the relations in DyGIE++ format
         relations = self.format_rels(phrase_labels)
         self.set_relations(relations)
+
+        # Get the total number of candidate sentences and the number that were
+        # skipped
+        skipped = len(self.skipped_sents['parse'])
+        total = len(self.cand_sents)
 
         return skipped, total
 
@@ -282,24 +275,24 @@ class Abstract():
                     next_labels.append(other_labs[0])
 
         kids = next_child._.children
-        child_dict = OrderedDict({lab:c for lab, c in zip(next_labels, kids)})
+        child_tups = [(lab, c) for lab, c in zip(next_labels, kids)]
 
         # Base case
         if 'NP' in next_labels:
-            phrase_add = [child_dict[l].text for l in next_labels if l != 'NP']
+            phrase_add = [t[1].text for t in child_tups if t[0] != 'NP']
             phrase += ' ' + ' '.join(phrase_add)
             return phrase.strip() # Removes leading whitespace
         # Recursive case
         else:
             # Add anything that doesn't have a child
             # Leaf nodes have no labels in benepar
-            phrase_add = [child_dict[l].text for l in next_labels
-                    if l == 'NO_LABEL']
+            phrase_add = [t[1].text for t in child_tups
+                    if t[0] == 'NO_LABEL']
             phrase += ' ' + ' '.join(phrase_add)
             # Continue down the one that does
             ## TODO what to do if there's more than one on the same level
             ## that has children? Is that possible?
-            to_walk = [child_dict[l] for l in next_labels if l != 'NO_LABEL']
+            to_walk = [t[1] for t in child_tups if t[0] != 'NO_LABEL']
             if len(to_walk) == 1:
                 to_walk = to_walk[0]
                 return Abstract.walk_VP(phrase, to_walk)

@@ -11,6 +11,7 @@ import spacy
 import openai
 from tqdm import tqdm
 import jsonlines
+import json
 import sys
 sys.path.append('../distant_supervision_re/')
 import bert_embeddings as be
@@ -45,8 +46,8 @@ def embed_relation(sent_tok, rel, label_df, model, tokenizer):
 
 def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False):
     """
-    Pulls text output from predictions, and calls helpers to format the
-    predictions for dygiepp.
+    Pulls text output from predictions, and calls helpers to embed relations if
+    embed_rels=True. TODO implement relation embeddings
 
     parameters:
         abstracts, dict: keys are filenames, values are strings with abstracts
@@ -58,7 +59,8 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
             labels by embedding
 
     returns:
-        formatted_preds, list of dict: dygiepp formatted data
+        trip_preds, dict of list: keys are filenames and values are lists of
+            the triple tuples
     """
     if embed_rels:
         # Load the BERT model, and embed relation labels
@@ -78,7 +80,7 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         label_df = None
 
     # Format preds
-    trip_preds = []
+    trip_preds = {}
     for fname, abstract_pred in tqdm(raw_preds.items()):
         # Check that there's only one prediction
         assert len(abstract_pred['choices']) == 1
@@ -98,7 +100,7 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
 
 
 def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
-        max_tokens=2048, temp=0):
+        max_tokens=2048, temp=0, stop='\n'):
     """
     Passes each abstract to gpt3 and returns the raw output.
 
@@ -114,6 +116,7 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
             change based on what model is requested, and must be larger than
             (number of tokens in request + number of tokens in respose)
         temp, int: temperature parameter to pass to gpt3, default is 0
+        stop, str: stop character to pass to gpt3
 
     returns:
         raw_preds, dict: keys are file names and values are the output of gpt3
@@ -121,20 +124,28 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
     """
     raw_preds = {}
     for fname, abstract_txt in tqdm(abstracts.items()):
+        # Add the abstract text to the prompt if required
         if fmt:
-            prompt = prompt.format(abstract_txt=abstract_txt)
+            formatted_prompt = prompt.format(abstract_txt=abstract_txt)
+        else:
+            formatted_prompt = prompt
+        verboseprint(f'Prompt for {fname}:\n{formatted_prompt}')
+
+        # Get predictions
         response = openai.Completion.create(
             model=model,
-            prompt=prompt,
+            prompt=formatted_prompt,
             max_tokens=max_tokens,
-            temperature=temp
+            temperature=temp,
+            stop=stop
                 )
+
+        # Add to list
         raw_preds[fname] = response
-        print(f'\nResponse and prediction for {fname}:')
-        print('------------------------------------------')
-        print(response)
-        print('------------------------------------------')
-        print(response['choices'][0]['text'])
+        verboseprint('\n----------------- Predictions -------------------------\n')
+        verboseprint(response['choices'][0]['text'])
+        verboseprint('\n---------------------------------------------------\n')
+
     return raw_preds
 
 
@@ -153,11 +164,10 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
     # Prompt GPT3 for each abstract
     verboseprint('\nGenerating predictions...')
     prompt = ('Extract the biological relationships from '
-    'the following text as (Subject, Predicate, Object) triples, and '
-    'include the index of the sentence from which the triple is extracted: '
-    '{abstract_txt}.\nExample relationship triple:\n("Protein 1", '
-    '"regulates", "Protein 2"), "Sentence 0"')
-    raw_preds = gpt3_predict(abstracts, prompt)
+     'the following text as (Subject, Predicate, Object) triples in the format ("Subject", "predicate", "Object"): '
+     '{abstract_txt[0]}')
+    raw_preds = gpt3_predict(abstracts, prompt, fmt=True, model='text-davinci-003',
+            max_tokens=1000, stop=["\\n"])
 
     # Format output in dygiepp format
     verboseprint('\nFormatting predictions...')
@@ -166,7 +176,7 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
 
     # Save output
     verboseprint('\nSaving output...')
-    out_path = f'{out_loc}/{out_prefix}_gpt3_preds.jsonl'
+    out_path = f'{out_loc}/{out_prefix}_gpt3_preds.json'
     with open(out_path, 'w') as myf:
         json.dump(final_preds, myf)
     verboseprint(f'Predictions saved to {out_path}')
