@@ -11,6 +11,7 @@ import numpy as np
 from numpy.linalg import norm
 from collections import defaultdict
 
+import traceback
 
 class Abstract():
     """
@@ -153,11 +154,17 @@ class Abstract():
             # Use helper to get the phrase to embed
             try:
                 phrase = self.pick_phrase(sent)
-            # Happens for some reason that I need to dig into
+            # Happens when:
+            # There are sub-nodes with S labels, or ## TODO deal with this
+            # It's not a complete sentence
             except AttributeError:
                 self.skipped_sents['parse'].append(self.const_parse[sent])
-                self.skipped_sents['phrase'].append('NO PHRASE: Unknown '
-                        'cause AttributeError')
+                if self.const_parse[sent].count('S') > 2:
+                    self.skipped_sents['phrase'].append('NO PHRASE: Multiple '
+                    'nested sentence annotations')
+                else:
+                    self.skipped_sents['phrase'].append('NO PHRASE: Incomplete '
+                    'sentence')
                 continue
 
             # Get this embedding out of the BERT output and add to dict
@@ -224,22 +231,30 @@ class Abstract():
         # Get the spacy object version of the sentence
         sent = list(self.spacy_doc.sents)[sent_idx]
 
-        ## TODO: This fails catastrophically on sentences with multiple
-        ## NPs within a VP, as well as sentences whose parse trees have
-        ## multiple nodes with children on the same level. Need to refine
-        ## this quite a bit, for now I'm just tracking failures and skipping
-        ## them
         # Walk the tree and its labels
-        # We want everything from the VP besides the nested NP 
-        # First, get the VP
         first_level_labels = [c._.labels for c in sent._.children]
-        top_vp = None
+        to_walk = None
+        # We want to find the VP on the level right below the top S
         for child, label in zip(sent._.children, first_level_labels):
             if (len(label) == 1) and (label[0] == 'VP'):
-                top_vp = child
-        # Then, we walk, and keep anything that's not the terminal NP
-        phrase = Abstract.walk_VP('', top_vp)
+                to_walk = child
+                # We also want to check here if the sentence contains an SBAR
+                # clause, as we'd like to subset it before calling walk_VP
+                if 'SBAR' in to_walk._.parse_string:
+                    to_walk = Abstract.subset_tree(to_walk, 'SBAR')
+            # Another possibility is that we have multiple VP connected by a CC
+            ## TODO deal with it, need to decide if this actually goes here or
+            ## if it belongs in pick_phrase with the multiple S labels part
 
+        # If there are full sentences on the second level, we won't find
+        # a VP, so we need to deal with that
+        if to_walk is None:
+            ## TODO deal with multiple S labels here, break things apart
+            ## and call walk_VP multiple times
+            # For now, just pass
+            pass
+        # Then, we walk to build the phrase
+        phrase = Abstract.walk_VP('', to_walk)
         return phrase
 
     @staticmethod
@@ -255,32 +270,12 @@ class Abstract():
         returns:
             phrase, str: updated phrase
         """
-        ## TODO confirm it's safe to assume there's only one label per tuple
-        ### UPDATE: It's not -- need to decide what to do about it, implemented the
-        ### elif's below as a stopgap measure
-        next_labels = []
-        for c in next_child._.children:
-            if len(c._.labels) == 0:
-                next_labels.append('NO_LABEL')
-            elif len(c._.labels) == 1:
-                next_labels.append(c._.labels[0])
-
-            ## This is a hideous stopgap measure, TODO fix
-            elif len(c._.labels) > 1:
-                if 'NP' in c._.labels and 'S' not in c._.labels:
-                    next_labels.append('NP')
-                elif 'S' in c._.labels:
-                    other_labs = list(c._.labels)
-                    other_labs.remove('S')
-                    assert len(other_labs) == 1
-                    next_labels.append(other_labs[0])
-
-        kids = next_child._.children
-        child_tups = [(lab, c) for lab, c in zip(next_labels, kids)]
-
+        # Get the labels that are on the next level
+        next_labels, child_tups = Abstract.get_child_tups(next_child)
         # Base case
         if 'NP' in next_labels:
-            phrase_add = [t[1].text for t in child_tups if t[0] != 'NP']
+            phrase_add = [t[1].text for t in child_tups
+                    if (t[0] != 'NP') & (t[0] != 'PP')]
             phrase += ' ' + ' '.join(phrase_add)
             return phrase.strip() # Removes leading whitespace
         # Recursive case
@@ -288,11 +283,9 @@ class Abstract():
             # Add anything that doesn't have a child
             # Leaf nodes have no labels in benepar
             phrase_add = [t[1].text for t in child_tups
-                    if t[0] == 'NO_LABEL']
+                if t[0] == 'NO_LABEL']
             phrase += ' ' + ' '.join(phrase_add)
             # Continue down the one that does
-            ## TODO what to do if there's more than one on the same level
-            ## that has children? Is that possible?
             to_walk = [t[1] for t in child_tups if t[0] != 'NO_LABEL']
             if len(to_walk) == 1:
                 to_walk = to_walk[0]
@@ -300,9 +293,92 @@ class Abstract():
             elif len(to_walk) == 0:
                 return phrase.strip()
             else:
-                print('It is possible for there to be more than one level '
-                        'with kids')
+                ## TODO implement dropping leading PP's here
                 return 'NO PHRASE: Multiple levels with kids'
+
+    @staticmethod
+    def subset_tree(next_child, label):
+        """
+        Return the benepar-parsed spacy object starting at the node with the
+        label label. If this label occurs more than once in the tree, and the
+
+        parameters:
+            next_child, spacy Span object: the next child to check
+            label, str: parse label to look for
+
+        returns:
+            subset_child, spacy Span object: subset child
+        """
+        # Base case
+        if label in next_child._.labels:
+            subset_child = next_child
+            return subset_child
+        # Recursive case
+        else:
+            # Get the labels that appear on the next level
+            _, child_tups = Abstract.get_child_tups(next_child)
+            # Check which ones have children
+            have_kids = [tup[1] for tup in child_tups if tup[0] != 'NO_LABEL']
+            # If multiples have children, only go down the one that contains
+            # SBAR
+            if len(have_kids) > 1:
+                contains_lab = []
+                for c in have_kids:
+                    if label in c._.parse_string:
+                        contains_lab.append(c)
+                # The case where multiple occurrences of the target label are
+                # nested and we want to stop at the one that's highest in the
+                # tree
+                if len(contains_lab) == 1:
+                    to_walk = contains_lab[0]
+                    return Abstract.subset_tree(to_walk, label)
+
+                # The case where the same label are siblings
+                ## TODO implement
+                elif len(contains_lab) > 1:
+                    mults = True
+                    try:
+                        assert mults, (f'The requested label is sibling with '
+                                'itself')
+                    except AssertionError as e:
+                        print(e)
+                        Abstract.visualize_parse(next_child._.parse_string)
+            # If only one has children:
+            else:
+                to_walk = have_kids[0]
+                return Abstract.subset_tree(to_walk, label)
+
+    @staticmethod
+    def get_child_tups(next_child):
+        """
+        Returns a list of spacy-object children and their corresponding labels.
+
+        parameters:
+            next_child, spacy Span object: span to get children from
+
+        returns:
+            next_labels, list of str: labels of the children
+            child_tups, list of tuple: spacy-object children with their labels
+        """
+        next_labels = []
+        for c in next_child._.children:
+            # Terminal nodes
+            if len(c._.labels) == 0:
+                next_labels.append('NO_LABEL')
+            # Non-terminal nodes with only one label
+            elif len(c._.labels) == 1:
+                next_labels.append(c._.labels[0])
+
+            elif len(c._.labels) > 1:
+                other_labs = list(c._.labels)
+                other_labs.remove('S')
+                assert len(other_labs) == 1
+                next_labels.append(other_labs[0])
+
+        kids = next_child._.children
+        child_tups = [(lab, c) for lab, c in zip(next_labels, kids)]
+
+        return next_labels, child_tups
 
     @staticmethod
     def compute_label(label_df, embedding):
@@ -418,6 +494,7 @@ class Abstract():
         self.dygiepp["predicted_relations"] = self.relations
 
         return self.dygiepp
+
 
     @staticmethod
     def parse_by_level(parse_string):
