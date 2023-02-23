@@ -5,37 +5,39 @@ Author: Serena G. Lotreck
 """
 import argparse
 from os import getenv, listdir
-from os.path import abspath, isfile
+from os.path import abspath, isfile, splitext
 from ast import literal_eval
 import spacy
 import openai
 from tqdm import tqdm
 import jsonlines
 import json
+import pandas as pd
 import sys
 sys.path.append('../distant_supervision_re/')
 import bert_embeddings as be
 from abstract import Abstract
 
 
-def embed_relation(sent_tok, rel, label_df, model, tokenizer):
+def embed_relation(trip, label_df, model, tokenizer):
     """
-    TODO adapt this to work without sentence indices
-    initial thought is to use the entire abstract instead of the sentence
-
-
     Performs the same relation embedding as relation_embedding.py to generate a
-    standardized relation label for a given triple.
+    standardized relation label for a given triple. Since the triples are not
+    tied to sentences, the word context is obtained by concatenating the triple
+    together into a pseudo-sentence. In general, most of the GPT3 triples tend
+    to be very verbose and contain most if not all of the sentence that they
+    came from, which will give similar context to the model as if it were the
+    full sentence.
 
     parameters:
-        sent_tok, list of str: tokenized sentence
-        rel, str: relation to embed
+        trip, tuple of str: the triple containing the relation to embed
         label_df, pandas df: rows are labels, columns are vector elements
         model, huggingface BERT model: model to use
         tokenizer, huggingface BERT tokenizer: tokenizer to use
     """
-    sent_text = ' '.join(self.sentences[sent_tok])
-    embedding = be.get_phrase_embedding(sent_text, rel,
+    rel = trip[1]
+    trip_text = ' '.join(trip)
+    embedding = be.get_phrase_embedding(trip_text, rel,
         tokenizer, model)
     label = Abstract.compute_label(label_df, embedding)
     if label == '':
@@ -89,12 +91,20 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         # Read the output literally to get triples
         doc_triples = [literal_eval(t) for t in pred_text.split('\n')
                 if t != '']
+        # Embed relations if asked
         if embed_rels:
-            pass
-            ## TODO fix the embed rels function to work without having
-            ## sentences associated with triples
-        # Add to preds dict
-        trip_preds[fname] = doc_triples
+            embedded_trips = []
+            for trip in doc_triples:
+                label = embed_relation(trip, label_df, model, tokenizer)
+                if label is not None: # Drops triples with no label assignment
+                    new_trip = (trip[0], label, trip[2])
+                    embedded_trips.append(new_trip)
+            trip_preds[fname] = embedded_trips
+            verboseprint(f'\nTriples for doc {fname} after '
+                 f'embedding:\n{embedded_trips}')
+        # Otherwise, leave them as-is
+        else:
+            trip_preds[fname] = doc_triples
 
     return trip_preds
 
@@ -158,8 +168,9 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
         if isfile(f'{text_dir}/{f}'):
             path = f'{text_dir}/{f}'
             with open(path) as myf:
-                abstract =[l.strip() for l in  myf.readlines()]
-                abstracts[f] = abstract
+                abstract = [l.strip() for l in  myf.readlines()]
+                fname = splitext(f)[0]
+                abstracts[fname] = abstract
 
     # Prompt GPT3 for each abstract
     verboseprint('\nGenerating predictions...')
@@ -211,7 +222,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.embed_rels:
-        assert label_path != '', ('--embed_rels was specified, -label_path '
+        assert args.label_path != '', ('--embed_rels was specified, -label_path '
                 'must be provided.')
         args.label_path = abspath(args.label_path)
     args.text_dir = abspath(args.text_dir)

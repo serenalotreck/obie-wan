@@ -156,7 +156,8 @@ class Abstract():
             # Happens for some reason that I need to dig into
             except AttributeError:
                 self.skipped_sents['parse'].append(self.const_parse[sent])
-                self.skipped_sents['phrase'].append('NO PHRASE')
+                self.skipped_sents['phrase'].append('NO PHRASE: Unknown '
+                        'cause AttributeError')
                 continue
 
             # Get this embedding out of the BERT output and add to dict
@@ -301,6 +302,7 @@ class Abstract():
             else:
                 print('It is possible for there to be more than one level '
                         'with kids')
+                return 'NO PHRASE: Multiple levels with kids'
 
     @staticmethod
     def compute_label(label_df, embedding):
@@ -457,5 +459,5 @@ class Abstract():
         Pretty-prints the parse tree as rendered by nltk.
         """
         parse_tree = ParentedTree.fromstring('(' + parse_string + ')')
-        print(parse_tree.pretty_print())
+        parse_tree.pretty_print()
 
