@@ -153,7 +153,7 @@ class Abstract():
 
             # Use helper to get the phrase to embed
             try:
-                phrase = self.pick_phrase(sent)
+                phrases = self.pick_phrase(sent)
             # Happens when:
             # There are sub-nodes with S labels, or ## TODO deal with this
             # It's not a complete sentence
@@ -169,20 +169,23 @@ class Abstract():
 
             # Get this embedding out of the BERT output and add to dict
             sent_text = ' '.join(self.sentences[sent])
-            try:
-                embedding = be.get_phrase_embedding(sent_text, phrase,
-                    tokenizer, model)
-                # Get distances to choose label
-                label = self.compute_label(label_df, embedding)
-                if label != '':
-                    phrase_labels[sent][phrase] = label
-                self.success_sents['parse'].append(self.const_parse[sent])
-                self.success_sents['phrase'].append(phrase)
-            # If there are gaps in the phrase, the tokenization won't align
-            except TypeError:
-                self.skipped_sents['parse'].append(self.const_parse[sent])
-                self.skipped_sents['phrase'].append(phrase)
-
+            for phrase in phrases:
+                try:
+                    embedding = be.get_phrase_embedding(sent_text, phrase,
+                        tokenizer, model)
+                    # Get distances to choose label
+                    label = self.compute_label(label_df, embedding)
+                    if label != '':
+                        phrase_labels[sent][phrase] = label
+                    self.success_sents['parse'].append(self.const_parse[sent])
+                    self.success_sents['phrase'].append(phrase)
+                # If there are gaps in the phrase, the tokenization won't align
+                except TypeError:
+                    self.skipped_sents['parse'].append(self.const_parse[sent])
+                    self.skipped_sents['phrase'].append(phrase)
+        ## TODO add something to keep associating the plain textphrases with
+        ## the embedding-derived labels to be able to determine where the phrase
+        ## came in the sentence later on
         # Format the relations in DyGIE++ format
         relations = self.format_rels(phrase_labels)
         self.set_relations(relations)
@@ -196,29 +199,7 @@ class Abstract():
 
     def pick_phrase(self, sent_idx):
         """
-        Uses constituency parse to choose phrase to embed.
-
-        The heuristic rule used in this process is based on the observation
-        that the benepar constituency parse usually has a verb phrase (VP)
-        that encompasses both the verb that constitutes the relation, as well
-        as the noun phrase (NP) that contains the second entity. We therefore
-        want to get at the part of the VP that contains the verb and any
-        prepositions, not including the entity. For simplicity's sake, I am
-        starting by including anything that isn't the nested NP; futher
-        refinement of this approach may be needed. This approach also relies
-        on the assumption that on the first level of the tree, there is only
-        one VP and one NP. I haven't reviewed parse trees for enough sentences
-        to determine if that is a truly reliable assumption for the scientific
-        literature, but my writing intuition says that it is -- TODO verify
-
-        For the moment, I am treating any sentence with more than 2 entities
-        as a sentence in which there is only one relation present. I am aware
-        that this is a major limitation, as in the corpus there are many
-        instances in which there are multiple relations in a sentence,
-        especially in cases where a sentence contains a list of entities that
-        are related to one or more other entities. However, this is a starting
-        point, and I will come back to this after implementing the simplest
-        version -- TODO
+        Uses constituency parse to choose phrases to embed for a given sentence.
 
         parameters:
             sent_idx, int: sentence from which to choose a phrase
@@ -226,36 +207,81 @@ class Abstract():
                 that are part of the final noun phrase in a sentence
 
         returns:
-            phrase, str: the phrase to embed
+            phrases, list of str: the phrases to embed for this sentence
         """
         # Get the spacy object version of the sentence
         sent = list(self.spacy_doc.sents)[sent_idx]
 
         # Walk the tree and its labels
         first_level_labels = [c._.labels for c in sent._.children]
-        to_walk = None
-        # We want to find the VP on the level right below the top S
-        for child, label in zip(sent._.children, first_level_labels):
-            if (len(label) == 1) and (label[0] == 'VP'):
-                to_walk = child
-                # We also want to check here if the sentence contains an SBAR
-                # clause, as we'd like to subset it before calling walk_VP
-                if 'SBAR' in to_walk._.parse_string:
-                    to_walk = Abstract.subset_tree(to_walk, 'SBAR')
-            # Another possibility is that we have multiple VP connected by a CC
-            ## TODO deal with it, need to decide if this actually goes here or
-            ## if it belongs in pick_phrase with the multiple S labels part
+        # Check for special cases
+        check_to_walk = []
+        # Check for SBAR clauses
+        if 'SBAR' in sent._.parse_string:
+            check_to_walk.extend(Abstract.parse_sbar(sent))
+        # Check for directly nested sentence annotations
+        elif sent._.parse_string.count('S') >=2:
+            check_to_walk.extend(Abstract.parse_mult_S(sent))
+        # Another possibility is that we have multiple VP connected by a CC
+        ## TODO deal with it
+        # If it's not a special case, just add to the list
+        else:
+            check_to_walk.append(sent)
+        # Now, go through these to get what we should walk
+        to_walk = []
+        for cand in check_to_walk:
+            # We want to find the VP on the level right below the top S
+            for child, label in zip(sent._.children, first_level_labels):
+                if (len(label) == 1) and (label[0] == 'VP'):
+                    to_walk.append(child)
 
-        # If there are full sentences on the second level, we won't find
-        # a VP, so we need to deal with that
-        if to_walk is None:
-            ## TODO deal with multiple S labels here, break things apart
-            ## and call walk_VP multiple times
-            # For now, just pass
-            pass
-        # Then, we walk to build the phrase
-        phrase = Abstract.walk_VP('', to_walk)
-        return phrase
+        # Then, we walk to build the phrases
+        phrases = []
+        for walk in to_walk:
+            phrase = Abstract.walk_VP('', walk)
+            phrases.append(phrase)
+
+        return phrases
+
+    @staticmethod
+    def parse_sbar(sent):
+        """
+        Function to pull apart sentences containing SBAR annotations into the
+        correct parts to pass to walk_VP.
+
+        This function assumes that sentences with SBAR annotations fall into
+        one of three categories:
+            Class 1: The SBAR node only has a VP child, but no NP child
+            Class 2: The SBAR node has both a NP and VP child
+            Class 3: There are multiple other SBAR's nested within the
+                top-level SBAR node. Child SBAR's can fall into Class 1 or
+                Class 2
+
+        TODO decide how to deal with  Class 1 (whether or not to annotate)
+
+        parameters:
+            sent, spacy Doc object sentence: sentence to parse
+
+        returns:
+            check_to_walk, list of spacy Span objects: phrases to walk,
+                starting at the S node below the SBAR annotation(s)
+        """
+        pass
+
+    @staticmethod
+    def parse_mult_S(sent):
+        """
+        Function to pull apart sentences that have multiple nested S
+        annotations.
+
+        parameters:
+            sent, spacy Doc object sentence: sentence to parse
+
+        returns:
+            check_to_walk, list of spacy Span objects: phrases to walk,
+            starting at the nested S annotations
+        """
+        pass
 
     @staticmethod
     def walk_VP(phrase, next_child):
