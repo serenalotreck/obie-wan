@@ -10,8 +10,8 @@ import bert_embeddings as be
 import numpy as np
 from numpy.linalg import norm
 from collections import defaultdict
+import phrase_utils as pu
 
-import traceback
 
 class Abstract():
     """
@@ -19,14 +19,16 @@ class Abstract():
     """
     def __init__(self, dygiepp=None, text='', sentences=None,
             entities=None, cand_sents=None, const_parse=None,
-            spacy_doc=None, relations=None):
+            nlp=None, spacy_doc=None, relations=None):
 
         self.dygiepp = {} if dygiepp is None else dygiepp
         self.text = text
         self.sentences = [] if sentences is None else sentences
+        self.doc_tok = [tok for sent in self.sentences for tok in sent]
         self.entities = [] if entities is None else entities
         self.cand_sents = [] if cand_sents is None else cand_sents
         self.const_parse = [] if const_parse is None else const_parse
+        self.nlp = nlp
         self.spacy_doc = spacy_doc
         self.relations = [] if relations is None else relations
         self.skipped_sents = {'parse':[], 'phrase':[]}
@@ -42,6 +44,7 @@ class Abstract():
         checks = [self.dygiepp == other.dygiepp,
                 self.text == other.text,
                 self.sentences == other.sentences,
+                self.doc_tok == other.doc_tok,
                 self.entities == other.entities,
                 self.cand_sents == other.cand_sents,
                 self.const_parse == other.const_parse,
@@ -49,14 +52,18 @@ class Abstract():
                                 # as far as I can tell they haven't overwritten
                                 # the __eq__ method, which seems weird to me
                                 ## TODO write something to compare two docs
-                self.relations == other.relations]
+                #self.nlp = other.nlp # This also may not work, haven't
+                                      # confirmed
+                self.relations == other.relations,
+                self.skipped_sents == other.skipped_sents,
+                self.success_sents == other.success_sents]
         match = set(checks)
         if (len(match) == 1) and list(match)[0]:
             return True
         else:
-            names = ['dygiepp', 'text', 'sentences','entities',
-                    'cand_sents','const_parse', 'spacy_doc',
-                    'relations']
+            names = ['dygiepp', 'text', 'sentences', 'doc_tok', 'entities',
+                    'cand_sents','const_parse', 'nlp', 'spacy_doc',
+                    'relations', 'skipped_sents', 'success_sents']
             print('The attributes in disagreement are:')
             print({attr:boolval for attr,boolval in zip(names, checks) if not
                 boolval})
@@ -115,6 +122,7 @@ class Abstract():
         and assigns the parse strings and spacy doc containing parse
         information to attributes.
         """
+        self.nlp = nlp
         doc = nlp(self.text)
         for sent in doc.sents:
             self.const_parse.append(sent._.parse_string)
@@ -148,7 +156,7 @@ class Abstract():
                 couldn't be resolved to their tokenizations
             total, int: the total number of candidate sentences
         """
-        phrase_labels = {k:{} for k in self.cand_sents}
+        phrase_labels = {k:[] for k in self.cand_sents}
         for sent in self.cand_sents:
 
             # Use helper to get the phrase to embed
@@ -176,16 +184,13 @@ class Abstract():
                     # Get distances to choose label
                     label = self.compute_label(label_df, embedding)
                     if label != '':
-                        phrase_labels[sent][phrase] = label
+                        phrase_labels[sent].append((phrase, label))
                     self.success_sents['parse'].append(self.const_parse[sent])
                     self.success_sents['phrase'].append(phrase)
                 # If there are gaps in the phrase, the tokenization won't align
                 except TypeError:
                     self.skipped_sents['parse'].append(self.const_parse[sent])
                     self.skipped_sents['phrase'].append(phrase)
-        ## TODO add something to keep associating the plain textphrases with
-        ## the embedding-derived labels to be able to determine where the phrase
-        ## came in the sentence later on
         # Format the relations in DyGIE++ format
         relations = self.format_rels(phrase_labels)
         self.set_relations(relations)
@@ -218,10 +223,11 @@ class Abstract():
         check_to_walk = []
         # Check for SBAR clauses
         if 'SBAR' in sent._.parse_string:
-            check_to_walk.extend(Abstract.parse_sbar(sent))
+            check_to_walk.extend(pu.parse_sbar(sent)) ## TODO figure out if I
+            ## want to be extending or appending here
         # Check for directly nested sentence annotations
         elif sent._.parse_string.count('S') >=2:
-            check_to_walk.extend(Abstract.parse_mult_S(sent))
+            check_to_walk.extend(pu.parse_mult_S(sent))
         # Another possibility is that we have multiple VP connected by a CC
         ## TODO deal with it
         # If it's not a special case, just add to the list
@@ -238,234 +244,33 @@ class Abstract():
         # Then, we walk to build the phrases
         phrases = []
         for walk in to_walk:
-            phrase = Abstract.walk_VP('', walk)
+            phrase = pu.walk_VP('', walk)
             phrases.append(phrase)
 
         return phrases
-
-    @staticmethod
-    def parse_sbar(sent):
-        """
-        Function to pull apart sentences containing SBAR annotations into the
-        correct parts to pass to walk_VP.
-
-        This function assumes that sentences with SBAR annotations fall into
-        one of three categories:
-            Class 1: The SBAR node only has a VP child, but no NP child
-            Class 2: The SBAR node has both a NP and VP child
-            Class 3: There are multiple other SBAR's nested within the
-                top-level SBAR node. Child SBAR's can fall into Class 1 or
-                Class 2
-
-        TODO decide how to deal with  Class 1 (whether or not to annotate)
-
-        parameters:
-            sent, spacy Doc object sentence: sentence to parse
-
-        returns:
-            check_to_walk, list of spacy Span objects: phrases to walk,
-                starting at the S node below the SBAR annotation(s)
-        """
-        pass
-
-    @staticmethod
-    def parse_mult_S(sent):
-        """
-        Function to pull apart sentences that have multiple nested S
-        annotations.
-
-        parameters:
-            sent, spacy Doc object sentence: sentence to parse
-
-        returns:
-            check_to_walk, list of spacy Span objects: phrases to walk,
-            starting at the nested S annotations
-        """
-        pass
-
-    @staticmethod
-    def walk_VP(phrase, next_child):
-        """
-        Walk recursively through a VP, adding anything that's not the
-        terminal NP to the phrase string.
-
-        parameters:
-            phrase, str: phrase to add to
-            next_child, spacy Span object: the next child to check
-
-        returns:
-            phrase, str: updated phrase
-        """
-        # Get the labels that are on the next level
-        next_labels, child_tups = Abstract.get_child_tups(next_child)
-        # Base case
-        if 'NP' in next_labels:
-            phrase_add = [t[1].text for t in child_tups
-                    if (t[0] != 'NP') & (t[0] != 'PP')]
-            phrase += ' ' + ' '.join(phrase_add)
-            return phrase.strip() # Removes leading whitespace
-        # Recursive case
-        else:
-            # Add anything that doesn't have a child
-            # Leaf nodes have no labels in benepar
-            phrase_add = [t[1].text for t in child_tups
-                if t[0] == 'NO_LABEL']
-            phrase += ' ' + ' '.join(phrase_add)
-            # Continue down the one that does
-            to_walk = [t[1] for t in child_tups if t[0] != 'NO_LABEL']
-            if len(to_walk) == 1:
-                to_walk = to_walk[0]
-                return Abstract.walk_VP(phrase, to_walk)
-            elif len(to_walk) == 0:
-                return phrase.strip()
-            else:
-                ## TODO implement dropping leading PP's here
-                return 'NO PHRASE: Multiple levels with kids'
-
-    @staticmethod
-    def subset_tree(next_child, label):
-        """
-        Return the benepar-parsed spacy object starting at the node with the
-        label label. If this label occurs more than once in the tree, and the
-
-        parameters:
-            next_child, spacy Span object: the next child to check
-            label, str: parse label to look for
-
-        returns:
-            subset_child, spacy Span object: subset child
-        """
-        # Base case
-        if label in next_child._.labels:
-            subset_child = next_child
-            return subset_child
-        # Recursive case
-        else:
-            # Get the labels that appear on the next level
-            _, child_tups = Abstract.get_child_tups(next_child)
-            # Check which ones have children
-            have_kids = [tup[1] for tup in child_tups if tup[0] != 'NO_LABEL']
-            # If multiples have children, only go down the one that contains
-            # SBAR
-            if len(have_kids) > 1:
-                contains_lab = []
-                for c in have_kids:
-                    if label in c._.parse_string:
-                        contains_lab.append(c)
-                # The case where multiple occurrences of the target label are
-                # nested and we want to stop at the one that's highest in the
-                # tree
-                if len(contains_lab) == 1:
-                    to_walk = contains_lab[0]
-                    return Abstract.subset_tree(to_walk, label)
-
-                # The case where the same label are siblings
-                ## TODO implement
-                elif len(contains_lab) > 1:
-                    mults = True
-                    try:
-                        assert mults, (f'The requested label is sibling with '
-                                'itself')
-                    except AssertionError as e:
-                        print(e)
-                        Abstract.visualize_parse(next_child._.parse_string)
-            # If only one has children:
-            else:
-                to_walk = have_kids[0]
-                return Abstract.subset_tree(to_walk, label)
-
-    @staticmethod
-    def get_child_tups(next_child):
-        """
-        Returns a list of spacy-object children and their corresponding labels.
-
-        parameters:
-            next_child, spacy Span object: span to get children from
-
-        returns:
-            next_labels, list of str: labels of the children
-            child_tups, list of tuple: spacy-object children with their labels
-        """
-        next_labels = []
-        for c in next_child._.children:
-            # Terminal nodes
-            if len(c._.labels) == 0:
-                next_labels.append('NO_LABEL')
-            # Non-terminal nodes with only one label
-            elif len(c._.labels) == 1:
-                next_labels.append(c._.labels[0])
-
-            elif len(c._.labels) > 1:
-                other_labs = list(c._.labels)
-                other_labs.remove('S')
-                assert len(other_labs) == 1
-                next_labels.append(other_labs[0])
-
-        kids = next_child._.children
-        child_tups = [(lab, c) for lab, c in zip(next_labels, kids)]
-
-        return next_labels, child_tups
-
-    @staticmethod
-    def compute_label(label_df, embedding):
-        """
-        Computes cosine distance between phrase embedding and all labels,
-        choosing the label with the highest similarity as the label for this
-        phrase. Must have a similarity of at least 0.5 to get a label.
-
-        parameters:
-            label_df, df: index is labels, rows are embeddings
-            embedding, vector: embedding for the phrase
-
-        returns:
-            label, str: chosen label, empty string if no label chosen
-        """
-        label_mat = np.asarray(label_df)
-        cosine = np.dot(label_mat,
-                embedding)/(norm(label_mat, axis=1)*norm(embedding))
-        label_idx = np.argmax(cosine)
-        assert isinstance(label_idx, np.int64)
-        try:
-            assert cosine[label_idx] > 0.5
-            label = label_df.index.values.tolist()[label_idx]
-        except AssertionError:
-            label = ''
-
-        return label
 
     def format_rels(self, phrase_labels):
         """
         Formats relations in DyGIE++ format.
 
-        This is where the choice to only label one relation per sentence is
-        implemented, will need to come back here to make this process more
-        nuanced.
-
         parameters:
-            phrase_labels, dict of dict : keys are sentence indices,
-                values are dictionaries, where keys are the phrase strings
-                and values are the corresponding chosen label
+            phrase_labels, dict of list: keys are sentence indices,
+                values are lists of tuples of the form (phrase, label)
 
         returns:
             relations, list of list: DyGIE++ formatted relations
         """
-        # Will need to update to allow multiples
         relations = []
         for i, sent in enumerate(self.sentences):
-            try:
-                phrase_and_label = phrase_labels[i]
-                phrase = list(phrase_and_label.keys())[0]
-                label = phrase_and_label[phrase]
+            sent_rels = []
+            for p_l_pair in phrase_labels[i]:
+                phrase = p_l_pair[0]
+                label = p_l_pair[1]
                 start_ent, end_ent = self.choose_ents(phrase, i)
                 rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
                         label]
-                sent_rels = [rel]
-                relations.append(sent_rels)
-            except (KeyError, IndexError): # Catching IndexError is a stopgap
-                                            # for the bigger problem of complex
-                                            # sentences resulting in mismatches
-                                            # of tokenizations (walk_VP bug)
-                relations.append([])
+                sent_rels.append(rel)
+            relations.append(sent_rels)
 
         return relations
 
@@ -475,18 +280,6 @@ class Abstract():
         entity in the relation is before the relation's VP, and the second
         is after.
 
-        NOTE: The current implementation here is to randomly choose two
-        entities, in order to simplify the process of choosing relations.
-        Therefore, nothing is actually enforced except that the two entities
-        be different from one another. This is related to the
-        "only one relation per sentence" paradigm, as there's not really a
-        good way to choose only one pair if there are multiple relations.
-        This also means that relations should be treated as undirected
-        (as in my current evaluation paradigm for PICKLE), since the ordering
-        of the entities is random.
-
-        TODO improve this
-
         parameters:
             phrase, str: relation phrase
             sent_idx, int: sentence index
@@ -494,16 +287,43 @@ class Abstract():
         returns:
             entities, list of list: two DyGIE++ formatted entities
         """
+        # Get the sentence tokenization
+        sent = self.sentences[sent_idx]
         # Get the sentence's entities
         sent_ents = self.entities[sent_idx]
+        # Tokenize the phrase and locate in the sentence
+        phrase_doc = self.nlp(phrase)
+        phrase_toks = [tok.text for tok in phrase_doc]
+        start_idx, end_idx = be.find_sublist(phrase_toks, self.doc_toks)
+        # Figure out what entities are closest on either side
+        subj_cands = [e[1] for e in sent_ents]
+        # Gets the closest ent ending on either side of the relation start
+        subj_idx = (np.abs(np.asarray(subj_cands) - start_idx)).argmin()
+        # So we want to make sure it's before the relation start
+        if subj_idx > start_idx:
+            subj_idx -= 1
+            # Need to make sure this index exists
+            try:
+                subj = sent_ents[subj_idx]
+            except IndexError:
+                return [] # We'll drop this triple if we can't find the right
+                          # entities
+        else:
+            subj = sent_ents[subj_idx]
+        # Get the closest ent starting on either side of the relation end
+        obj_cands = [e[0] for e in sent_ents]
+        obj_idx = (np.abs(np.asarray(obj_cands) - end_idx)).argmin()
+        # Make sure it's after the ending
+        if obj_idx < end_idx:
+            obj_idx += 1
+            try:
+                obj = sent_ents[obj_idx]
+            except IndexError:
+                return []
+        else:
+            obj = sent_ents[obj_idx]
 
-        # Randomly choose two
-        ## TODO improve
-        # Importing this here because I won't need it when this isn't random
-        from random import sample
-        entities = sample(sent_ents, 2)
-        return entities
-
+        return [subj, obj]
 
     def set_relations(self, relations):
         """
