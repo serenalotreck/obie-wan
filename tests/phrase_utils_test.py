@@ -57,12 +57,12 @@ class TestRelHelpers:
         return sent
 
     @pytest.fixture
-    def candidate_phrase_one_word(self):
-        return 'upregulates'
+    def candidate_phrase_one_word(self, nlp):
+        return [list(nlp('upregulates').sents)[0]]
 
     @pytest.fixture
-    def candidate_phrase_multi_word(self):
-        return 'is found in'
+    def candidate_phrase_multi_word(self, nlp):
+        return [list(nlp(w).sents)[0] for w in ['is', 'found', 'in']]
 
     @pytest.fixture
     def label_df(self):
@@ -99,13 +99,13 @@ class TestRelHelpers:
 
     def test_walk_VP_one_word(self, top_VP_one_word,
             candidate_phrase_one_word):
-        phrase = pu.walk_VP('', top_VP_one_word)
+        phrase = pu.walk_VP([], top_VP_one_word)
 
         assert phrase == candidate_phrase_one_word
 
     def test_walk_VP_multi_word(self, top_VP_multi_word,
             candidate_phrase_multi_word):
-        phrase = pu.walk_VP('', top_VP_multi_word)
+        phrase = pu.walk_VP([], top_VP_multi_word)
         assert phrase == candidate_phrase_multi_word
 
     def pick_phrase_one_word(self, abstract, candidate_phrase_one_word):
@@ -142,12 +142,6 @@ class TestSubsetTree:
     occur when just subsetting the tree, so instead of comparing the entire
     parse string in the tests here, I just compare the text of the subset to
     the text of the correct answer.
-
-    TODO: Come back to write tests for Class 4 for subset_tree, as well as
-    tests for parse_sbar and parse_mult_sent when those things have been
-    implemented -- right now the parse functions just put the single value
-    returned by subset tree into a list because there's no implementation for
-    dealing with siblings yet.
     """
 
     ############################ Fixtures ################################
@@ -159,29 +153,49 @@ class TestSubsetTree:
         return nlp
 
     @pytest.fixture
-    def class1_sent(self):
+    def class1a_sent(self):
         return ('The signal transduction pathway regulating this response is '
                 'not fully understood , but several compounds have been '
                 'identified which are capable of inducing proteinase inhibitor '
                 'synthesis in tomato and potato leaves .')
 
     @pytest.fixture
-    def class1_next_child(self, class1_sent, nlp):
-        doc = nlp(class1_sent)
+    def class1a_next_child(self, class1a_sent, nlp):
+        doc = nlp(class1a_sent)
         next_child = list(doc.sents)[0]
         return next_child
 
     @pytest.fixture
-    def class1_subset_child(self, nlp):
+    def class1a_subset_child(self, nlp):
         doc = nlp('which are capable of inducing proteinase inhibitor '
                     'synthesis in tomato and potato leaves')
-        subset_child = list(doc.sents)[0]
-        return subset_child
+        subset_child = list(doc.sents)[0].text
+        return [subset_child]
+
+    @pytest.fixture
+    def class1b_sent(self):
+         return ('The same complexity is evident which the role of '
+                'phytoalexin accumulation in resistance is analysed .')
+
+    @pytest.fixture
+    def class1b_next_child(self, class1b_sent, nlp):
+        doc = nlp(class1b_sent)
+        next_child = list(doc.sents)[0]
+        return next_child
+
+    @pytest.fixture
+    def class1b_subset_child(self, nlp):
+        doc = nlp('which the role of phytoalexin accumulation in '
+                'resistance is analysed')
+        subset_child = list(doc.sents)[0].text
+        return [subset_child]
 
     @pytest.fixture
     def class2_sent(self):
-         return ('The same complexity is evident which the role of '
-                'phytoalexin accumulation in resistance is analysed .')
+        return ('The separate , and distant , locations of the receptor and '
+                'the responsive genes means that the event in which the '
+                'signal is perceived by the receptor must be relayed to '
+                'the genes by means of a second messenger system .')
 
     @pytest.fixture
     def class2_next_child(self, class2_sent, nlp):
@@ -191,68 +205,69 @@ class TestSubsetTree:
 
     @pytest.fixture
     def class2_subset_child(self, nlp):
-        doc = nlp('which the role of phytoalexin accumulation in '
-                'resistance is analysed')
-        subset_child = list(doc.sents)[0]
-        return subset_child
-
-    @pytest.fixture
-    def class3_sent(self):
-        return ('The separate , and distant , locations of the receptor and '
-                'the responsive genes means that the event in which the '
-                'signal is perceived by the receptor must be relayed to '
-                'the genes by means of a second messenger system .')
-
-    @pytest.fixture
-    def class3_next_child(self, class3_sent, nlp):
-        doc = nlp(class3_sent)
-        next_child = list(doc.sents)[0]
-        return next_child
-
-    @pytest.fixture
-    def class3_subset_child(self, nlp):
         doc = nlp('in which the signal is perceived by the receptor')
-        subset_child = list(doc.sents)[0]
-        return subset_child
+        subset_child = list(doc.sents)[0].text
+        return [subset_child]
 
     @pytest.fixture
-    def class4_sent(self):
+    def sbar_class3_sent(self):
         return ('We conclude that plants prioritize resistance of reproductive '
         'tissues over vegetative tissues , and that a chewing herbivore '
         'species is the main driver of responses in flowering B. nigra .')
 
     @pytest.fixture
-    def class4_next_child(self, class4_sent, nlp):
-        doc = nlp(class4_sent)
+    def sbar_class3_next_child(self, sbar_class3_sent, nlp):
+        doc = nlp(sbar_class3_sent)
         next_child = list(doc.sents)[0]
         return next_child
 
-    ## TODO figure out what the right answer for Class 4 should look like
+    @pytest.fixture
+    def sbar_class3_subset_child(self, nlp):
+        sbar1 = ('that plants prioritize resistance of reproductive tissues '
+                    'over vegetative tissues')
+        sbar2 = ('that a chewing herbivore species is the main driver of '
+                    'responses in flowering B. nigra')
+        subset_children = [list(nlp(s).sents)[0].text for s in [sbar1, sbar2]]
+        return subset_children
 
+    @pytest.fixture
+    def s_class3_sent(self):
+        return (' In this chapter , we describe the properties of systemin '
+        'and its precursor prosystemin , and we summarize the evidence '
+        'supporting a role for systemin as an initial signal that regulates '
+        'proteinase inhibitor synthesis in response to wounding .') 
     ############################### Tests ################################
 
-    def test_subset_tree_class1(self, class1_next_child, class1_subset_child):
+    def test_subset_tree_class1a(self, class1a_next_child, class1a_subset_child):
 
-        subset = pu.subset_tree(class1_next_child, 'SBAR', highest=False)
+        subset = pu.subset_tree(class1a_next_child, 'SBAR', highest=False)
+        subset_text = [s.text for s in subset]
 
-        assert subset.text == class1_subset_child.text
+        assert subset_text == class1a_subset_child
+
+
+    def test_subset_tree_class1b(self, class1b_next_child, class1b_subset_child):
+
+        subset = pu.subset_tree(class1b_next_child, 'SBAR', highest=False)
+        subset_text = [s.text for s in subset]
+
+        assert subset_text == class1b_subset_child
 
 
     def test_subset_tree_class2(self, class2_next_child, class2_subset_child):
 
         subset = pu.subset_tree(class2_next_child, 'SBAR', highest=False)
+        subset_text = [s.text for s in subset]
 
-        assert subset.text == class2_subset_child.text
+        assert subset_text == class2_subset_child
 
+    def test_subset_tree_sbar_class3(self, sbar_class3_next_child, sbar_class3_subset_child):
 
-    def test_subset_tree_class3(self, class3_next_child, class3_subset_child):
+        subset = pu.subset_tree(sbar_class3_next_child, 'SBAR', highest=False)
+        subset_text = [s.text for s in subset]
 
-        subset = pu.subset_tree(class3_next_child, 'SBAR', highest=False)
+        assert subset_text == sbar_class3_subset_child
 
-        assert subset.text == class3_subset_child.text
-
-    def test_subset_tree_class4(self):
-        pass
 
 class TestCategoryTracking:
     """

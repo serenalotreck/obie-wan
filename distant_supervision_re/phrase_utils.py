@@ -9,55 +9,10 @@ from numpy.linalg import norm
 from nltk import ParentedTree
 
 
-def parse_sbar(sent):
-    """
-    Function to pull apart sentences containing SBAR annotations into the
-    correct parts to pass to walk_VP.
-
-    This function assumes that sentences with SBAR annotations fall into
-    one of three categories:
-        Class 1: The SBAR node only has a VP child, but no NP child
-        Class 2: The SBAR node has both a NP and VP child
-        Class 3: There are multiple other SBAR's nested within the
-            top-level SBAR node. Child SBAR's can fall into Class 1 or
-            Class 2
-        Class 4: There are sibling nodes that contain SBAR annotations, which
-            can fall into any of the other three classes
-
-    TODO decide how to deal with  Class 1 (whether or not to annotate)
-    TODO figure out how to implement this parse for Class 4
-
-    parameters:
-        sent, spacy Doc object sentence: sentence to parse
-
-    returns:
-        check_to_walk, list of spacy Span objects: phrases to walk,
-            starting at the lowest SBAR annotation
-    """
-    child = subset_tree(sent, 'SBAR', highest=False)
-    return [child]
-
-
-def parse_mult_S(sent):
-    """
-    Function to pull apart sentences that have multiple nested S
-    annotations.
-
-    parameters:
-        sent, spacy Doc object sentence: sentence to parse
-
-    returns:
-        check_to_walk, list of spacy Span objects: phrases to walk,
-        starting at the nested S annotations
-    """
-    child = subset_tree(sent, 'S')
-    return [child]
-
-
 def walk_VP(phrase, next_child):
     """
     Walk recursively through a VP, adding anything that's not the
-    terminal NP to the phrase string.
+    terminal NP to the phrase list.
 
     parameters:
         phrase, list: list of words that make up the phrase to add to
@@ -98,6 +53,14 @@ def subset_tree(next_child, label, highest=True):
     Return the benepar-parsed spacy object starting at the node with the
     label label.
 
+    This function assumes that sentences fall into one of three categories with
+    respect to the target label:
+        Class 1: There is only one node with a label
+        Class 2: There are multiple other target labels nested within the
+            top-level target label node.
+        Class 3: There are sibling nodes that contain target label, which
+            can fall into any of the other two classes
+
     parameters:
         next_child, spacy Span object: the next child to check
         label, str: parse label to look for
@@ -106,7 +69,9 @@ def subset_tree(next_child, label, highest=True):
             to the leaves
 
     returns:
-        subset_child, spacy Span object: subset child
+        subset_child, list of spacy Span objects: subset children. There is
+            only more than one element in the output list if the sentence is Class
+            4 with respect to the target label.
     """
     # Base case
     # There are two cases that trigger the base case:
@@ -118,7 +83,7 @@ def subset_tree(next_child, label, highest=True):
     if label in next_child._.labels and (highest or
             (not highest and next_child._.parse_string.count(label) == 1)):
         subset_child = next_child
-        return subset_child
+        return [subset_child]
     # Recursive case
     else:
         # Get the labels that appear on the next level
@@ -134,13 +99,16 @@ def subset_tree(next_child, label, highest=True):
                                                   # how many times the
                                                   # target label appears
                                                   # within their trees
-        sibling_lens = [len(contains_lab[i]) for i in contains_lab.keys()
-                if i != 0 and len(contains_lab[i]) > 1]
+        sibling_lens = {i:len(contains_lab[i]) for i in contains_lab.keys()
+                if i != 0 and len(contains_lab[i]) > 1}
         # The case where sibling nodes contain the target label
-        if len(sibling_lens) > 0:
-            ## TODO figure out how to deal with this in a way that returns the
-            ## recursion results of the two siblings separately
-            assert True, (f'The requested label is sibling with itself')
+        if len(sibling_lens.keys()) > 0:
+            for i in sibling_lens.keys():
+                sib_children = contains_lab[i]
+                sib_phrases = []
+                for c in sib_children:
+                    sib_phrases.extend(subset_tree(c, label, highest))
+                return sib_phrases
         # The case where labels are nested or there is only 1
         else:
             nonzero_keys = [i for i in contains_lab.keys() if i != 0]

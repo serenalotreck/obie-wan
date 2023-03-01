@@ -225,10 +225,10 @@ class Abstract():
         check_to_walk = []
         # Check for SBAR clauses
         if 'SBAR' in sent._.parse_string:
-            check_to_walk.extend(pu.parse_sbar(sent))
+            check_to_walk.extend(pu.subset_tree(sent, 'SBAR', highest=False))
         # Check for directly nested sentence annotations
         elif sent._.parse_string.count('S') >=2:
-            check_to_walk.extend(pu.parse_mult_S(sent))
+            check_to_walk.extend(pu.subset_tree(sent, 'S', highest=True))
         # Another possibility is that we have multiple VP connected by a CC
         ## TODO deal with it
         # If it's not a special case, just add to the list
