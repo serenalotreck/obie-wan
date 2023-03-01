@@ -5,10 +5,8 @@ Author: Serena G. Lotreck
 """
 from collections import OrderedDict
 import benepar, spacy
-from nltk import ParentedTree
 import bert_embeddings as be
 import numpy as np
-from numpy.linalg import norm
 from collections import defaultdict
 import phrase_utils as pu
 
@@ -164,12 +162,16 @@ class Abstract():
                 phrases = self.pick_phrase(sent)
             # Happens when:
             # There are sub-nodes with S labels, or ## TODO deal with this
-            # It's not a complete sentence
-            except AttributeError:
+            # there are sibling SBAR annotations, or ## TODO deal with this
+            # it's not a complete sentence
+            except AttributeError or AssertionError:
                 self.skipped_sents['parse'].append(self.const_parse[sent])
                 if self.const_parse[sent].count('S') > 2:
                     self.skipped_sents['phrase'].append('NO PHRASE: Multiple '
                     'nested sentence annotations')
+                elif self.const_parse[sent].count('SBAR') > 2:
+                    self.skipped_sents['phrase'].append('NO PHRASE: Sibling '
+                            'SBAR annotations')
                 else:
                     self.skipped_sents['phrase'].append('NO PHRASE: Incomplete '
                     'sentence')
@@ -179,10 +181,10 @@ class Abstract():
             sent_text = ' '.join(self.sentences[sent])
             for phrase in phrases:
                 try:
-                    embedding = be.get_phrase_embedding(sent_text, phrase,
+                    embedding = be.get_phrase_embedding(sent_text, phrase.text,
                         tokenizer, model)
                     # Get distances to choose label
-                    label = self.compute_label(label_df, embedding)
+                    label = pu.compute_label(label_df, embedding)
                     if label != '':
                         phrase_labels[sent].append((phrase, label))
                     self.success_sents['parse'].append(self.const_parse[sent])
@@ -212,7 +214,7 @@ class Abstract():
                 that are part of the final noun phrase in a sentence
 
         returns:
-            phrases, list of str: the phrases to embed for this sentence
+            phrases, list of spacy Span objects: the phrases to embed for this sentence
         """
         # Get the spacy object version of the sentence
         sent = list(self.spacy_doc.sents)[sent_idx]
@@ -223,8 +225,7 @@ class Abstract():
         check_to_walk = []
         # Check for SBAR clauses
         if 'SBAR' in sent._.parse_string:
-            check_to_walk.extend(pu.parse_sbar(sent)) ## TODO figure out if I
-            ## want to be extending or appending here
+            check_to_walk.extend(pu.parse_sbar(sent))
         # Check for directly nested sentence annotations
         elif sent._.parse_string.count('S') >=2:
             check_to_walk.extend(pu.parse_mult_S(sent))
@@ -244,8 +245,15 @@ class Abstract():
         # Then, we walk to build the phrases
         phrases = []
         for walk in to_walk:
+            # Get phrase Span components
             phrase = pu.walk_VP('', walk)
-            phrases.append(phrase)
+            # Reconstruct one Span for the phrase
+            phrase_span = phrase[0].doc[phrase[0].start:phrase[-1].end]
+            # Assert that the span is continuous
+            phrase_idxs = [p.start for p in phrase]
+            assert len(phrase_idxs) == phrase_idxs[-1]-phrase_idxs[0]+1
+            # If they are, add to the phrases list
+            phrases.append(phrase_span)
 
         return phrases
 
@@ -340,47 +348,3 @@ class Abstract():
         self.dygiepp["predicted_relations"] = self.relations
 
         return self.dygiepp
-
-
-    @staticmethod
-    def parse_by_level(parse_string):
-        """
-        Turns a parse string into a dictionary that contains the labels for
-        each level. The tree cannot be reconstructed form the output of this
-        function, as it doesn't preserve parents within a level.
-
-        parameters:
-            parse_string, str: parse string to parse
-
-        returns:
-            mylabs, dict of list: keys are level indices, values are lists
-                of the labels at that level in the parse tree
-        """
-        # Make parse tree
-        parse_tree = ParentedTree.fromstring(parse_string)
-
-        # Get label dictionary
-        mylabs = defaultdict(list)
-        for pos in parse_tree.treepositions():
-            try:
-                mylabs[len(pos)].append(parse_tree[pos].label())
-            except AttributeError:
-                if parse_tree[pos].isupper():
-                    mylabs[len(pos)].append(parse_tree[pos])
-
-        # Check for and remove empty list in last key
-        max_key = max(list(mylabs.keys()))
-        if mylabs[max_key] == []:
-            del mylabs[max_key]
-
-        return mylabs
-
-
-    @staticmethod
-    def visualize_parse(parse_string):
-        """
-        Pretty-prints the parse tree as rendered by nltk.
-        """
-        parse_tree = ParentedTree.fromstring('(' + parse_string + ')')
-        parse_tree.pretty_print()
-
