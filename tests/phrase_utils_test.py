@@ -232,10 +232,27 @@ class TestSubsetTree:
 
     @pytest.fixture
     def s_class3_sent(self):
-        return (' In this chapter , we describe the properties of systemin '
+        return ('In this chapter , we describe the properties of systemin '
         'and its precursor prosystemin , and we summarize the evidence '
         'supporting a role for systemin as an initial signal that regulates '
-        'proteinase inhibitor synthesis in response to wounding .') 
+        'proteinase inhibitor synthesis in response to wounding .')
+
+    @pytest.fixture
+    def s_class3_next_child(self, nlp, s_class3_sent):
+        doc = nlp(s_class3_sent)
+        next_child = list(doc.sents)[0]
+        return next_child
+
+    @pytest.fixture
+    def s_class3_subset_child(self, nlp):
+        s1 = ('we describe the properties of systemin and its precursor '
+            'prosystemin')
+        s2 = ('we summarize the evidence supporting a role for systemin as an '
+        'initial signal that regulates proteinase inhibitor synthesis in '
+        'response to wounding')
+        subset_children = [list(nlp(s).sents)[0].text for s in [s1, s2]]
+        return subset_children
+
     ############################### Tests ################################
 
     def test_subset_tree_class1a(self, class1a_next_child, class1a_subset_child):
@@ -267,6 +284,13 @@ class TestSubsetTree:
         subset_text = [s.text for s in subset]
 
         assert subset_text == sbar_class3_subset_child
+
+    def test_subset_tree_s_class3(self, s_class3_next_child, s_class3_subset_child):
+
+        subset = pu.subset_tree(s_class3_next_child, 'S', highest=True)
+        subset_text = [s.text for s in subset]
+
+        assert subset_text == s_class3_subset_child
 
 
 class TestCategoryTracking:
