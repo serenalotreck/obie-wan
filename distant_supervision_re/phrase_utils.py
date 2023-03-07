@@ -26,7 +26,7 @@ def walk_VP(phrase, next_child):
     # Get the labels that are on the next level
     next_labels, child_tups = get_child_tups(next_child)
     # Base case
-    if 'NP' in next_labels:
+    if 'NP' or 'PP' in next_labels:
         phrase_add = [t[1] for t in child_tups
                 if (t[0] != 'NP') & (t[0] != 'PP')]
         phrase.extend(phrase_add)

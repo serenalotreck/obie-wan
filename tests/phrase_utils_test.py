@@ -15,6 +15,14 @@ import phrase_utils as pu
 class TestWalkVP:
     """
     Class to test the walk_VP function
+
+    NOTE: before calling walk_VP, the sentence has to undergo the same
+    preprocessing that happens in pick_phrase (tested in abstract_test.py).
+    The preprocessing is designed to make sure that the only thing that gets
+    passed to walk_VP is a single, parsable VP. Therefore, many of the tests
+    here end up being basically identical in terms of edge cases; however, I've
+    left them all in case there are issues with pick_phrase that originate
+    here, as they correspond to the test cases in pick_phrase.
     """
 
     ############################ Fixtures ################################
@@ -26,9 +34,8 @@ class TestWalkVP:
 
     @pytest.fixture
     def internal_sbar(self, nlp):
-        return list(nlp('that SA-mediated redox modulation plays an important '
-                        'role in the SA-mediated attenuation of the JA '
-                        'signaling pathway').sents)[0]
+        return list(nlp('plays an important role in the SA-mediated '
+                        'attenuation of the JA signaling pathway').sents)[0]
 
     @pytest.fixture
     def vp_w_pp(self, nlp):
@@ -37,35 +44,36 @@ class TestWalkVP:
 
     @pytest.fixture
     def normal_vp(self, nlp):
-        return list(nlp('inhibited active sucrose uptake in beet '
+        # Have to use whole phrase to build out VP instead of just providing
+        # VP, beacuse it changes the parse tree to provide a partial sentence
+        # and gives the incorrect answer
+        sent = list(nlp('JA inhibited active sucrose uptake in beet '
             'roots').sents)[0]
+        vp = pu.subset_tree(sent, 'VP', highest=True)
+        return vp
 
     @pytest.fixture
     def mult_words(self, nlp):
         return list(nlp('did not modify or counteract the auxin effect').sents)[0]
 
     @pytest.fixture
-    def internal_sbar_phrase(self, nlp):
-        phrase_tokens = ['plays']
-        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+    def internal_sbar_phrase(self, internal_sbar, nlp):
+        phrase = internal_sbar[0]
         return phrase
 
     @pytest.fixture
-    def vp_w_pp_phrase(self, nlp):
-        phrase_tokens = ['varied']
-        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+    def vp_w_pp_phrase(self, vp_w_pp, nlp):
+        phrase = vp_w_pp[0]
         return phrase
 
     @pytest.fixture
-    def normal_vp_phrase(self, nlp):
-        phrase_tokens = ['inhibited']
-        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+    def normal_vp_phrase(self, normal_vp, nlp):
+        phrase = normal_vp[0]
         return phrase
 
     @pytest.fixture
-    def mult_words_phrase(self, nlp):
-        phrase_tokens = ['did', 'not', 'modify', 'or', 'counteract']
-        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+    def mult_words_phrase(self, mult_words, nlp):
+        phrase = mult_words[0:5]
         return phrase
 
     ############################### Tests ################################

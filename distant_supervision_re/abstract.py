@@ -291,20 +291,17 @@ class Abstract():
         is after.
 
         parameters:
-            phrase, str: relation phrase
+            phrase, spacy Span object: relation phrase
             sent_idx, int: sentence index
 
         returns:
             entities, list of list: two DyGIE++ formatted entities
         """
-        # Get the sentence tokenization
-        sent = self.sentences[sent_idx]
         # Get the sentence's entities
         sent_ents = self.entities[sent_idx]
-        # Tokenize the phrase and locate in the sentence
-        phrase_doc = self.nlp(phrase)
-        phrase_toks = [tok.text for tok in phrase_doc]
-        start_idx, end_idx = be.find_sublist(phrase_toks, self.doc_toks)
+        # Locate phrase in the document
+        start_idx, end_idx = phrase.start, phrase.end - 1 # So that its the
+                                                          # last token
         # Figure out what entities are closest on either side
         subj_cands = [e[1] for e in sent_ents]
         # Gets the closest ent ending on either side of the relation start
