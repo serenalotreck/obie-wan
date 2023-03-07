@@ -12,7 +12,9 @@ from nltk import ParentedTree
 def walk_VP(phrase, next_child):
     """
     Walk recursively through a VP, adding anything that's not the
-    terminal NP to the phrase list.
+    terminal NP to the phrase list. Expects the sentence to have been subset
+    via subset_tree first if it contains sibling clauses that should count as
+    different phrases.
 
     parameters:
         phrase, list: list of words that make up the phrase to add to
@@ -44,11 +46,10 @@ def walk_VP(phrase, next_child):
         elif len(to_walk) == 0:
             return phrase
         else:
-            ## TODO implement dropping leading PP's here
             return 'NO PHRASE: Multiple levels with kids'
 
 
-def subset_tree(next_child, label, highest=True):
+def subset_tree(next_child, label, highest=True, ignore_root=False):
     """
     Return the benepar-parsed spacy object starting at the node with the
     label label.
@@ -67,6 +68,10 @@ def subset_tree(next_child, label, highest=True):
         highest, bool: if there are multiple of the requested label in the
             tree, whether or not to return the highest one or the one closest
             to the leaves
+        ignore_root, bool: whether or not to disregard the root node if it
+            matches the target label. Intended for the case where we're trying
+            to get the highest child sibling S labels, but the root node is
+            also labeled S
 
     returns:
         subset_child, list of spacy Span objects: subset children. There is
@@ -74,14 +79,22 @@ def subset_tree(next_child, label, highest=True):
             4 with respect to the target label.
     """
     # Base case
-    # There are two cases that trigger the base case:
+    # There are three cases that trigger the base case:
     # 1. The root node has the target label, and we only want the first
     # occurrence so we return, regardless of what's underneath; or
     # 2. The root node has the target label and we only want the lowest, so we
     # only want to return if there are no other occurrences of the label left
     # in the tree
-    if label in next_child._.labels and (highest or
-            (not highest and next_child._.parse_string.count(label) == 1)):
+    # If statement in plain language: If the top of the current tree is the
+    # target label and one of the following is true : (1) we want the highest
+    # occurrence of this label; or (2) we want the lowest occurrence of this
+    # label and there are no more of this label left in the tree; or (3) the
+    # root node is the label, there are more of it (irrespective of whether or
+    # not we want the highest or not) and we don't want to ignore the root
+    case1 = label in next_child._.labels and highest and not ignore_root
+    case2 = (label in next_child._.labels) and (
+            not highest) and (next_child._.parse_string.count(label) == 1)
+    if case1 or case2:
         subset_child = next_child
         return [subset_child]
     # Recursive case
@@ -100,15 +113,16 @@ def subset_tree(next_child, label, highest=True):
                                                   # target label appears
                                                   # within their trees
         sibling_lens = {i:len(contains_lab[i]) for i in contains_lab.keys()
-                if i != 0 and len(contains_lab[i]) > 1}
+                if i != 0 and len(contains_lab[i]) >= 1}
         # The case where sibling nodes contain the target label
         if len(sibling_lens.keys()) > 0:
+            sib_children = []
             for i in sibling_lens.keys():
-                sib_children = contains_lab[i]
-                sib_phrases = []
-                for c in sib_children:
-                    sib_phrases.extend(subset_tree(c, label, highest))
-                return sib_phrases
+                sib_children.extend(contains_lab[i])
+            sib_phrases = []
+            for c in sib_children:
+                sib_phrases.extend(subset_tree(c, label, highest))
+            return sib_phrases
         # The case where labels are nested or there is only 1
         else:
             nonzero_keys = [i for i in contains_lab.keys() if i != 0]
@@ -176,7 +190,6 @@ def compute_label(label_df, embedding):
         label = ''
 
     return label
-
 
 
 def parse_by_level(parse_string):

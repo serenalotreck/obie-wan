@@ -12,29 +12,95 @@ sys.path.append('../distant_supervision_re')
 import phrase_utils as pu
 
 
-class TestRelHelpers:
+class TestWalkVP:
     """
-    Class to test the testable helpers for extract_rels. I'm not writing a
-    unit test for extract_rels itself, beacuse its functionality relies on
-    the code in bert_embeddings.py in addition to its helpers, so it's
-    covered by the tests for the bert_embeddings code, as well as the
-    tests for its helpers
+    Class to test the walk_VP function
     """
 
     ############################ Fixtures ################################
+    @pytest.fixture
+    def nlp(self):
+        nlp = spacy.load("en_core_sci_sm")
+        nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
+        return nlp
 
     @pytest.fixture
-    def dygiepp(self):
-        return {'doc_key': 'doc2',
-                'dataset': 'scierc',
-                'sentences': [['Jasmonic', 'acid', 'is', 'a', 'hormone', '.'],
-                    ['Jasmonic', 'acid', 'upregulates', 'Protein', '1', '.'],
-                    ['Jasmonic', 'acid', 'is', 'found', 'in', 'Arabidopsis',
-                        'thaliana', '.']],
-                'ner': [[[0, 1, 'Plant_hormone']],
-                    [[6, 7, 'Plant_hormone'], [9, 10, 'Protein']],
-                    [[12, 13, 'Plant_hormone'],
-                        [17, 18, 'Multicellular_organism']]]}
+    def internal_sbar(self, nlp):
+        return list(nlp('that SA-mediated redox modulation plays an important '
+                        'role in the SA-mediated attenuation of the JA '
+                        'signaling pathway').sents)[0]
+
+    @pytest.fixture
+    def vp_w_pp(self, nlp):
+        return list(nlp('varied from no effect to the more generally observed '
+                        '1.4-to 3.0-fold stimulation').sents)[0]
+
+    @pytest.fixture
+    def normal_vp(self, nlp):
+        return list(nlp('inhibited active sucrose uptake in beet '
+            'roots').sents)[0]
+
+    @pytest.fixture
+    def mult_words(self, nlp):
+        return list(nlp('did not modify or counteract the auxin effect').sents)[0]
+
+    @pytest.fixture
+    def internal_sbar_phrase(self, nlp):
+        phrase_tokens = ['plays']
+        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+        return phrase
+
+    @pytest.fixture
+    def vp_w_pp_phrase(self, nlp):
+        phrase_tokens = ['varied']
+        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+        return phrase
+
+    @pytest.fixture
+    def normal_vp_phrase(self, nlp):
+        phrase_tokens = ['inhibited']
+        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+        return phrase
+
+    @pytest.fixture
+    def mult_words_phrase(self, nlp):
+        phrase_tokens = ['did', 'not', 'modify', 'or', 'counteract']
+        phrase = [list(nlp(t).sents)[0] for t in phrase_tokens]
+        return phrase
+
+    ############################### Tests ################################
+
+    def test_internal_sbar(self, internal_sbar, internal_sbar_phrase):
+
+        phrase = pu.walk_VP([], internal_sbar)
+
+        assert phrase == internal_sbar_phrase
+
+    def test_vp_w_pp(self, vp_w_pp, vp_w_pp_phrase):
+
+        phrase = pu.walk_VP([], vp_w_pp)
+
+        assert phrase == vp_w_pp_phrase
+
+    def test_normal_vp(self, normal_vp, normal_vp_phrase):
+
+        phrase = pu.walk_VP([], normal_vp)
+
+        assert phrase == normal_vp_phrase
+
+    def test_mult_words(self, mult_words, mult_words_phrase):
+
+        phrase = pu.walk_VP([], mult_words)
+
+        assert phrase == mult_words_phrase
+
+
+class TestGetChildTups:
+    """
+    Class to test the get_child_tups function
+    """
+
+    ############################ Fixtures ################################
 
     @pytest.fixture
     def nlp(self):
@@ -43,92 +109,94 @@ class TestRelHelpers:
         return nlp
 
     @pytest.fixture
-    def top_VP_one_word(self, nlp):
-        text = 'upregulates Protein 1'
+    def one_with_child_sent(self, nlp):
+        text = ('indicated that ABA signaling positively regulates root '
+                'defense to R. solanacearum')
         doc = nlp(text)
         sent = list(doc.sents)[0]
         return sent
 
     @pytest.fixture
-    def top_VP_multi_word(self, nlp):
-        text = 'is found in Arabidopsis thaliana'
+    def mult_with_child_sent(self, nlp):
+        text = ('Plant responses to one attacker can interfere with responses '
+                'to a second attacker')
         doc = nlp(text)
         sent = list(doc.sents)[0]
         return sent
 
     @pytest.fixture
-    def candidate_phrase_one_word(self, nlp):
-        return [list(nlp('upregulates').sents)[0]]
+    def double_label_sent(self, nlp):
+       text = ('which are capable of inducing proteinase inhibitor synthesis in '
+               'tomato and potato leaves')
+       doc = nlp(text)
+       sent = list(doc.sents)[0]
+       return sent
 
     @pytest.fixture
-    def candidate_phrase_multi_word(self, nlp):
-        return [list(nlp(w).sents)[0] for w in ['is', 'found', 'in']]
+    def one_with_child_tups(self, nlp):
+        c1_label = 'NO_LABEL'
+        c1 = list(nlp('indicated').sents)[0]
+        c2_label = 'SBAR'
+        c2 = list(nlp('that ABA signaling positively regulates root defense to '
+            'R. solanacearum').sents)[0]
+        return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
-    def label_df(self):
-        """
-        Dummy embeddings for easy testing
-        """
-        label_dict = {'activates': [0.5, 0.1],
-                'inhibits': [0.1, 0.1],
-                'produces': [1, 0.5],
-                'interacts': [1, 1],
-                'is_in': [0.1, 1]}
-
-        return pd.DataFrame.from_dict(label_dict, orient='index')
+    def one_with_child_list(self):
+        return ['NO_LABEL', 'SBAR']
 
     @pytest.fixture
-    def embed_gets_label(self):
-        return [0.3, 0.1]
+    def mult_with_child_tups(self, nlp):
+        c1_label = 'NP'
+        c1 = list(nlp('Plant responses to one attacker').sents)[0]
+        c2_label = 'VP'
+        c2 = list(nlp(
+            'can interfere with responses to a second attacker').sents)[0]
+        return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
-    def embed_no_label(self):
-        # I'm not sure this is a legitimate scenario, but I wanted to
-        # test the scenario where the similarity is less than 0.5
-        return [-0.1, -0.5]
+    def mult_with_child_list(self):
+        return ['NP', 'VP']
 
     @pytest.fixture
-    def correct_label(self):
-        return 'activates'
+    def double_label_tups(self, nlp):
+        c1_label = 'WHNP'
+        c1 = list(nlp('which').sents)[0]
+        c2_label = 'VP'
+        c2 = list(nlp('are capable of inducing proteinase inhibitor synthesis '
+                        'in tomato and potato leaves').sents)[0]
+        return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
-    def phrase_labels(self):
-        return {1:{'upregulates':'activates'}, 2:{'is found in':'is_in'}}
+    def double_label_list(self):
+        return ['WHNP', 'VP']
 
     ############################### Tests ################################
 
-    def test_walk_VP_one_word(self, top_VP_one_word,
-            candidate_phrase_one_word):
-        phrase = pu.walk_VP([], top_VP_one_word)
+    def test_one_with_child(self, one_with_child_sent, one_with_child_tups,
+            one_with_child_list):
 
-        assert phrase == candidate_phrase_one_word
+        next_labels, child_tups = pu.get_child_tups(one_with_child_sent)
 
-    def test_walk_VP_multi_word(self, top_VP_multi_word,
-            candidate_phrase_multi_word):
-        phrase = pu.walk_VP([], top_VP_multi_word)
-        assert phrase == candidate_phrase_multi_word
+        assert next_labels == one_with_child_list
+        assert child_tups == one_with_child_tups
 
-    def pick_phrase_one_word(self, abstract, candidate_phrase_one_word):
-        sent_idx = 1
-        phrase = abstract.pick_phrase(sent_idx)
+    def test_mult_with_child(self, mult_with_child_sent, mult_with_child_tups,
+            mult_with_child_list):
 
-        assert phrase == candidate_phrase_one_word
+        next_labels, child_tups = pu.get_child_tups(mult_with_child_sent)
 
-    def pick_phrase_multi_word(self, abstract, candidate_phrase_multi_word):
-        sent_idx = 2
-        phrase = abstract.pick_phrase(sent_idx)
+        assert next_labels == mult_with_child_list
+        assert child_tups == mult_with_child_tups
 
-        assert phrase == candidate_phrase_multi_word
+    def test_double_label(self, double_label_sent, double_label_tups,
+            double_label_list):
 
-    def test_compute_label_gets_label(self, label_df, embed_gets_label,
-            correct_label):
-        label = pu.compute_label(label_df, embed_gets_label)
-        assert label == correct_label
+        next_labels, child_tups = pu.get_child_tups(double_label_sent)
 
-    def test_compute_label_no_label(self, label_df, embed_no_label):
-        label = pu.compute_label(label_df, embed_no_label)
+        assert next_labels == double_label_list
+        assert child_tups == double_label_tups
 
-        assert label == ''
 
 class TestSubsetTree:
     """
@@ -287,10 +355,58 @@ class TestSubsetTree:
 
     def test_subset_tree_s_class3(self, s_class3_next_child, s_class3_subset_child):
 
-        subset = pu.subset_tree(s_class3_next_child, 'S', highest=True)
+        subset = pu.subset_tree(s_class3_next_child, 'S', highest=True,
+                ignore_root=True)
         subset_text = [s.text for s in subset]
 
         assert subset_text == s_class3_subset_child
+
+
+class TestComputeLabel:
+    """
+    Class to test compute_label
+    """
+
+    ############################ Fixtures ################################
+
+    @pytest.fixture
+    def label_df(self):
+        """
+        Dummy embeddings for easy testing
+        """
+        label_dict = {'activates': [0.5, 0.1],
+                'inhibits': [0.1, 0.1],
+                'produces': [1, 0.5],
+                'interacts': [1, 1],
+                'is_in': [0.1, 1]}
+
+        return pd.DataFrame.from_dict(label_dict, orient='index')
+
+    @pytest.fixture
+    def embed_gets_label(self):
+        return [0.3, 0.1]
+
+    @pytest.fixture
+    def embed_no_label(self):
+        # I'm not sure this is a legitimate scenario, but I wanted to
+        # test the scenario where the similarity is less than 0.5
+        return [-0.1, -0.5]
+
+    @pytest.fixture
+    def correct_label(self):
+        return 'activates'
+
+    ############################### Tests ################################
+
+    def test_compute_label_gets_label(self, label_df, embed_gets_label,
+            correct_label):
+        label = pu.compute_label(label_df, embed_gets_label)
+        assert label == correct_label
+
+    def test_compute_label_no_label(self, label_df, embed_no_label):
+        label = pu.compute_label(label_df, embed_no_label)
+
+        assert label == ''
 
 
 class TestCategoryTracking:

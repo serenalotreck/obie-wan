@@ -212,6 +212,7 @@ class Abstract():
             sent_idx, int: sentence from which to choose a phrase
             include_preps, bool: whether or not to include prepositions
                 that are part of the final noun phrase in a sentence
+                ## TODO implement this
 
         returns:
             phrases, list of spacy Span objects: the phrases to embed for this sentence
@@ -251,7 +252,8 @@ class Abstract():
             phrase_span = phrase[0].doc[phrase[0].start:phrase[-1].end]
             # Assert that the span is continuous
             phrase_idxs = [p.start for p in phrase]
-            assert len(phrase_idxs) == phrase_idxs[-1]-phrase_idxs[0]+1
+            assert len(phrase_idxs) == phrase_idxs[-1]-phrase_idxs[0]+1, (
+                    'Noncontinuous span')
             # If they are, add to the phrases list
             phrases.append(phrase_span)
 
