@@ -32,6 +32,7 @@ class TestWalkVP:
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
         return nlp
 
+
     @pytest.fixture
     def internal_sbar(self, nlp):
         return list(nlp('plays an important role in the SA-mediated '
@@ -49,7 +50,7 @@ class TestWalkVP:
         # and gives the incorrect answer
         sent = list(nlp('JA inhibited active sucrose uptake in beet '
             'roots').sents)[0]
-        vp = pu.subset_tree(sent, 'VP', highest=True)
+        vp = pu.subset_tree(sent, 'VP', highest=True)[0]
         return vp
 
     @pytest.fixture
@@ -58,22 +59,22 @@ class TestWalkVP:
 
     @pytest.fixture
     def internal_sbar_phrase(self, internal_sbar, nlp):
-        phrase = internal_sbar[0]
-        return phrase
+        phrase = internal_sbar[0:1]
+        return [phrase]
 
     @pytest.fixture
     def vp_w_pp_phrase(self, vp_w_pp, nlp):
-        phrase = vp_w_pp[0]
-        return phrase
+        phrase = vp_w_pp[0:1]
+        return [phrase]
 
     @pytest.fixture
     def normal_vp_phrase(self, normal_vp, nlp):
-        phrase = normal_vp[0]
-        return phrase
+        phrase = normal_vp[0:1]
+        return [phrase]
 
     @pytest.fixture
     def mult_words_phrase(self, mult_words, nlp):
-        phrase = mult_words[0:5]
+        phrase = [mult_words[i:i+1] for i in range(5)]
         return phrase
 
     ############################### Tests ################################
@@ -141,12 +142,11 @@ class TestGetChildTups:
        return sent
 
     @pytest.fixture
-    def one_with_child_tups(self, nlp):
+    def one_with_child_tups(self, one_with_child_sent):
         c1_label = 'NO_LABEL'
-        c1 = list(nlp('indicated').sents)[0]
+        c1 = one_with_child_sent[0:1]
         c2_label = 'SBAR'
-        c2 = list(nlp('that ABA signaling positively regulates root defense to '
-            'R. solanacearum').sents)[0]
+        c2 = one_with_child_sent[1:]
         return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
@@ -154,12 +154,11 @@ class TestGetChildTups:
         return ['NO_LABEL', 'SBAR']
 
     @pytest.fixture
-    def mult_with_child_tups(self, nlp):
+    def mult_with_child_tups(self, mult_with_child_sent):
         c1_label = 'NP'
-        c1 = list(nlp('Plant responses to one attacker').sents)[0]
+        c1 = mult_with_child_sent[0:5]
         c2_label = 'VP'
-        c2 = list(nlp(
-            'can interfere with responses to a second attacker').sents)[0]
+        c2 = mult_with_child_sent[5:]
         return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
@@ -167,12 +166,11 @@ class TestGetChildTups:
         return ['NP', 'VP']
 
     @pytest.fixture
-    def double_label_tups(self, nlp):
+    def double_label_tups(self, double_label_sent):
         c1_label = 'WHNP'
-        c1 = list(nlp('which').sents)[0]
+        c1 = double_label_sent[0:1]
         c2_label = 'VP'
-        c2 = list(nlp('are capable of inducing proteinase inhibitor synthesis '
-                        'in tomato and potato leaves').sents)[0]
+        c2 = double_label_sent[1:]
         return [(c1_label, c1), (c2_label, c2)]
 
     @pytest.fixture
@@ -208,8 +206,7 @@ class TestGetChildTups:
 
 class TestSubsetTree:
     """
-    Test parse_sbar, parse_mult_S, and the subset_tree function on which both
-    rely.
+    Test subset_tree.
 
     NOTE: As a result of needing to independently turn the candidate phrase
     into spacy docs, there are differences between the parse trees of the
@@ -242,10 +239,8 @@ class TestSubsetTree:
         return next_child
 
     @pytest.fixture
-    def class1a_subset_child(self, nlp):
-        doc = nlp('which are capable of inducing proteinase inhibitor '
-                    'synthesis in tomato and potato leaves')
-        subset_child = list(doc.sents)[0].text
+    def class1a_subset_child(self, class1a_next_child):
+        subset_child = class1a_next_child[18:-1]
         return [subset_child]
 
     @pytest.fixture
@@ -260,10 +255,8 @@ class TestSubsetTree:
         return next_child
 
     @pytest.fixture
-    def class1b_subset_child(self, nlp):
-        doc = nlp('which the role of phytoalexin accumulation in '
-                'resistance is analysed')
-        subset_child = list(doc.sents)[0].text
+    def class1b_subset_child(self, class1b_next_child):
+        subset_child = class1b_next_child[5:-1]
         return [subset_child]
 
     @pytest.fixture
@@ -280,9 +273,8 @@ class TestSubsetTree:
         return next_child
 
     @pytest.fixture
-    def class2_subset_child(self, nlp):
-        doc = nlp('in which the signal is perceived by the receptor')
-        subset_child = list(doc.sents)[0].text
+    def class2_subset_child(self, class2_next_child):
+        subset_child = class2_next_child[18:27]
         return [subset_child]
 
     @pytest.fixture
@@ -298,12 +290,10 @@ class TestSubsetTree:
         return next_child
 
     @pytest.fixture
-    def sbar_class3_subset_child(self, nlp):
-        sbar1 = ('that plants prioritize resistance of reproductive tissues '
-                    'over vegetative tissues')
-        sbar2 = ('that a chewing herbivore species is the main driver of '
-                    'responses in flowering B. nigra')
-        subset_children = [list(nlp(s).sents)[0].text for s in [sbar1, sbar2]]
+    def sbar_class3_subset_child(self, sbar_class3_next_child):
+        sbar1 = sbar_class3_next_child[2:12]
+        sbar2 = sbar_class3_next_child[14:-1]
+        subset_children = [sbar1, sbar2]
         return subset_children
 
     @pytest.fixture
@@ -320,13 +310,47 @@ class TestSubsetTree:
         return next_child
 
     @pytest.fixture
-    def s_class3_subset_child(self, nlp):
-        s1 = ('we describe the properties of systemin and its precursor '
-            'prosystemin')
-        s2 = ('we summarize the evidence supporting a role for systemin as an '
-        'initial signal that regulates proteinase inhibitor synthesis in '
-        'response to wounding')
-        subset_children = [list(nlp(s).sents)[0].text for s in [s1, s2]]
+    def s_class3_subset_child(self, s_class3_next_child):
+        s1 = s_class3_next_child[4:14]
+        s2 = s_class3_next_child[16:-1]
+        subset_children = [s1, s2]
+        return subset_children
+
+    @pytest.fixture
+    def vp_class1_sent(self):
+        return ('Our study indicated that ABA signaling positively regulates '
+                'root defense to R. solanacearum.')
+
+    @pytest.fixture
+    def vp_class1_next_child(self, vp_class1_sent, nlp):
+        # Note that this is a case where we've already subset by SBAR within
+        # pick_phrase, so we will do that here manually
+        next_child = list(nlp(vp_class1_sent).sents)[0]
+        next_child = next_child[3:-1]
+        return next_child
+
+    @pytest.fixture
+    def vp_class1_subset_child(self, vp_class1_next_child):
+        s1 = vp_class1_next_child[4:]
+        subset_children = [s1]
+        return subset_children
+
+    @pytest.fixture
+    def vp_cc_vp_class3_sent(self):
+        return ('Dual attack increased plant resistance to caterpillars, but '
+                'compromised resistance to aphids.')
+
+    @pytest.fixture
+    def vp_cc_vp_class3_next_child(self, vp_cc_vp_class3_sent, nlp):
+        doc = nlp(vp_cc_vp_class3_sent)
+        next_child = list(doc.sents)[0]
+        return next_child
+
+    @pytest.fixture
+    def vp_cc_vp_class3_subset_child(self, vp_cc_vp_class3_next_child):
+        s1 = vp_cc_vp_class3_next_child[2:7]
+        s2 = vp_cc_vp_class3_next_child[9:13]
+        subset_children = [s1, s2]
         return subset_children
 
     ############################### Tests ################################
@@ -334,40 +358,50 @@ class TestSubsetTree:
     def test_subset_tree_class1a(self, class1a_next_child, class1a_subset_child):
 
         subset = pu.subset_tree(class1a_next_child, 'SBAR', highest=False)
-        subset_text = [s.text for s in subset]
 
-        assert subset_text == class1a_subset_child
+        assert subset == class1a_subset_child
 
 
     def test_subset_tree_class1b(self, class1b_next_child, class1b_subset_child):
 
         subset = pu.subset_tree(class1b_next_child, 'SBAR', highest=False)
-        subset_text = [s.text for s in subset]
 
-        assert subset_text == class1b_subset_child
+        assert subset == class1b_subset_child
 
 
     def test_subset_tree_class2(self, class2_next_child, class2_subset_child):
 
         subset = pu.subset_tree(class2_next_child, 'SBAR', highest=False)
-        subset_text = [s.text for s in subset]
 
-        assert subset_text == class2_subset_child
+        assert subset == class2_subset_child
 
     def test_subset_tree_sbar_class3(self, sbar_class3_next_child, sbar_class3_subset_child):
 
         subset = pu.subset_tree(sbar_class3_next_child, 'SBAR', highest=False)
-        subset_text = [s.text for s in subset]
 
-        assert subset_text == sbar_class3_subset_child
+        assert subset == sbar_class3_subset_child
 
     def test_subset_tree_s_class3(self, s_class3_next_child, s_class3_subset_child):
 
         subset = pu.subset_tree(s_class3_next_child, 'S', highest=True,
                 ignore_root=True)
-        subset_text = [s.text for s in subset]
 
-        assert subset_text == s_class3_subset_child
+        assert subset == s_class3_subset_child
+
+    def test_subset_tree_vp_class1(self, vp_class1_next_child,
+            vp_class1_subset_child):
+
+        subset = pu.subset_tree(vp_class1_next_child, 'VP', highest=True)
+
+        assert subset == vp_class1_subset_child
+
+    def test_subset_tree_vp_cc_vp_class3(self, vp_cc_vp_class3_next_child,
+            vp_cc_vp_class3_subset_child):
+
+        subset = pu.subset_tree(vp_cc_vp_class3_next_child, 'VP',
+                highest=False)
+
+        assert subset == vp_cc_vp_class3_subset_child
 
 
 class TestComputeLabel:

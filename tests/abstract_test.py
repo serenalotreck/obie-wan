@@ -159,22 +159,22 @@ class TestPickPhrase:
         return Abstract(spacy_doc=spacy_doc)
 
     @pytest.fixture
-    def simplest_idx(self):
+    def sbar_class1_idx(self):
         return 0
 
     @pytest.fixture
-    def simplest_phrases(self, simplest_idx, spacy_doc):
-        phrase1 = list(spacy_doc.sents)[simplest_idx][0]
+    def sbar_class1_phrases(self, spacy_doc):
+        phrase1 = spacy_doc[5:6]
         return [phrase1]
 
     @pytest.fixture
-    def sbar_idx(self):
+    def sbar_class3_idx(self):
         return 1
 
     @pytest.fixture
-    def sbar_phrases(self, sbar_idx, spacy_doc):
-        phrase1 = list(spacy_doc.sents)[sbar_idx][16]
-        phrase2 = list(spacy_doc.sents)[sbar_idx][31]
+    def sbar_class3_phrases(self, spacy_doc):
+        phrase1 = spacy_doc[16:17]
+        phrase2 = spacy_doc[31:32]
         return [phrase1, phrase2]
 
     @pytest.fixture
@@ -182,9 +182,9 @@ class TestPickPhrase:
         return 2
 
     @pytest.fixture
-    def sibling_s_phrases(self, sibling_s_idx, spacy_doc):
-        phrase1 = list(spacy_doc.sents)[sibling_s_idx][45:47]
-        phrase2 = list(spacy_doc.sents)[sibling_s_idx][65:67]
+    def sibling_s_phrases(self, spacy_doc):
+        phrase1 = spacy_doc[45:47]
+        phrase2 = spacy_doc[65:67]
         return [phrase1, phrase2]
 
     @pytest.fixture
@@ -192,8 +192,10 @@ class TestPickPhrase:
         return 3
 
     @pytest.fixture
-    def vp_cc_vp_phrases(self, nlp):
-        return 'NO PHRASE: Multiple levels with kids'
+    def vp_cc_vp_phrases(self, spacy_doc):
+        phrase1 = spacy_doc[74:75]
+        phrase2 = spacy_doc[81:82]
+        return [phrase1, phrase2]
 
     @pytest.fixture
     def noncontinuous_idx(self):
@@ -201,17 +203,17 @@ class TestPickPhrase:
 
     ############################### Tests ################################
 
-    def test_simplest(self, abstract, simplest_idx, simplest_phrases):
+    def test_sbar_class1(self, abstract, sbar_class1_idx, sbar_class1_phrases):
 
-        phrases = abstract.pick_phrase(simplest_idx)
+        phrases = abstract.pick_phrase(sbar_class1_idx)
 
-        assert phrases == simplest_phrases
+        assert phrases == sbar_class1_phrases
 
-    def test_sbar(self, abstract, sbar_idx, sbar_phrases):
+    def test_sbar_class3(self, abstract, sbar_class3_idx, sbar_class3_phrases):
 
-        phrases = abstract.pick_phrase(sbar_idx)
+        phrases = abstract.pick_phrase(sbar_class3_idx)
 
-        assert phrases == sbar_phrases
+        assert phrases == sbar_class3_phrases
 
     def test_sibling_s(self, abstract, sibling_s_idx, sibling_s_phrases):
 
@@ -228,7 +230,7 @@ class TestPickPhrase:
     def test_noncontinuous(self, abstract, noncontinuous_idx):
 
         with pytest.raises(Exception) as exc_info:
-            phrases = abstract.pick_phrases(noncontinuous_idx)
+            phrases = abstract.pick_phrase(noncontinuous_idx)
 
         assert exc_info.value.args[0] == 'Noncontinuous span'
 
@@ -239,7 +241,7 @@ class TestChooseEntsFormatRels:
     """
 
     ############################### Fixtures ################################
-    @pytest.fixtures
+    @pytest.fixture
     def nlp(self):
         nlp = spacy.load("en_core_sci_sm")
         nlp.add_pipe('benepar', config={'model': 'benepar_en3'})
@@ -266,14 +268,14 @@ class TestChooseEntsFormatRels:
                     ['Flowers', 'tend', 'to', 'enjoy', 'jasmonic',
                     'acid', 'and', 'gibberellic', 'acid', '.'],
                     ['Once', 'again', 'my', 'name', 'is', 'Sparty', '.']],
-                'entities': [[[2, 3, 'ENTITY'], [5, 5, 'ENTITY']],
+                'predicted_ner': [[[2, 3, 'ENTITY'], [5, 5, 'ENTITY']],
                     [[7, 8, 'ENTITY'], [10, 11, 'ENTITY'], [16, 17, 'ENTITY']],
                     [[23, 24, 'ENTITY'], [26, 27, 'ENTITY']],
                     [[31, 32, 'ENTITY'], [34, 34, 'ENTITY']]]
                 }
 
     @pytest.fixture
-    def abstract(self, dygiepp, nlp):
+    def abst(self, dygiepp, nlp):
         abst = Abstract.parse_pred_dict(dygiepp, nlp)
         return abst
 
@@ -289,31 +291,31 @@ class TestChooseEntsFormatRels:
         end_idx = 16
         return fulldoc_spacy[start_idx:end_idx]
 
-     @pytest.fixture
-     def mult_one_side_phrase(self, fulldoc_spacy):
-         start_idx = 20
-         end_idx = 23
-         return fulldoc_spacy[start_idx:end_idx]
+    @pytest.fixture
+    def mult_one_side_phrase(self, fulldoc_spacy):
+        start_idx = 20
+        end_idx = 23
+        return fulldoc_spacy[start_idx:end_idx]
 
-     @pytest.fixture
-     def overlapping_phrase(self, fulldoc_spacy):
-         start_idx = 32
-         end_idx = 34
-         return fulldoc_spacy[start_idc:end_idx]
+    @pytest.fixture
+    def overlapping_phrase(self, fulldoc_spacy):
+        start_idx = 32
+        end_idx = 34
+        return fulldoc_spacy[start_idx:end_idx]
 
-     @pytest.fixture
-     def one_each_side_answer(self, dygiepp):
-         ents = dygiepp['entities'][0]
-         return ents
+    @pytest.fixture
+    def one_each_side_answer(self, dygiepp):
+        ents = dygiepp['predicted_ner'][0]
+        return ents
 
-     @pytest.fixture
-     def mult_both_sides_answer(self, dygiepp):
-         ents = sygiepp['entities'][1][1:]
-         return ents
+    @pytest.fixture
+    def mult_both_sides_answer(self, dygiepp):
+        ents = dygiepp['predicted_ner'][1][1:]
+        return ents
 
-     @pytest.fixture
-     def mult_one_side_answer(self):
-        return []
+    @pytest.fixture
+    def mult_one_side_answer(self):
+       return []
 
     @pytest.fixture
     def overlapping_answer(self):
@@ -354,7 +356,7 @@ class TestChooseEntsFormatRels:
     def test_choose_ents_one_each_side(self, abst, one_each_side_phrase,
             one_each_side_answer):
 
-        ents = abst.choose_ents(one_side_each_phrase, 0)
+        ents = abst.choose_ents(one_each_side_phrase, 0)
 
         assert ents == one_each_side_answer
 
@@ -381,7 +383,7 @@ class TestChooseEntsFormatRels:
 
     def test_format_rels(self, abst, phrase_labels, formatted_rels):
 
-        rels = abstract.format_rels(phrase_labels)
+        rels = abst.format_rels(phrase_labels)
 
         assert rels == formatted_rels
 

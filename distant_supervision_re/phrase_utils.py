@@ -26,7 +26,7 @@ def walk_VP(phrase, next_child):
     # Get the labels that are on the next level
     next_labels, child_tups = get_child_tups(next_child)
     # Base case
-    if 'NP' or 'PP' in next_labels:
+    if ('NP' in next_labels) or ('PP' in next_labels):
         phrase_add = [t[1] for t in child_tups
                 if (t[0] != 'NP') & (t[0] != 'PP')]
         phrase.extend(phrase_add)
@@ -78,6 +78,18 @@ def subset_tree(next_child, label, highest=True, ignore_root=False):
             only more than one element in the output list if the sentence is Class
             4 with respect to the target label.
     """
+    # We need to make an augmented version of the label that we can search for
+    # in the parse string, in addition to the original label. We search for the
+    # label in two ways within this function: first, we check within the list
+    # of next labels, where the label will appear as it's passed to the
+    # function. However, we also look for it as a substring of the parse
+    # string, which means that labels containing the target label as a
+    # substring (for example, ADVP when the target label is 'VP') will also
+    # return True, resulting in incorrect children being passed to the next
+    # iteration. Therefore, we'll make an "agumented" label that we can use to
+    # search inside the parse string.
+    augmented_label = '(' + label + ' '
+
     # Base case
     # There are three cases that trigger the base case:
     # 1. The root node has the target label, and we only want the first
@@ -107,7 +119,7 @@ def subset_tree(next_child, label, highest=True, ignore_root=False):
         contains_lab = defaultdict(list)
         for c in have_kids:
             if label in c._.parse_string:
-                count_lab = c._.parse_string.count(label)
+                count_lab = c._.parse_string.count(augmented_label)
                 contains_lab[count_lab].append(c) # Categorize children by
                                                   # how many times the
                                                   # target label appears

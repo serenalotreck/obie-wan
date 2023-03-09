@@ -228,26 +228,28 @@ class Abstract():
         if 'SBAR' in sent._.parse_string:
             check_to_walk.extend(pu.subset_tree(sent, 'SBAR', highest=False))
         # Check for directly nested sentence annotations
-        elif sent._.parse_string.count('S') >=2:
-            check_to_walk.extend(pu.subset_tree(sent, 'S', highest=True))
+        elif sent._.parse_string.count('(S ') >=2:
+            check_to_walk.extend(pu.subset_tree(sent, 'S', highest=True,
+                ignore_root=True))
         # Another possibility is that we have multiple VP connected by a CC
-        ## TODO deal with it
+        elif (sent._.parse_string.count('(VP ') >=2) and (
+                sent._.parse_string.count('(CC ') >= 1):
+            check_to_walk.extend(pu.subset_tree(sent, 'VP', highest=False))
         # If it's not a special case, just add to the list
         else:
             check_to_walk.append(sent)
         # Now, go through these to get what we should walk
         to_walk = []
         for cand in check_to_walk:
-            # We want to find the VP on the level right below the top S
-            for child, label in zip(sent._.children, first_level_labels):
-                if (len(label) == 1) and (label[0] == 'VP'):
-                    to_walk.append(child)
+            # We want to find the next VP
+            w = pu.subset_tree(cand, 'VP', highest=True)
+            to_walk.extend(w)
 
         # Then, we walk to build the phrases
         phrases = []
         for walk in to_walk:
             # Get phrase Span components
-            phrase = pu.walk_VP('', walk)
+            phrase = pu.walk_VP([], walk)
             # Reconstruct one Span for the phrase
             phrase_span = phrase[0].doc[phrase[0].start:phrase[-1].end]
             # Assert that the span is continuous
@@ -276,7 +278,10 @@ class Abstract():
             for p_l_pair in phrase_labels[i]:
                 phrase = p_l_pair[0]
                 label = p_l_pair[1]
-                start_ent, end_ent = self.choose_ents(phrase, i)
+                try:
+                    start_ent, end_ent = self.choose_ents(phrase, i)
+                except ValueError:
+                    continue
                 rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
                         label]
                 sent_rels.append(rel)
@@ -305,30 +310,34 @@ class Abstract():
         # Figure out what entities are closest on either side
         subj_cands = [e[1] for e in sent_ents]
         # Gets the closest ent ending on either side of the relation start
-        subj_idx = (np.abs(np.asarray(subj_cands) - start_idx)).argmin()
+        subj_cand_idx = (np.abs(np.asarray(subj_cands) - start_idx)).argmin()
+        subj_end_idx = subj_cands[subj_cand_idx]
         # So we want to make sure it's before the relation start
-        if subj_idx > start_idx:
-            subj_idx -= 1
-            # Need to make sure this index exists
-            try:
-                subj = sent_ents[subj_idx]
-            except IndexError:
-                return [] # We'll drop this triple if we can't find the right
-                          # entities
+        if subj_end_idx >= start_idx:
+            move = (subj_end_idx - start_idx) + 1
+            subj_cand_idx -= move
+            if subj_cand_idx < 0:
+                # - numbers are valid indices so it will return the wrong entity if
+                # allowed to pass through
+                return []
+            else:
+                subj = sent_ents[subj_cand_idx]
         else:
-            subj = sent_ents[subj_idx]
+            subj = sent_ents[subj_cand_idx]
         # Get the closest ent starting on either side of the relation end
         obj_cands = [e[0] for e in sent_ents]
-        obj_idx = (np.abs(np.asarray(obj_cands) - end_idx)).argmin()
+        obj_cand_idx = (np.abs(np.asarray(obj_cands) - end_idx)).argmin()
+        obj_start_idx = obj_cands[obj_cand_idx]
         # Make sure it's after the ending
-        if obj_idx < end_idx:
-            obj_idx += 1
+        if obj_start_idx <= end_idx:
+            move = (end_idx - obj_start_idx) + 1
+            obj_cand_idx += move
             try:
-                obj = sent_ents[obj_idx]
+                obj = sent_ents[obj_cand_idx]
             except IndexError:
                 return []
         else:
-            obj = sent_ents[obj_idx]
+            obj = sent_ents[obj_cand_idx]
 
         return [subj, obj]
 
