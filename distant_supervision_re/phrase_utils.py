@@ -167,6 +167,7 @@ def get_child_tups(next_child):
 
         elif len(c._.labels) > 1:
             other_labs = list(c._.labels)
+            assert 'S' in other_labs, ('NO PHRASE: Double label failure')
             other_labs.remove('S')
             assert len(other_labs) == 1
             next_labels.append(other_labs[0])

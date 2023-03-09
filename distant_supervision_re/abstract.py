@@ -161,20 +161,21 @@ class Abstract():
             try:
                 phrases = self.pick_phrase(sent)
             # Happens when:
-            # There are sub-nodes with S labels, or ## TODO deal with this
-            # there are sibling SBAR annotations, or ## TODO deal with this
-            # it's not a complete sentence
-            except AttributeError or AssertionError:
+            # it's not a complete sentence, or
+            # the identified phrase is noncontinuous
+            except AssertionError as e:
                 self.skipped_sents['parse'].append(self.const_parse[sent])
-                if self.const_parse[sent].count('S') > 2:
-                    self.skipped_sents['phrase'].append('NO PHRASE: Multiple '
-                    'nested sentence annotations')
-                elif self.const_parse[sent].count('SBAR') > 2:
-                    self.skipped_sents['phrase'].append('NO PHRASE: Sibling '
-                            'SBAR annotations')
+                if e == 'Noncontinuous span':
+                    self.skipped_sents['phrase'].append(f'NO PHRASE: {e}')
+                elif e == 'NO PHRASE: Multiple levels with kids':
+                    self.skipped_sents['phrase'].append(e)
+                elif e == 'NO PHRASE: VP-CC-VP detector issue':
+                    self.skipped_sents['phrase'].append(e)
+                elif e == 'NO PHRASE: Double label failure':
+                    self.skipped_sents['phrase'].append(e)
                 else:
-                    self.skipped_sents['phrase'].append('NO PHRASE: Incomplete '
-                    'sentence')
+                    self.skipped_sents['phrase'].append('NO PHRASE: other '
+                            'Assertion error')
                 continue
 
             # Get this embedding out of the BERT output and add to dict
@@ -188,11 +189,15 @@ class Abstract():
                     if label != '':
                         phrase_labels[sent].append((phrase, label))
                     self.success_sents['parse'].append(self.const_parse[sent])
-                    self.success_sents['phrase'].append(phrase)
-                # If there are gaps in the phrase, the tokenization won't align
+                    self.success_sents['phrase'].append(phrase.text)
+                # Not sure why this TypeError occurs now; it used to be that if
+                # there were gaps in the phrase, the tokenization wouldn't
+                # align, but I take care of that when subsetting the doc to get
+                # the phrase with correct indices now
+                ## TODO look into it
                 except TypeError:
                     self.skipped_sents['parse'].append(self.const_parse[sent])
-                    self.skipped_sents['phrase'].append(phrase)
+                    self.skipped_sents['phrase'].append(phrase.text)
         # Format the relations in DyGIE++ format
         relations = self.format_rels(phrase_labels)
         self.set_relations(relations)
@@ -250,6 +255,9 @@ class Abstract():
         for walk in to_walk:
             # Get phrase Span components
             phrase = pu.walk_VP([], walk)
+            assert phrase != [], ('NO PHRASE: VP-CC-VP detector issue')
+            assert phrase != 'NO PHRASE: Multiple levels with kids', (
+                                'NO PHRASE: Multiple levels with kids')
             # Reconstruct one Span for the phrase
             phrase_span = phrase[0].doc[phrase[0].start:phrase[-1].end]
             # Assert that the span is continuous
@@ -275,16 +283,17 @@ class Abstract():
         relations = []
         for i, sent in enumerate(self.sentences):
             sent_rels = []
-            for p_l_pair in phrase_labels[i]:
-                phrase = p_l_pair[0]
-                label = p_l_pair[1]
-                try:
-                    start_ent, end_ent = self.choose_ents(phrase, i)
-                except ValueError:
-                    continue
-                rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
-                        label]
-                sent_rels.append(rel)
+            if i in phrase_labels.keys():
+                for p_l_pair in phrase_labels[i]:
+                    phrase = p_l_pair[0]
+                    label = p_l_pair[1]
+                    try:
+                        start_ent, end_ent = self.choose_ents(phrase, i)
+                    except ValueError:
+                        continue
+                    rel = [start_ent[0], start_ent[1], end_ent[0], end_ent[1],
+                            label]
+                    sent_rels.append(rel)
             relations.append(sent_rels)
 
         return relations
