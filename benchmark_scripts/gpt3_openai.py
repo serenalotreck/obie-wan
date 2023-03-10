@@ -16,7 +16,7 @@ import pandas as pd
 import sys
 sys.path.append('../distant_supervision_re/')
 import bert_embeddings as be
-from abstract import Abstract
+import phrase_utils as pu
 
 
 def embed_relation(trip, label_df, model, tokenizer):
@@ -39,7 +39,7 @@ def embed_relation(trip, label_df, model, tokenizer):
     trip_text = ' '.join(trip)
     embedding = be.get_phrase_embedding(trip_text, rel,
         tokenizer, model)
-    label = Abstract.compute_label(label_df, embedding)
+    label = pu.compute_label(label_df, embedding)
     if label == '':
         return None
     else:
@@ -89,8 +89,13 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         # Pull out the text from the prediction
         pred_text = abstract_pred['choices'][0]['text']
         # Read the output literally to get triples
-        doc_triples = [literal_eval(t) for t in pred_text.split('\n')
+        try:
+            doc_triples = [literal_eval(t) for t in pred_text.split('\n')
                 if t != '']
+            doc_triples[0][1]
+        except IndexError:
+            spl = pred_text.split(", \n")
+            doc_triples = [literal_eval(t) for t in pred_text.split(', \n')]
         # Embed relations if asked
         if embed_rels:
             embedded_trips = []
