@@ -240,7 +240,8 @@ def main(data_dir, to_annotate, affinity_cap, embed_rels, label_path,
                 label_df, model, tokenizer)
             dygiepp_jsonl.append(jsonl_anns)
 
-    # Write out dygiepp-formatted output 
+    # Write out dygiepp-formatted output
+    output-name = f'{out_loc}/{out_prefix}_openie_preds.jsonl'
     with jsonlines.open(output_name, 'w') as writer:
         writer.write_all(dygiepp_jsonl)
 
