@@ -87,7 +87,7 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         # Check that there's only one prediction
         assert len(abstract_pred['choices']) == 1
         # Pull out the text from the prediction
-        pred_text = abstract_pred['choices'][0]['text']
+        pred_text = abstract_pred['choices'][0]['message']['content']
         # Read the output literally to get triples
         try:
             doc_triples = [literal_eval(t) for t in pred_text.split('\n')
@@ -115,7 +115,7 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
 
 
 def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
-        max_tokens=2048, temp=0, stop='\n'):
+        max_tokens=2048, temp=0, stop='\n', print_preds=False):
     """
     Passes each abstract to gpt3 and returns the raw output.
 
@@ -132,11 +132,18 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
             (number of tokens in request + number of tokens in respose)
         temp, int: temperature parameter to pass to gpt3, default is 0
         stop, str: stop character to pass to gpt3
+        print_preds, bool: whether or not to print predictions
 
     returns:
         raw_preds, dict: keys are file names and values are the output of gpt3
             predictions
     """
+    if __name__ != "__main__":
+        if print_preds:
+            verboseprint = print
+        else:
+            verboseprint = lambda *a, **k: None
+
     raw_preds = {}
     for fname, abstract_txt in tqdm(abstracts.items()):
         # Add the abstract text to the prompt if required
@@ -147,9 +154,9 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
         verboseprint(f'Prompt for {fname}:\n{formatted_prompt}')
 
         # Get predictions
-        response = openai.Completion.create(
+        response = openai.ChatCompletion.create(
             model=model,
-            prompt=formatted_prompt,
+            messages=[{"role": "user", "content": formatted_prompt}],
             max_tokens=max_tokens,
             temperature=temp,
             stop=stop
@@ -158,7 +165,7 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
         # Add to list
         raw_preds[fname] = response
         verboseprint('\n----------------- Predictions -------------------------\n')
-        verboseprint(response['choices'][0]['text'])
+        verboseprint(response['choices'][0]['message']['content'])
         verboseprint('\n---------------------------------------------------\n')
 
     return raw_preds
