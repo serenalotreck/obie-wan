@@ -1,0 +1,94 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text:  In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. It is produced in the roots and accumulated mainly in the leaves."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199. A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid.', 'Nicotine is produced in the roots and accumulated mainly in the leaves.', 'Jasmonates play a central signaling role in damage-induced nicotine formation.', 'The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway.', 'Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors.', 'The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway.', 'Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes.', 'The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199.', 'A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Nicotine is the predominant alkaloid.', 'Nicotine is found in tobacco (Nicotiana tabacum).']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway.', 'These structural genes in the nicotine pathway form a regulon under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes.', 'The homologous clusters of ERF genes are possibly derived from two ancestral diploids.', 'The homologous clusters of ERF genes include either nicotine-controlling ERF189 or ERF 199.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: These homologous clusters of ERF genes are possibly derived from two ancestral diploids."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: Jasmonates play a central signaling role in damage-induced nicotine formation."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('Jasmonates', 'activates', 'damage-induced nicotine formation')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: {text}"
+ 		}
+ 	]
+ }

@@ -14,7 +14,7 @@ import jsonlines
 import json
 import pandas as pd
 import sys
-sys.path.append('../distant_supervision_re/')
+sys.path.append('distant_supervision_re/')
 import bert_embeddings as be
 import phrase_utils as pu
 

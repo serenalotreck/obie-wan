@@ -19,7 +19,7 @@ from stanza.server import CoreNLPClient
 from openie import StanfordOpenIE
 
 import sys
-sys.path.append('../distant_supervision_re/')
+sys.path.append('distant_supervision_re/')
 import bert_embeddings as be
 
 

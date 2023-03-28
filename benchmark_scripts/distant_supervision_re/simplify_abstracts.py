@@ -1,4 +1,6 @@
 """
+EXPERIMENTAL IMPLEMENTATION, NOT DEBUGGED.
+
 Script to use GPT-3.5 to simplify abstracts before use in relation extraction.
 
 The major limitation of the implementation of the heuristic distantly
@@ -68,6 +70,16 @@ def main(abstract_dir, dygiepp_top_dir, run_dygiepp_path, dygiepp_path, out_loc,
         with open(out_name, 'w') as myf:
             myf.write(abst)
 
+    # Create and activate conda env
+    verboseprint('\nBuilding conda environment for dygiepp...')
+    conda_create = ["conda", "create", "--name", "dygiepp_env"]
+    chng_dir = ["cd", dygiepp_path]
+    conda_activate = ["conda", "activate", "dygiepp_env"]
+    pip_install = ["pip", "install", "-r", "requirements.txt"]
+    all_cmds = [conda_create, chng_dir, conda_activate, pip_install]
+    for cmd in all_cmds:
+        subprocess.run(cmd)
+
     # Pass simplified abstracts to dygiepp
     verboseprint('\nCalling dygiepp...')
     verb = "-v" if verbose else None
@@ -77,6 +89,13 @@ def main(abstract_dir, dygiepp_top_dir, run_dygiepp_path, dygiepp_path, out_loc,
             "-models_to_run", "scierc", verb
             ]
     subprocess.run(dygiepp_command)
+
+    # Deactivate and destroy conda env
+    verboseprint('\nCleaning up conda environment...')
+    conda_deact = ["conda", "deactivate"]
+    conda_remove = ["conda", "remove", "-n", "dygiepp_env"]
+    subprocess.run(conda_deact)
+    subprocess.run(conda_remove)
 
     verboseprint('\nDone!\n')
 

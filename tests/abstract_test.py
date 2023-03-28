@@ -5,7 +5,7 @@ Author: Serena G. Lotreck
 """
 import pytest
 import sys
-sys.path.append('../distant_supervision_re')
+sys.path.append('../benchmark_scripts/distant_supervision_re')
 import pandas as pd
 import spacy
 import benepar
