@@ -72,23 +72,43 @@
  		},
  		{
  			"role": "user",
- 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: These homologous clusters of ERF genes are possibly derived from two ancestral diploids."
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: These homologous clusters of ERF genes are possibly derived from two ancestral diploids."
  		},
+		{
+			"role": "assistant",
+			"content": "('homologous clusters of ERF genes', 'are possibly derived from', 'two ancestral diploids')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
  		{
  			"role": "assistant",
  			"content": "No relation"
  		},
  		{
  			"role": "user",
- 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: Jasmonates play a central signaling role in damage-induced nicotine formation."
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Jasmonates play a central signaling role in damage-induced nicotine formation."
  		},
+		{
+			"role": "assistant",
+			"content": "('Jasmonates', 'play a central signaling role in', 'damage-induced nicotine formation')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
  		{
  			"role": "assistant",
  			"content": "('Jasmonates', 'activates', 'damage-induced nicotine formation')"
  		},
  		{
  			"role": "user",
- 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers, replacing the initially extracted predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple: {text}"
- 		}
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		}
  	]
  }

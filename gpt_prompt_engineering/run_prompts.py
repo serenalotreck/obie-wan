@@ -14,6 +14,22 @@ from tqdm import tqdm
 import openai
 
 
+def find_format(prompt):
+    """
+    Finds the index of the message requiring string formatting.
+
+    parameters:
+        current_prompt, list of dict: each dict is a message item, and only one
+            message item contains the substring '{text}'
+
+    returns:
+        idx, int: index of the message that needs changing
+    """
+    for idx, msg in enumerate(prompt):
+        if '{text}' in msg["content"]:
+            return idx
+
+
 def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
     """
     Builds sequential predictions based on prompts.
@@ -46,13 +62,14 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                 commonsenseprint(f'\nPrevious output is a list:\n{prev_out}')
 
                 for i in prev_out:
-                    # Put the previous prompt's output (or initial doc) into the last
-                    # query of the current prompt
+                    # Put the previous prompt's output (or initial doc) into the
+                    # query of the current prompt that requires formatting
                     current_prompt = deepcopy(prompt)
-                    current_prompt[-1]["content"] = current_prompt[-1]["content"].format(text=i)
+                    idx = find_format(current_prompt)
+                    current_prompt[idx]["content"] = current_prompt[idx]["content"].format(text=i)
 
                     commonsenseprint('\nPrompt when formatted with current '
-                                        f'element of prev_out:\n{prompt}')
+                                        f'element of prev_out:\n{current_prompt}')
 
                     # Get model predictions for these prompts
                     response = openai.ChatCompletion.create(
@@ -68,7 +85,13 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                     except SyntaxError:
                         literal_response = response['choices'][0]['message']['content']
                     commonsenseprint(f'\nLiteral response:\n{literal_response}')
-                    new_prev_out.append(literal_response)
+
+                    # If it's a list, just extend the prev_out instead of
+                    # append
+                    if isinstance(literal_response, list):
+                        new_prev_out.extend(literal_response)
+                    else:
+                        new_prev_out.append(literal_response)
 
             else:
 
@@ -76,9 +99,10 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
 
                 # Put the previous prompt's output into the last query of the current prompt
                 current_prompt = deepcopy(prompt)
-                current_prompt[-1]["content"] = current_prompt[-1]["content"].format(text=prev_out)
+                idx = find_format(current_prompt)
+                current_prompt[idx]["content"] = current_prompt[idx]["content"].format(text=prev_out)
 
-                commonsenseprint(f'\nPrompt when formatted with prev_out:\n{prompt}')
+                commonsenseprint(f'\nPrompt when formatted with prev_out:\n{current_prompt}')
 
                 # Get model predictions for these prompts
                 response = openai.ChatCompletion.create(
@@ -94,7 +118,13 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                 except SyntaxError:
                     literal_response = response['choices'][0]['message']['content']
                 commonsenseprint(f'\nLiteral response:\n{literal_response}')
-                new_prev_out = literal_response
+
+                # If it's a list, just extend the prev_out instead of
+                # append
+                if isinstance(literal_response, list):
+                    new_prev_out.extend(literal_response)
+                else:
+                    new_prev_out.append(literal_response)
 
             # Make the new_prev_out into the current prev_out
             prev_out = new_prev_out
