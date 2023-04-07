@@ -61,6 +61,22 @@
  			"role": "assistant",
  			"content": "['The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes.', 'The homologous clusters of ERF genes are possibly derived from two ancestral diploids.', 'The homologous clusters of ERF genes include either nicotine-controlling ERF189 or ERF 199.']"
  		},
+		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: Previously, we have identified a yeast histone deacetylase REDUCED POTASSIUM DEPENDENCY3 (RPD3) homolog, HISTONE DEACETYLASE19 (HDA19) (AtRPD3A), in Arabidopsis thaliana."
+		},
+		{
+			"role": "assistant",
+			"content": "['Previously, we have identified a yeast histone deacetylase REDUCED POTASSIUM DEPENDENCY3 homolog in Arabidopsis thaliana.', 'Previously, we have identified a yeast histone deacetylase RPD3 homolog in Arabidopsis thaliana.', 'Previously, we have identified HISTONE DEACETYLASE19, in Arabidopsis thaliana.', 'Previously, we have identified HDA19 in Arabidopsis thaliana.', 'Previously, we have identified AtRPD3A, in Arabidopsis thaliana.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: In addition, the expression of HDA19 was induced by wounding, the pathogen Alternaria brassicicola, and the plant hormones jasmonic acid and ethylene."
+		},
+		{
+			"role": "assistant",
+			"content": "['The expression of HDA19 was induced by wounding.', 'The expression of HDA19 was induced by the pathogen Alternaria brassicicola.', 'The expression of HDA19 was induced by the plant hormone jasmonic acid.', 'The expression of HDA19 was induced by the plant hormone ethylene.']"
+		},
  		{
  			"role": "user",
  			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only contains one subject, one relation and one object, and that the first level of each new sentence contains only one Noun Phrase and one Verb Phrase: {text}"
@@ -86,6 +102,54 @@
  			"role": "assistant",
  			"content": "No relation"
  		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Previously, we have identified a yeast histone deacetylase REDUCED POTASSIUM DEPENDENCY3 homolog in Arabidopsis thaliana."
+		},
+		{
+			"role": "assistant",
+			"content": "('yeast histone deacetylase REDUCED POTASSIUM DEPENDENCY3 homolog', 'identified in', 'Arabidopsis thaliana')"
+		},
+		{
+			"role": "user",
+			"Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+		{
+			"role": "assistant",
+			"content": "('yeast histone deacetylase REDUCED POTASSIUM DEPENDENCY3 homolog', 'is-in', 'Arabidopsis thaliana')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: The expression of HDA19 was induced by the pathogen Alternaria brassicicola."
+		},
+		{
+			"role": "assistant",
+			"content": "('HDA19', 'was induced by', 'Alternaria brassicicola')"
+		},
+		{
+			"role": "user",
+			"Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+		{
+			"role": "assistant",
+			"content": "('Alternaria brassicicola', 'activates', 'HDA19')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Here, we report further study of the expression and function of HDA19."
+		},
+		{
+			"role": "assistant",
+			"content": "('we', 'report', 'study')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
  		{
  			"role": "user",
  			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Jasmonates play a central signaling role in damage-induced nicotine formation."
