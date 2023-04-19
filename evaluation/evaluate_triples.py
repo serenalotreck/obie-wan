@@ -219,9 +219,6 @@ def get_doc_trip_counts(trips, gold_trips, check_rel_labels, nlp, pos_neg,
     for neg in false_negs:
         untoked = [' '.join(elt) for elt in neg]
         untoked_false_negs.append(untoked)
-    print(f'false neg triples: {untoked_false_negs}')
-    print(f'gold trips: {gold_trips}')
-    print(f'pos neg before return: {pos_neg}')
 
     return pos_neg
 
