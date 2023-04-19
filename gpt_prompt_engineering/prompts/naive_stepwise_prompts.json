@@ -112,7 +112,7 @@
 		},
 		{
 			"role": "user",
-			"Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
 		},
 		{
 			"role": "assistant",
@@ -128,7 +128,7 @@
 		},
 		{
 			"role": "user",
-			"Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning thep hrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
 		},
 		{
 			"role": "assistant",

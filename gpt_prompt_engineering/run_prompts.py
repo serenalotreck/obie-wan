@@ -82,7 +82,7 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                     # Pull out the model response
                     try:
                         literal_response = literal_eval(response['choices'][0]['message']['content'])
-                    except SyntaxError:
+                    except SyntaxError or ValueError:
                         literal_response = response['choices'][0]['message']['content']
                     commonsenseprint(f'\nLiteral response:\n{literal_response}')
 
@@ -95,7 +95,7 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
 
             else:
 
-                commonsenseprint(f'prev_out is not a list:\n{prev_out}')
+                commonsenseprint(f'Previoius output is not a list:\n{prev_out}')
 
                 # Put the previous prompt's output into the last query of the current prompt
                 current_prompt = deepcopy(prompt)
@@ -115,7 +115,7 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                 # Pull out the model response
                 try:
                     literal_response = literal_eval(response['choices'][0]['message']['content'])
-                except SyntaxError:
+                except SyntaxError or ValueError:
                     literal_response = response['choices'][0]['message']['content']
                 commonsenseprint(f'\nLiteral response:\n{literal_response}')
 
