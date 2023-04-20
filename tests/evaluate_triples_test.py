@@ -260,6 +260,10 @@ def interacts_and_activates_order_reversed_no_rel_lab():
 def duplicate_goldstd_rel_lab():
     return (2, 3, 2)
 
+@pytest.fixture
+def duplicate_goldstd_no_rel_lab():
+    return (1, 1, 1)
+
 
 def test_remove_trip_dups_PMID18941053_abstract_gold_trips_deduped_no_rel_labs(
         PMID18941053_abstract_gold_trips_undeduped_no_rel_labs,
@@ -378,8 +382,6 @@ def test_get_f1_input_interacts_and_activates_order_reversed_rel_lab(
         interacts_and_activates_order_reversed_rel_lab,
         sym_labs):
 
-    print('TEST HELLO\n\n\n')
-    print(f'sym labs passed to test: {sym_labs}')
     f1_input = et.get_f1_input(interacts_and_activates_order_reversed_trips,
             interacts_and_activates_order_reversed_gold_trips, nlp, sym_labs,
             check_rel_labels=True)
@@ -406,3 +408,12 @@ def test_get_f1_input_duplicate_goldstd_rel_lab(duplicate_goldstd_trips,
             duplicate_goldstd_gold_trips, nlp, sym_labs, check_rel_labels=True)
 
     assert f1_input == duplicate_goldstd_rel_lab
+
+def test_get_f1_input_duplicate_goldstd_no_rel_lab(duplicate_goldstd_trips,
+        duplicate_goldstd_gold_trips, nlp, duplicate_goldstd_no_rel_lab,
+        sym_labs):
+
+    f1_input = et.get_f1_input(duplicate_goldstd_trips,
+            duplicate_goldstd_gold_trips, nlp, sym_labs, check_rel_labels=False)
+
+    assert f1_input == duplicate_goldstd_no_rel_lab
