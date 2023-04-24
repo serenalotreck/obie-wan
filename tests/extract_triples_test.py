@@ -5,7 +5,7 @@ Author: Serena G. Lotreck
 """
 import pytest
 import sys
-sys.path.append('../evaluation')
+sys.path.append('../data_scripts')
 from extract_triples import get_doc_triples
 
 

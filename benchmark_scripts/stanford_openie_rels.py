@@ -287,6 +287,8 @@ if __name__ == "__main__":
     args.out_loc = abspath(args.out_loc)
 
     verboseprint = print if args.verbose else lambda *a, **k: None
+    print('\n\n\n\n START OF SCRIPT')
+    print(f'value of --verbose: {args.verbose}')
 
     to_annotate = [join(args.data_dir, f) for f in listdir(args.data_dir) if
             f.endswith('.txt')]

@@ -5,7 +5,7 @@ the new directory.
 Author: Serena G. Lotreck
 """
 import argparse
-from os.path import abspath, exists
+from os.path import abspath, exists, basename
 from os import makedirs
 import subprocess
 import jsonlines
@@ -31,7 +31,7 @@ def main(dataset, all_abstract_dir, new_abstract_dir, kind):
     # Check if target directory exists
     if not exists(new_abstract_dir):
         makedirs(new_abstract_dir)
-    print('Target directory didn\'t exist, new directory created at '
+        print('Target directory didn\'t exist, new directory created at '
             f'{new_abstract_dir}')
 
     # Build the copy command
@@ -40,13 +40,13 @@ def main(dataset, all_abstract_dir, new_abstract_dir, kind):
     # Perform operation
     subprocess.run(copy_cmd)
 
-    print(f'\nThe following abstracts have been copied to {new_abstract_dir}:')
-    print(copy_keys)
+    print(f'\nSnapshot of the abstracts copied to {new_abstract_dir}:')
+    snap_keys = [basename(k) for k in copy_keys]
+    print(snap_keys[:5])
     print('\nDone!\n')
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description='Copy abstracts')
 
     parser.add_argument('dataset', type=str,
@@ -65,5 +65,6 @@ if __name__ == "__main__":
     args.dataset = abspath(args.dataset)
     args.all_abstract_dir = abspath(args.all_abstract_dir)
     args.new_abstract_dir = abspath(args.new_abstract_dir)
+
 
     main(args.dataset, args.all_abstract_dir, args.new_abstract_dir, args.kind)
