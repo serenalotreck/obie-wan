@@ -202,7 +202,7 @@ def main(data_dir, to_annotate, affinity_cap, embed_rels, label_path,
         bert_name, out_loc, out_prefix):
 
     properties = {'openie.affinity_probability_cap': affinity_cap}
-    print('normal print statement')
+    #print('normal print statement')
 
     # Load models for relations embedding outside of loop, if required
     if embed_rels:
@@ -249,7 +249,7 @@ def main(data_dir, to_annotate, affinity_cap, embed_rels, label_path,
 
 if __name__ == "__main__":
 
-    print('\n\n\nPrint before anything')
+    #print('\n\n\nPrint before anything')
     parser = argparse.ArgumentParser(description='Use Stanford OpenIE for '
             'relation extraction')
 
@@ -289,8 +289,8 @@ if __name__ == "__main__":
     args.out_loc = abspath(args.out_loc)
 
     verboseprint = print if args.verbose else lambda *a, **k: None
-    print('\n\n\n\n START OF SCRIPT')
-    print(f'value of --verbose: {args.verbose}')
+    #print('\n\n\n\n START OF SCRIPT')
+    #print(f'value of --verbose: {args.verbose}')
 
     to_annotate = [join(args.data_dir, f) for f in listdir(args.data_dir) if
             f.endswith('.txt')]

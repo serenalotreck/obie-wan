@@ -1,13 +1,14 @@
 """
 Converts the Huggingface version of the BioInfer dataset to brat standoff. Does
-both train and test and saves as separate files.
+both train and test and saves as separate files. Maintains disjoint entities.
 
 Link to dataset: https://huggingface.co/datasets/bigbio/bioinfer
 
 Author: Serena G. Lotreck
 """
 import argparse
-from os.path import abspath
+from os.path import abspath, exists
+from os import mkdir
 from datasets import load_dataset
 from collections import defaultdict
 from tqdm import tqdm
@@ -104,14 +105,22 @@ def get_ent_anns(docs):
             ent_key = ent['id']
             t_key = f'T{t_num}'
             ent_type = ent['type']
-            # Check for cases where there's more than one offset list
-            assert len(ent['offsets']) == 1, f'ent: {ent}'
-            start = ent['offsets'][0][0] + prev_len
-            end = ent['offsets'][0][1] + prev_len
-            # Check that there's only one text
-            assert len(ent['text']) == 1, f'ent: {ent}'
-            txt = ent['text'][0]
-            full_ann = f'{t_key}\t{ent_type} {start} {end}\t{txt}'
+            # Allows disjoint entities
+            if len(ent['offsets']) > 1:
+                offset_str_list = []
+                for offset_pair in ent['offsets']:
+                    offset_pair = [str(o) for o in offset_pair]
+                    offset_str_list.append(' '.join(offset_pair))
+                offset_str = ';'.join(offset_str_list)
+                # Check that text always has multiples
+                assert len(ent['text']) > 1
+                txt = ' '.join(ent['text'])
+            else:
+                start = ent['offsets'][0][0] + prev_len
+                end = ent['offsets'][0][1] + prev_len
+                offset_str = f'{start} {end}'
+                txt = ent['text'][0]
+            full_ann = f'{t_key}\t{ent_type} {offset_str}\t{txt}'
             ent_anns[ent_key] = full_ann
             t_num += 1
         prev_len += len(doc['text']) + 1 # For the space
@@ -178,7 +187,7 @@ def huggingface2brat(dataset, out_loc, out_prefix):
             myf.write(anns_to_save)
 
 
-def main(out_loc, out_prefix):
+def main(out_loc, out_prefix, split):
 
     # Check existence of out_loc
     verboseprint('\nChecking existence of output directory...')
@@ -187,14 +196,12 @@ def main(out_loc, out_prefix):
         verboseprint(f'New directory created at {out_loc}')
 
     # Read in both datasets
-    verboseprint('\nReading in datasets...')
-    train = load_dataset('bigbio/bioinfer', split='train')
-    test = load_dataset('bigbio/bioinfer', split='test')
+    verboseprint('\nReading in dataset...')
+    dataset = load_dataset('bigbio/bioinfer', split=split)
 
     # Convert to brat
     verboseprint('\nConverting datasets...')
-    huggingface2brat(train, out_loc, out_prefix)
-    huggingface2brat(test, out_loc, out_prefix)
+    huggingface2brat(dataset, out_loc, out_prefix)
 
     verboseprint('\nDone!')
 
@@ -206,6 +213,9 @@ if __name__ == "__main__":
     parser.add_argument('out_loc', type=str,
             help='Path to directory to save output. Will be created if it '
             'doesn\'t already exist')
+    parser.add_argument('split', type=str,
+            help='Either "train" or "test", which split of the data to '
+            'convert')
     parser.add_argument('-out_prefix', type=str, default='',
             help='Prefix to prepend to output files')
     parser.add_argument('--verbose', '-v', action='store_true',
@@ -217,5 +227,5 @@ if __name__ == "__main__":
 
     verboseprint = print if args.verbose else lambda *a, **k: None
 
-    main(args.out_loc, args.out_prefix)
+    main(args.out_loc, args.out_prefix, args.split)
 

@@ -148,6 +148,56 @@ def test_get_ent_anns_mult_doc(ent_anns_mult_doc_input,
 
 
 @pytest.fixture
+def ent_anns_disjoint_input():
+    return [{'document_id': 'BioInfer.d1.s1', 'type': 'Sentence',
+        'text': 'Birch profilin increased the critical concentration required '
+        'for muscle and brain actin polymerization in a '
+        'concentration-dependent manner, supporting the notion of the '
+        'formation of a heterologous complex between the plant protein and '
+        'animal actin.',
+        'entities': [
+            {'id': 'BioInfer.d1.s1.e0', 'offsets': [[76, 87]],
+                'text': ['brain actin'], 'type': 'Individual_protein',
+                'normalized': []},
+            {'id': 'BioInfer.d1.s1.e1', 'offsets': [[6, 14]],
+                'text': ['profilin'], 'type': 'Individual_protein',
+                'normalized': []},
+            {'id': 'BioInfer.d1.s1.e2', 'offsets': [[65, 71], [82, 87]],
+                'text': ['muscle', 'actin'], 'type': 'Individual_protein',
+                'normalized': []},
+            {'id': 'BioInfer.d1.s1.e3', 'offsets': [[242, 247]],
+                'text': ['actin'], 'type': 'Individual_protein',
+                'normalized': []}],
+        'relations': [
+            {'id': 'BioInfer.d1.s1.i0', 'type': 'PPI',
+                'arg1_id': 'BioInfer.d1.s1.e0', 'arg2_id': 'BioInfer.d1.s1.e1',
+                'normalized': []},
+            {'id': 'BioInfer.d1.s1.i1', 'type': 'PPI',
+                'arg1_id': 'BioInfer.d1.s1.e1', 'arg2_id': 'BioInfer.d1.s1.e2',
+                'normalized': []},
+            {'id': 'BioInfer.d1.s1.i2', 'type': 'PPI',
+                'arg1_id': 'BioInfer.d1.s1.e1', 'arg2_id': 'BioInfer.d1.s1.e3',
+                'normalized': []}]}]
+
+@pytest.fixture
+def ent_anns_disjoint_output():
+    return {
+            'BioInfer.d1.s1.e0': 'T1\tIndividual_protein 76 87\tbrain actin',
+            'BioInfer.d1.s1.e1': 'T2\tIndividual_protein 6 14\tprofilin',
+            'BioInfer.d1.s1.e2':
+                'T3\tIndividual_protein 65 71;82 87\tmuscle actin',
+            'BioInfer.d1.s1.e3': 'T4\tIndividual_protein 242 247\tactin'
+            }
+
+def test_get_ent_anns_disjoint(ent_anns_disjoint_input,
+        ent_anns_disjoint_output):
+
+    ent_anns = hbb.get_ent_anns(ent_anns_disjoint_input)
+
+    assert ent_anns == ent_anns_disjoint_output
+
+
+@pytest.fixture
 def rel_anns_one_doc_input():
     return [{'document_id': 'BioInfer.d0.s0',
             'relations': [{'id': 'BioInfer.d0.s0.i0', 'type': 'PPI',
