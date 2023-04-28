@@ -1,0 +1,1 @@
+Extract the relations Compare, Part-of, Conjunction, Evaluate-for, Feature-of, Used-for, and HyponymOf from the following text as (Subject, Predicate, Object) triples in the format ("Subject", "predicate", "Object"): {abstract_txt[0]}

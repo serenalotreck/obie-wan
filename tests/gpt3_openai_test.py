@@ -6,7 +6,7 @@ Author: Serena G. Lotreck
 import pytest
 import spacy
 import sys
-sys.path.append('../benchmark_scripts/')
+sys.path.append('../models/')
 from gpt3_openai import format_dygiepp_doc, find_sent
 
 

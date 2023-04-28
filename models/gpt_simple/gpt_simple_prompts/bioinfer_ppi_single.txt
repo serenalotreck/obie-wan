@@ -1,0 +1,1 @@
+Extract the protein-protein interactions from the following text as (Subject, Predicate, Object) triples in the format ("Subject", "predicate", "Object"): {abstract_txt[0]}

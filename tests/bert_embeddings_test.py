@@ -5,7 +5,7 @@ Author: Serena G. Lotreck
 """
 import pytest
 import sys
-sys.path.append('../benchmark_scripts/distant_supervision_re/')
+sys.path.append('../models/distant_supervision_re/')
 import bert_embeddings as be
 
 @pytest.fixture

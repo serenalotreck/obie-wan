@@ -14,7 +14,7 @@ import jsonlines
 import json
 import pandas as pd
 import sys
-sys.path.append('distant_supervision_re/')
+sys.path.append('../distant_supervision_re/')
 import bert_embeddings as be
 import phrase_utils as pu
 
@@ -96,6 +96,8 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
         except IndexError:
             spl = pred_text.split(", \n")
             doc_triples = [literal_eval(t) for t in pred_text.split(', \n')]
+        except SyntaxError:
+            continue
         # Embed relations if asked
         if embed_rels:
             embedded_trips = []
@@ -138,11 +140,10 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
         raw_preds, dict: keys are file names and values are the output of gpt3
             predictions
     """
-    if __name__ != "__main__":
-        if print_preds:
-            verboseprint = print
-        else:
-            verboseprint = lambda *a, **k: None
+    if print_preds:
+        verboseprint = print
+    else:
+        verboseprint = lambda *a, **k: None
 
     raw_preds = {}
     for fname, abstract_txt in tqdm(abstracts.items()):
@@ -171,7 +172,8 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
     return raw_preds
 
 
-def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
+def main(text_dir, prompt_file, out_loc, out_prefix, embed_rels, label_path,
+            bert_name):
 
     # Read in the abstracts
     verboseprint('\nReading in abstracts...')
@@ -184,13 +186,16 @@ def main(text_dir, embed_rels, label_path, bert_name, out_loc, out_prefix):
                 fname = splitext(f)[0]
                 abstracts[fname] = abstract
 
+    # Read in the prompt
+    verboseprint('\nReading in the requested prompt...')
+    with open(prompt_file) as myf:
+        prompt = myf.read()
+    verboseprint(f'Snapshot of requested prompt: {prompt}')
+
     # Prompt GPT3 for each abstract
     verboseprint('\nGenerating predictions...')
-    prompt = ('Extract the biological relationships from '
-     'the following text as (Subject, Predicate, Object) triples in the format ("Subject", "predicate", "Object"): '
-     '{abstract_txt[0]}')
-    raw_preds = gpt3_predict(abstracts, prompt, fmt=True, model='text-davinci-003',
-            max_tokens=1000, stop=["\\n"])
+    raw_preds = gpt3_predict(abstracts, prompt, fmt=True, model='gpt-3.5-turbo',
+            max_tokens=1000, stop=["\\n"], print_preds=True)
 
     # Format output in dygiepp format
     verboseprint('\nFormatting predictions...')
@@ -212,6 +217,12 @@ if __name__ == "__main__":
 
     parser.add_argument('text_dir', type=str,
             help='Path to directory where abstracts to be used are stored')
+    parser.add_argument('prompt_file', type=str,
+            help='Path to txt file with prompt string')
+    parser.add_argument('out_loc', type=str,
+            help='Path to save output')
+    parser.add_argument('out_prefix', type=str,
+            help='String to prepend to save file names')
     parser.add_argument('--embed_rels', action='store_true',
             help='Whether or not to embed relations to get standardized '
             'labels. If passed, must also pass label_path')
@@ -224,10 +235,6 @@ if __name__ == "__main__":
             help='Name of pretrained BERT model from the huggingface '
             'transformers library. Default is the BioBERt genetic NER '
             'model.')
-    parser.add_argument('-out_loc', type=str,
-            help='Path to save output')
-    parser.add_argument('-out_prefix', type=str,
-            help='String to prepend to save file names')
     parser.add_argument('-v', '--verbose', action='store_true',
             help='Whether or not to print output.')
 
@@ -238,11 +245,12 @@ if __name__ == "__main__":
                 'must be provided.')
         args.label_path = abspath(args.label_path)
     args.text_dir = abspath(args.text_dir)
+    args.prompt_file = abspath(args.prompt_file)
     args.out_loc = abspath(args.out_loc)
 
     verboseprint = print if args.verbose else lambda *a, **k: None
 
     openai.api_key = getenv("OPENAI_API_KEY")
 
-    main(args.text_dir, args.embed_rels, args.label_path, args.bert_name,
-            args.out_loc, args.out_prefix)
+    main(args.text_dir, args.prompt_file, args.out_loc, args.out_prefix,
+        args.embed_rels, args.label_path, args.bert_name)

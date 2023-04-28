@@ -3,3 +3,4 @@ __pycache__
 .ipynb_checkpoints
 data
 job_scripts
+dygiepp_training_configs
