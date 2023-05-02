@@ -30,17 +30,18 @@ conversion to jsonl results in the following doc dictionary:
 Author: Serena G. Lotreck
 """
 import argparse
-from os.path import abspath
+from os.path import abspath, splitext
 import jsonlines
+from tqdm import tqdm
 
 
 def check_correct_doc(doc):
     """
     Detect incorrectly split sentences and fix.
-    
+
     parameters:
         doc, dict: dygiepp-formatted doc to fix
-        
+
     returns:
         new_doc, dict: corrected doc
     """
@@ -53,7 +54,7 @@ def check_correct_doc(doc):
             sent_start = sent_idxs[i-1][1] + 1
         sent_end = sent_start + len(sent)  - 1
         sent_idxs.append((sent_start, sent_end))
-    
+
     # For each relation, check if it crosses sentence boundaries
     sents_to_join = []
     for i, relset in enumerate(doc['relations']):
@@ -69,7 +70,7 @@ def check_correct_doc(doc):
             if sent_mems[0] != sent_mems[1]:
                 sents_to_join.append(sent_mems)
     sents_to_join = list(set([tuple(pair) for pair in sents_to_join]))
-                
+
     # Join sentences that need it
     if len(sents_to_join) == 0:
         new_doc = doc
@@ -91,43 +92,47 @@ def check_correct_doc(doc):
                 # Add all sentences before the first to join
                 first_idx = min(pair)
                 joined.extend(doc[key][:first_idx])
-                
+
                 # Join the pair and add
                 last_idx = max(pair)
                 pair_j = [doc[key][first_idx] + doc[key][last_idx]]
                 joined.extend(pair_j)
-                
+
                 # Add any after
                 if last_idx != len(doc[key]) - 1:
                     joined.extend(doc[key][last_idx + 1:])
-                    
+
                 # Add to new doc
                 new_doc[key] = joined
-                
+
         return new_doc
-                
+
 
 def main(dataset):
-    
+
     # Read in dataset
     print('\nReading in dataset...')
     with jsonlines.open(dataset) as reader:
         dset = []
         for obj in reader:
             dset.append(obj)
-            
+
     # Go through and check for cross sentence rels and correct
     print('\nDetecting and correcting errors...')
     corrected_dset = []
+    num_corrected = 0
     for doc in tqdm(dset):
         corrected_doc = check_correct_doc(doc)
+        if corrected_doc != doc:
+            num_corrected += 1
         corrected_dset.append(corrected_doc)
-        
+    print(f'A total of {num_corrected} documents were corrected.')
+
     # Save out
     print('\nSaving...')
     path_and_name, ext = splitext(dataset)
     new_save_name = f'{path_and_name}_CORRECTED{ext}'
-    with jsonlines.writer(new_save_name, 'w') as writer:
+    with jsonlines.open(new_save_name, 'w') as writer:
         writer.write_all(corrected_dset)
     print(f'Dataset saved as {new_save_name}')
 
@@ -135,15 +140,15 @@ def main(dataset):
 
 
 if __name__ == '__main__':
-    
+
     parser = argparse.ArgumentParser(description='Join mis-split sentences')
-    
+
     parser.add_argument('dataset', type=str,
         help='Path to dataset to check. Output will be saved back to the same '
         'directory, with the string CORRECTED appended to the filename')
-        
+
     args = parser.parse_args()
-    
+
     args.dataset = abspath(args.dataset)
-    
+
     main(args.dataset)
