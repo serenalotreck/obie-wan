@@ -98,6 +98,8 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
             doc_triples = [literal_eval(t) for t in pred_text.split(', \n')]
         except SyntaxError:
             continue
+        except ValueError:
+            continue
         # Embed relations if asked
         if embed_rels:
             embedded_trips = []
@@ -155,13 +157,21 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
         verboseprint(f'Prompt for {fname}:\n{formatted_prompt}')
 
         # Get predictions
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=[{"role": "user", "content": formatted_prompt}],
-            max_tokens=max_tokens,
-            temperature=temp,
-            stop=stop
-                )
+        predicted = False
+        num_fails = 0
+        while not predicted:
+            try:
+                response = openai.ChatCompletion.create(
+                    model=model,
+                    messages=[{"role": "user", "content": formatted_prompt}],
+                    max_tokens=max_tokens,
+                    temperature=temp,
+                    stop=stop
+                    )
+                predicted = True
+            except openai.error.RateLimitError:
+                num_fails += 1
+                print(f'On attempt {num_fails} for doc {fname}')
 
         # Add to list
         raw_preds[fname] = response

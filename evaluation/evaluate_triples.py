@@ -15,6 +15,7 @@ import spacy
 import pandas as pd
 import numpy as np
 from tqdm import tqdm
+import time
 
 
 def calculate_CI(prec_samples, rec_samples, f1_samples):
@@ -252,11 +253,14 @@ def get_f1_input(preds, gold, nlp, sym_labs, check_rel_labels=False):
 
     # Go through the docs
     for doc_key, trips in preds.items():
+        start = time.time()
         # Get the corresponding gold standard
         gold_trips = gold[doc_key]
         # Get tp/fp/fn counts for this document
         pos_neg = get_doc_trip_counts(trips, gold_trips, check_rel_labels, nlp,
                 pos_neg, sym_labs)
+        end = time.time()
+        print(f'time to get_f1_output for 1 doc: {end - start}')
 
     # Add to get f1 inputs
     predicted = pos_neg['tp'] + pos_neg['fp']
