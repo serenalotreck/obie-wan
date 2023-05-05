@@ -1,0 +1,121 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text:  Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that they synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text:  The binding surfaces for segment 1 and profilin are different, although they peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin.', 'The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin.', 'This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Motile areas of leech neurites are rich in microfilaments.', 'Motile areas of leech neurites are rich in actin-binding protein gelsolin.', 'Motile areas of leech neurites are rich in actin-binding protein profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['This review describes three structures of actin complexed with monomer-binding protein DNase I.', 'This review describes three structures of actin complexed with monomer-binding protein gelsolin segment 1.', 'This review describes three structures of actin complexed with monomer-binding protein profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Polyacrylamide gels of platelets heated at 45 degrees C for 90 minutes showed no increase in filamentous actin."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('platelets', 'showed no increase in', 'actin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: This review describes three structures of actin complexed with monomer-binding protein gelsolin segment 1."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin', 'complexes with', 'gelsolin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin', 'PPI', 'gelsolin')"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."		}
+ 	]
+ }

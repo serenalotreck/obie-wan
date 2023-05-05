@@ -54,8 +54,7 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
 
             commonsenseprint(f'\nCurrently on prompt {prompt_num}: {prompt}')
 
-            # If the previous output is a list, we need to iterate over the
-            # list
+            # If the previous output is a list, we need to iterate over the list
             new_prev_out = []
             if isinstance(prev_out, list):
 
@@ -72,17 +71,27 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                                         f'element of prev_out:\n{current_prompt}')
 
                     # Get model predictions for these prompts
-                    response = openai.ChatCompletion.create(
-                        model=model,
-                        messages=current_prompt,
-                        temperature=0)
+                    predicted = False
+                    num_fails = 0
+                    while not predicted:
+                        try:
+                            response = openai.ChatCompletion.create(
+                                model=model,
+                                messages=current_prompt,
+                                temperature=0)
+                            predicted = True
+                        except openai.error.RateLimitError:
+                            num_fails += 1
+                            print(f'On attempt {num_fails} for doc {doc_name}')
 
                     commonsenseprint(f'\nRaw response:\n{response}')
 
                     # Pull out the model response
                     try:
                         literal_response = literal_eval(response['choices'][0]['message']['content'])
-                    except SyntaxError or ValueError:
+                    except SyntaxError:
+                        literal_response = response['choices'][0]['message']['content']
+                    except ValueError:
                         literal_response = response['choices'][0]['message']['content']
                     commonsenseprint(f'\nLiteral response:\n{literal_response}')
 
@@ -105,22 +114,31 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                 commonsenseprint(f'\nPrompt when formatted with prev_out:\n{current_prompt}')
 
                 # Get model predictions for these prompts
-                response = openai.ChatCompletion.create(
-                    model=model,
-                    messages=current_prompt,
-                    temperature=0)
-
+                predicted = False
+                num_fails = 0
+                while not predicted:
+                    try:
+                        response = openai.ChatCompletion.create(
+                            model=model,
+                            messages=current_prompt,
+                            temperature=0)
+                        predicted = True
+                    except openai.error.RateLimitError:
+                        num_fails += 1
+                        print(f'On attempt {num_fails} for doc {doc_name}')
                 commonsenseprint(f'\nRaw response:\n{response}')
 
                 # Pull out the model response
                 try:
                     literal_response = literal_eval(response['choices'][0]['message']['content'])
-                except SyntaxError or ValueError:
+                except SyntaxError:
                     literal_response = response['choices'][0]['message']['content']
+                except ValueError:
+                    literal_response = response['choices'][0]['message']['content']
+                
                 commonsenseprint(f'\nLiteral response:\n{literal_response}')
 
-                # If it's a list, just extend the prev_out instead of
-                # append
+                # If it's a list, just extend the prev_out instead of append
                 if isinstance(literal_response, list):
                     new_prev_out.extend(literal_response)
                 else:

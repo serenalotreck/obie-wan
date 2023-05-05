@@ -1,6 +1,6 @@
 """
 Remove triples that didn't properly tokenize to 3 elements from a GPT
-prediction set.
+prediction set, as well as "No relation" in preparation for evaluation.
 
 Author: Serena G. Lotreck
 """

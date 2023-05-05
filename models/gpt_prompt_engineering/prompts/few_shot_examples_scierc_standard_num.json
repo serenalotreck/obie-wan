@@ -1,0 +1,121 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Constraint propagation is one of the key techniques in constraint programming, and a large body of work has built up around it. Special-purpose constraint propagation algorithms frequently make implicit use of short supports — by examining a subset of the variables, they can infer support (a justification that a variable-value pair still forms part of a solution to the constraint) for all other variables and values and save substantial work. Recently short supports have been used in general purpose propagators, and (when the constraint is amenable to short supports) speed ups of more than three orders of magnitude have been demonstrated. In this paper we present ShortSTR2, a development of the Simple Tabular Reduction algorithm STR2+. We show that ShortSTR2 is complementary to the existing algorithms ShortGAC and HaggisGAC that exploit short supports, while being much simpler. When a constraint is amenable to short supports, the short support set can be exponentially smaller than the full-length support set. Therefore ShortSTR2 can efficiently propagate many constraints that STR2+ cannot even load into memory. We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports, to provide a superior drop-in replacement for STR2+."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Constraint propagation is one of the key techniques in constraint programming, and a large body of work has built up around constraint propogation. Special-purpose constraint propagation algorithms frequently make implicit use of short supports — by examining a subset of the variables, special-purpose constraint propagation algorithms can infer support (a justification that a variable-value pair still forms part of a solution to the constraint) for all other variables and values and save substantial work. Recently short supports have been used in general purpose propagators, and (when the constraint is amenable to short supports) speed ups of more than three orders of magnitude have been demonstrated. In this paper we present ShortSTR2, a development of the Simple Tabular Reduction algorithm STR2+. We show that ShortSTR2 is complementary to the existing algorithms ShortGAC and HaggisGAC that exploit short supports, while being much simpler. When a constraint is amenable to short supports, the short support set can be exponentially smaller than the full-length support set. Therefore ShortSTR2 can efficiently propagate many constraints that STR2+ cannot even load into memory. We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports, to provide a superior drop-in replacement for STR2+."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: We present a syntax-based constraint for word alignment, known as the cohesion constraint. It requires disjoint English phrases to be mapped to non-overlapping intervals in the French sentence. We evaluate the utility of this constraint in two different algorithms. The results show that it can provide a significant improvement in alignment quality."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "We present a syntax-based constraint for word alignment, known as the cohesion constraint. Cohesion constraint requires disjoint English phrases to be mapped to non-overlapping intervals in the French sentence. We evaluate the utility of cohesion constraint in two different algorithms. The results show that cohesion constraint can provide a significant improvement in alignment quality."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Constraint propagation is one of the key techniques in constraint programming, and a large body of work has built up around constraint propogation. Special-purpose constraint propagation algorithms frequently make implicit use of short supports — by examining a subset of the variables, special-purpose constraint propagation algorithms can infer support (a justification that a variable-value pair still forms part of a solution to the constraint) for all other variables and values and save substantial work. Recently short supports have been used in general purpose propagators, and (when the constraint is amenable to short supports) speed ups of more than three orders of magnitude have been demonstrated. In this paper we present ShortSTR2, a development of the Simple Tabular Reduction algorithm STR2+. We show that ShortSTR2 is complementary to the existing algorithms ShortGAC and HaggisGAC that exploit short supports, while being much simpler. When a constraint is amenable to short supports, the short support set can be exponentially smaller than the full-length support set. Therefore ShortSTR2 can efficiently propagate many constraints that STR2+ cannot even load into memory. We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports, to provide a superior drop-in replacement for STR2+."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Constraint propagation is one of the key techniques in constraint programming, and a large body of work has built up around constraint propogation.', 'Special-purpose constraint propagation algorithms frequently make implicit use of short supports — by examining a subset of the variables, special-purpose constraint propagation algorithms can infer support (a justification that a variable-value pair still forms part of a solution to the constraint) for all other variables and values and save substantial work.', 'Recently short supports have been used in general purpose propagators, and (when the constraint is amenable to short supports) speed ups of more than three orders of magnitude have been demonstrated.', 'In this paper we present ShortSTR2, a development of the Simple Tabular Reduction algorithm STR2+.', 'We show that ShortSTR2 is complementary to the existing algorithms ShortGAC and HaggisGAC that exploit short supports, while being much simpler.', 'When a constraint is amenable to short supports, the short support set can be exponentially smaller than the full-length support set.', 'Therefore ShortSTR2 can efficiently propagate many constraints that STR2+ cannot even load into memory.', 'We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports, to provide a superior drop-in replacement for STR2+.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: We present a syntax-based constraint for word alignment, known as the cohesion constraint. Cohesion constraint requires disjoint English phrases to be mapped to non-overlapping intervals in the French sentence. We evaluate the utility of cohesion constraint in two different algorithms. The results show that cohesion constraint can provide a significant improvement in alignment quality."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['We present a syntax-based constraint for word alignment, known as the cohesion constraint.', 'Cohesion constraint requires disjoint English phrases to be mapped to non-overlapping intervals in the French sentence.', 'We evaluate the utility of cohesion constraint in two different algorithms.', 'The results show that cohesion constraint can provide a significant improvement in alignment quality.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: We show that ShortSTR2 is complementary to the existing algorithms ShortGAC and HaggisGAC that exploit short supports, while being much simpler."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Motile areas of leech neurites are rich in microfilaments.', 'Motile areas of leech neurites are rich in actin-binding protein gelsolin.', 'Motile areas of leech neurites are rich in actin-binding protein profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports, to provide a superior drop-in replacement for STR2+."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['We also show that ShortSTR2 can be combined with a simple algorithm to identify short supports from full-length supports.', 'We also show that ShortSTR2 provides a superior drop-in replacement for STR2+.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: ShortGAC exploits short supports."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('ShortGAC', 'exploits', 'short supports')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list ['EVALUATE-FOR', 'COMPARE', 'FEATURE-OF', 'PART-OF', 'HYPONYM-OF', 'USED-FOR', 'CONJUNCTION'], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('ShortGAC', 'USED-FOR', 'short supports')"
+ 		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Special-purpose constraint propagation algorithms frequently make implicit use of short supports."
+		},
+		{
+			"role": "assistant",
+			"content": "('Special-purpose constraint propogation algorithms', 'make implicit use of', 'short supports')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list ['EVALUATE-FOR', 'COMPARE', 'FEATURE-OF', 'PART-OF', 'HYPONYM-OF', 'USED-FOR', 'CONJUNCTION'], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list ['EVALUATE-FOR', 'COMPARE', 'FEATURE-OF', 'PART-OF', 'HYPONYM-OF', 'USED-FOR', 'CONJUNCTION'], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."		}
+ 	]
+ }

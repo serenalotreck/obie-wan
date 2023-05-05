@@ -13,7 +13,7 @@ import json
 import jsonlines
 
 
-def get_doc_triples(doc):
+def get_doc_triples(doc, dygiepp):
     """
     Extracts triples form a dygiepp-formatted doc. Ignores entities
     that are not involved in a relation. If "predicted_relations" is
@@ -21,6 +21,9 @@ def get_doc_triples(doc):
 
     parameters:
         doc, dygiepp-formatteed doc: triples to extract
+        dygiepp, bool: If True, indicates that there are logit and softmax 
+            scores at the end of the relation list that need to be dropped
+            before processing
 
     returns:
         triples, list of tuple: extracted triples
@@ -31,6 +34,9 @@ def get_doc_triples(doc):
         full_doc_toks.extend(doc["sentences"][sent_idx])
         try:
             for rel in doc["predicted_relations"][sent_idx]:
+                # Drop the logit and sofmax scores
+                if dygiepp:
+                    rel = rel[:-2]
                 ent1_txt = ' '.join(full_doc_toks[rel[0]:rel[1]+1])
                 rel_label = rel[-1]
                 ent2_txt = ' '.join(full_doc_toks[rel[2]:rel[3]+1])
@@ -47,7 +53,7 @@ def get_doc_triples(doc):
     return triples
 
 
-def main(input_file, out_loc, out_prefix):
+def main(input_file, out_loc, out_prefix, dygiepp):
 
     # Read in the file
     docs = []
@@ -59,7 +65,7 @@ def main(input_file, out_loc, out_prefix):
     triples = {}
     for doc in docs:
         doc_key = doc["doc_key"]
-        trips = get_doc_triples(doc)
+        trips = get_doc_triples(doc, dygiepp)
         triples[doc_key] = trips
 
     # Save file
@@ -81,10 +87,13 @@ if __name__ == "__main__":
             help='Path to save the output')
     parser.add_argument('-out_prefix', type=str,
             help='String to prepend to output file names')
+    parser.add_argument('--dygiepp', action='store_true',
+            help='If specified, the elements in the optional '
+            'predicted_relations field contain a logit and softmax score')
 
     args = parser.parse_args()
 
     args.input_file = abspath(args.input_file)
     args.out_loc = abspath(args.out_loc)
 
-    main(args.input_file, args.out_loc, args.out_prefix)
+    main(args.input_file, args.out_loc, args.out_prefix, args.dygiepp)

@@ -8,7 +8,7 @@ import pandas as pd
 import spacy
 import benepar
 import sys
-sys.path.append('../models/distant_supervision_re')
+sys.path.append('../models/heuristic')
 import phrase_utils as pu
 
 

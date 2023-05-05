@@ -1,0 +1,41 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list ['EVALUATE-FOR', 'COMPARE', 'FEATURE-OF', 'PART-OF', 'HYPONYM-OF', 'USED-FOR', 'CONJUNCTION'], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."		}
+ 	]
+ }

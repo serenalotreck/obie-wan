@@ -19,68 +19,18 @@ import bert_embeddings as be
 import phrase_utils as pu
 
 
-def embed_relation(trip, label_df, model, tokenizer):
+def process_preds(abstracts, raw_preds):
     """
-    Performs the same relation embedding as relation_embedding.py to generate a
-    standardized relation label for a given triple. Since the triples are not
-    tied to sentences, the word context is obtained by concatenating the triple
-    together into a pseudo-sentence. In general, most of the GPT3 triples tend
-    to be very verbose and contain most if not all of the sentence that they
-    came from, which will give similar context to the model as if it were the
-    full sentence.
-
-    parameters:
-        trip, tuple of str: the triple containing the relation to embed
-        label_df, pandas df: rows are labels, columns are vector elements
-        model, huggingface BERT model: model to use
-        tokenizer, huggingface BERT tokenizer: tokenizer to use
-    """
-    rel = trip[1]
-    trip_text = ' '.join(trip)
-    embedding = be.get_phrase_embedding(trip_text, rel,
-        tokenizer, model)
-    label = pu.compute_label(label_df, embedding)
-    if label == '':
-        return None
-    else:
-        return label
-
-
-def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False):
-    """
-    Pulls text output from predictions, and calls helpers to embed relations if
-    embed_rels=True. TODO implement relation embeddings
+    Pulls text output from predictions.
 
     parameters:
         abstracts, dict: keys are filenames, values are strings with abstracts
         raw_preds, dict: keys are filenames, values are raw output of gpt3
-        bert_name, str: name of BERT model to use to embed relations
-        label_path, str: path to a file with relation labels and example
-            sentences containing them
-        embed_rels, bool: True if relations should be converted to standard
-            labels by embedding
 
     returns:
         trip_preds, dict of list: keys are filenames and values are lists of
             the triple tuples
     """
-    if embed_rels:
-        # Load the BERT model, and embed relation labels
-        verboseprint('\nLoading BERT model...')
-        verboseprint(f'Model name: {bert_name}')
-        tokenizer, model = be.load_model(pretrained=bert_name)
-
-        # Embed relation labels
-        verboseprint('\nEmbedding relation labels...')
-        with open(label_path) as infile:
-            label_dict = json.load(infile)
-        label_embed_dict = be.embed_labels(label_dict, tokenizer, model)
-        label_df = pd.DataFrame.from_dict(label_embed_dict, orient='index')
-    else:
-        tokenizer = None
-        model = None
-        label_df = None
-
     # Format preds
     trip_preds = {}
     for fname, abstract_pred in tqdm(raw_preds.items()):
@@ -97,23 +47,10 @@ def process_preds(abstracts, raw_preds, bert_name, label_path, embed_rels=False)
             spl = pred_text.split(", \n")
             doc_triples = [literal_eval(t) for t in pred_text.split(', \n')]
         except SyntaxError:
-            continue
-        except ValueError:
-            continue
-        # Embed relations if asked
-        if embed_rels:
-            embedded_trips = []
-            for trip in doc_triples:
-                label = embed_relation(trip, label_df, model, tokenizer)
-                if label is not None: # Drops triples with no label assignment
-                    new_trip = (trip[0], label, trip[2])
-                    embedded_trips.append(new_trip)
-            trip_preds[fname] = embedded_trips
-            verboseprint(f'\nTriples for doc {fname} after '
-                 f'embedding:\n{embedded_trips}')
-        # Otherwise, leave them as-is
-        else:
-            trip_preds[fname] = doc_triples
+            doc_triples = abstract_pred['choices'][0]['message']['content'] # For consistency with manual prompts code
+        except ValueError:                                                 
+            doc_triples = abstract_pred['choices'][0]['message']['content'] 
+        trip_preds[fname] = doc_triples
 
     return trip_preds
 
@@ -182,8 +119,7 @@ def gpt3_predict(abstracts, prompt, fmt=False, model='text-davinci-003',
     return raw_preds
 
 
-def main(text_dir, prompt_file, out_loc, out_prefix, embed_rels, label_path,
-            bert_name):
+def main(text_dir, prompt_file, out_loc, out_prefix):
 
     # Read in the abstracts
     verboseprint('\nReading in abstracts...')
@@ -209,8 +145,7 @@ def main(text_dir, prompt_file, out_loc, out_prefix, embed_rels, label_path,
 
     # Format output in dygiepp format
     verboseprint('\nFormatting predictions...')
-    final_preds = process_preds(abstracts, raw_preds, bert_name, label_path,
-            embed_rels)
+    final_preds = process_preds(abstracts, raw_preds)
 
     # Save output
     verboseprint('\nSaving output...')
@@ -233,27 +168,11 @@ if __name__ == "__main__":
             help='Path to save output')
     parser.add_argument('out_prefix', type=str,
             help='String to prepend to save file names')
-    parser.add_argument('--embed_rels', action='store_true',
-            help='Whether or not to embed relations to get standardized '
-            'labels. If passed, must also pass label_path')
-    parser.add_argument('-label_path', type=str, default='',
-            help='Path to a json file where keys are the relation '
-            'labels, and values are lists of strings, where each string '
-            'is an example sentence that literally uses the relation label.')
-    parser.add_argument('-bert_name', type=str,
-            default="alvaroalon2/biobert_genetic_ner",
-            help='Name of pretrained BERT model from the huggingface '
-            'transformers library. Default is the BioBERt genetic NER '
-            'model.')
     parser.add_argument('-v', '--verbose', action='store_true',
             help='Whether or not to print output.')
 
     args = parser.parse_args()
 
-    if args.embed_rels:
-        assert args.label_path != '', ('--embed_rels was specified, -label_path '
-                'must be provided.')
-        args.label_path = abspath(args.label_path)
     args.text_dir = abspath(args.text_dir)
     args.prompt_file = abspath(args.prompt_file)
     args.out_loc = abspath(args.out_loc)
@@ -262,5 +181,4 @@ if __name__ == "__main__":
 
     openai.api_key = getenv("OPENAI_API_KEY")
 
-    main(args.text_dir, args.prompt_file, args.out_loc, args.out_prefix,
-        args.embed_rels, args.label_path, args.bert_name)
+    main(args.text_dir, args.prompt_file, args.out_loc, args.out_prefix)

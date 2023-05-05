@@ -5,7 +5,7 @@ Author: Serena G. Lotreck
 """
 import pytest
 import sys
-sys.path.append('../models/distant_supervision_re')
+sys.path.append('../models/heuristic')
 import pandas as pd
 import spacy
 import benepar
