@@ -1,1 +1,0 @@
-Extract the relations Activates, Inhibits, Produces, Interacts and IsIn from the following text as (Subject, Predicate, Object) triples in the format ("Subject", "predicate", "Object"): {abstract_txt[0]}

@@ -14,7 +14,7 @@ import jsonlines
 import json
 import pandas as pd
 import sys
-sys.path.append('../distant_supervision_re/')
+sys.path.append('../heuristic/')
 import bert_embeddings as be
 import phrase_utils as pu
 
@@ -48,8 +48,8 @@ def process_preds(abstracts, raw_preds):
             doc_triples = [literal_eval(t) for t in pred_text.split(', \n')]
         except SyntaxError:
             doc_triples = abstract_pred['choices'][0]['message']['content'] # For consistency with manual prompts code
-        except ValueError:                                                 
-            doc_triples = abstract_pred['choices'][0]['message']['content'] 
+        except ValueError:
+            doc_triples = abstract_pred['choices'][0]['message']['content']
         trip_preds[fname] = doc_triples
 
     return trip_preds

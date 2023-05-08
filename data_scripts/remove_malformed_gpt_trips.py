@@ -21,10 +21,17 @@ def main(to_clean):
     num_dropped = defaultdict(int)
     for doc_key, doc_trips in data.items():
         for trip in doc_trips:
-            if len(trip) != 3:
-                num_dropped[doc_key] += 1
-            else:
-                clean_data[doc_key].append(trip)
+            if isinstance(trip, list):
+                if len(trip) != 3:
+                    num_dropped[doc_key] += 1
+                else:
+                    # Account for the fact that the elements of the triple may also be lists
+                    list_elts = [isinstance(e, list) for e in trip]
+                    if True in list_elts:
+                        num_dropped[doc_key] += 1
+                    else:
+                        clean_data[doc_key].append(trip)
+            else: num_dropped[doc_key] += 1
 
     # Save and print results
     print('\nNumber of triples with a non-3 length that were dropped:')

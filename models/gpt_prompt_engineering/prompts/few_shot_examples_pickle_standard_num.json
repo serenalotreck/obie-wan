@@ -1,0 +1,122 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text:  In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. It is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199 A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199 A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of these, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified them as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of these amides was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that they act as phytoalexins. The accumulation of these amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins. The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199. A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid.', 'Nicotine is produced in the roots and accumulated mainly in the leaves.', 'Jasmonates play a central signaling role in damage-induced nicotine formation.', 'The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway.', 'Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors.', 'The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway.', 'Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes.', 'The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199.', 'A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins. The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species.', 'HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves.', 'Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses.', 'The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry.', 'The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine.', 'Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins.', 'The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2.', 'We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS.', 'Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana.', 'Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Nicotine is the predominant alkaloid.', 'Nicotine is found in tobacco (Nicotiana tabacum).']"
+ 		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: In addition, the expression of HDA19 was induced by wounding, the pathogen Alternaria brassicicola, and the plant hormones jasmonic acid and ethylene."
+		},
+		{
+			"role": "assistant",
+			"content": "['The expression of HDA19 was induced by wounding.', 'The expression of HDA19 was induced by the pathogen Alternaria brassicicola.', 'The expression of HDA19 was induced by the plant hormone jasmonic acid.', 'The expression of HDA19 was induced by the plant hormone ethylene.']"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: These homologous clusters of ERF genes are possibly derived from two ancestral diploids."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('homologous clusters of ERF genes', 'are possibly derived from', 'two ancestral diploids')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Jasmonates play a central signaling role in damage-induced nicotine formation."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Jasmonates', 'play a central signaling role in', 'damage-induced nicotine formation')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('Jasmonates', 'activates', 'damage-induced nicotine formation')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		}
+ 	]
+ }

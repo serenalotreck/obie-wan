@@ -83,6 +83,9 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                         except openai.error.RateLimitError:
                             num_fails += 1
                             print(f'On attempt {num_fails} for doc {doc_name}')
+                        except openai.error.APIError:
+                            num_fails += 1
+                            print(f'On attempt {num_fails} for doc {doc_name}')
 
                     commonsenseprint(f'\nRaw response:\n{response}')
 
@@ -126,6 +129,9 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                     except openai.error.RateLimitError:
                         num_fails += 1
                         print(f'On attempt {num_fails} for doc {doc_name}')
+                    except openai.error.APIError:
+                        num_fails += 1
+                        print(f'On attempt {num_fails} for doc {doc_name}')
                 commonsenseprint(f'\nRaw response:\n{response}')
 
                 # Pull out the model response
@@ -135,7 +141,7 @@ def gpt_predict(abstracts, prompts, model='gpt-3.5-turbo'):
                     literal_response = response['choices'][0]['message']['content']
                 except ValueError:
                     literal_response = response['choices'][0]['message']['content']
-                
+
                 commonsenseprint(f'\nLiteral response:\n{literal_response}')
 
                 # If it's a list, just extend the prev_out instead of append
