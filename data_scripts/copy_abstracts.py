@@ -24,7 +24,11 @@ def main(dataset, all_abstract_dir, new_abstract_dir, kind):
 
     # Make them into the filepaths to copy
     if kind == 'all':
-        copy_keys = [all_abstract_dir + '/' + k + '.*' for k in keys]
+        copy_keys = []
+        for k in keys:
+            txt_path = f'{all_abstract_dir}/{k}.txt'
+            ann_path = f'{all_abstract_dir}/{k}.ann'
+            copy_keys.extend([txt_path, ann_path])
     elif kind == 'txt':
         copy_keys = [all_abstract_dir + '/' + k + '.txt' for k in keys]
 

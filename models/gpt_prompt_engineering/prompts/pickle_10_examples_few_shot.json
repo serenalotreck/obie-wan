@@ -1,0 +1,346 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text:  In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. It is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199 A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199 A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of these, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified them as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of these amides was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that they act as phytoalexins. The accumulation of these amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins. The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Herbivore-induced plant volatiles (HIPVs) are commonly emitted from plants after herbivore attack. These HIPVs are mainly regulated by the defensive plant hormone jasmonic acid (JA) and its volatile derivative methyl jasmonate (MeJA). Over the past 3 decades researchers have documented that HIPVs can repel or attract herbivores, attract the natural enemies of herbivores, and in some cases they can induce or prime plant defenses prior to herbivore attack. In a recent paper, I reported that feeding by gypsy moth caterpillars, exogenous MeJA application, and mechanical damage induce the emissions of volatiles from blueberry plants, albeit differently. In addition, blueberry branches respond to HIPVs emitted from neighboring branches of the same plant by increasing the levels of JA and resistance to herbivores (i.e., direct plant defenses), and by priming volatile emissions (i.e., indirect plant defenses). Similar findings have been reported recently for sagebrush, poplar, and lima beans. Here, I describe a push-pull method for collecting blueberry volatiles induced by herbivore (gypsy moth) feeding, exogenous MeJA application, and mechanical damage. The volatile collection unit consists of a 4 L volatile collection chamber, a 2-piece guillotine, an air delivery system that purifies incoming air, and a vacuum system connected to a trap filled with Super-Q adsorbent to collect volatiles. Volatiles collected in Super-Q traps are eluted with dichloromethane and then separated and quantified using Gas Chromatography (GC). This volatile collection method was used in my study to investigate the volatile response of undamaged branches to exposure to volatiles from herbivore-damaged branches within blueberry plants. These methods are described here. Briefly, undamaged blueberry branches are exposed to HIPVs from neighboring branches within the same plant. Using the same techniques described above, volatiles emitted from branches after exposure to HIPVs are collected and analyzed."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Herbivore-induced plant volatiles (HIPVs) are commonly emitted from plants after herbivore attack. These HIPVs are mainly regulated by the defensive plant hormone jasmonic acid (JA) and JA’s volatile derivative methyl jasmonate (MeJA). Over the past 3 decades researchers have documented that HIPVs can repel or attract herbivores, attract the natural enemies of herbivores, and in some cases HIPVs can induce or prime plant defenses prior to herbivore attack. In a recent paper, I reported that feeding by gypsy moth caterpillars, exogenous MeJA application, and mechanical damage induce the emissions of volatiles from blueberry plants, albeit differently. In addition, blueberry branches respond to HIPVs emitted from neighboring branches of the same plant by increasing the levels of JA and resistance to herbivores (i.e., direct plant defenses), and by priming volatile emissions (i.e., indirect plant defenses). Similar findings have been reported recently for sagebrush, poplar, and lima beans. Here, I describe a push-pull method for collecting blueberry volatiles induced by herbivore (gypsy moth) feeding, exogenous MeJA application, and mechanical damage. The volatile collection unit consists of a 4 L volatile collection chamber, a 2-piece guillotine, an air delivery system that purifies incoming air, and a vacuum system connected to a trap filled with Super-Q adsorbent to collect volatiles. Volatiles collected in Super-Q traps are eluted with dichloromethane and then separated and quantified using Gas Chromatography (GC). This volatile collection method was used in my study to investigate the volatile response of undamaged branches to exposure to volatiles from herbivore-damaged branches within blueberry plants. These methods are described here. Briefly, undamaged blueberry branches are exposed to HIPVs from neighboring branches within the same plant. Using the same techniques described above, volatiles emitted from branches after exposure to HIPVs are collected and analyzed."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Suspension cultures were incubated in the presence and absence of gibberellic acid (GA(3)) in an attempt to define a new experimental system for study of the molecular action of gibberellins upon growth. Unlike many suspension cultures, an auxin-independent green clone from spinach (Spinacia oleracea L.) and an auxin-dependent line of \"Paul's Scarlet\" rose (Rosa sp.) were promoted in expansion growth by GA(3) at 10(-11) to 10(-6) molar. In Rosa the cells also elongated upon GA(3) treatment whereas in Spinacia they remained isodiametric.Attempts were made to intensify the response. The effect of GA(3) in Spinacia was stronger when gas exchange between the culture and the laboratory air was facilitated. The response of Rosa was dependent on the presence of a cytokinin, although this culture did not require exogenous cytokinin for serial subculture. GA(3) antagonized the growth retardant AMO-1618 in Rosa but not in Spinacia. In general, conditions that enhanced growth also rendered GA(3) a more effective promoter; conversely, GA(3) tended to become inhibitory under conditions that permitted only slow growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Suspension cultures were incubated in the presence and absence of gibberellic acid (GA(3)) in an attempt to define a new experimental system for study of the molecular action of gibberellins upon growth. Unlike many suspension cultures, an auxin-independent green clone from spinach (Spinacia oleracea L.) and an auxin-dependent line of \"Paul's Scarlet\" rose (Rosa sp.) were promoted in expansion growth by GA(3) at 10(-11) to 10(-6) molar. In the auxin-dependent Rosa line the cells also elongated upon GA(3) treatment whereas in the auxin-independent green clone from Spinacia the cells remained isodiametric. Attempts were made to intensify the response. The effect of GA(3) in the auxin-independent green clone from Spinacia was stronger when gas exchange between the culture and the laboratory air was facilitated. The response of the auxin-dependent Rosa line was dependent on the presence of a cytokinin, although the auxin-dependent Rosa line culture did not require exogenous cytokinin for serial subculture. GA(3) antagonized the growth retardant AMO-1618 in the auxin-dependent Rosa line culture but not in the auxin-independent green clone from Spinacia. In general, conditions that enhanced growth also rendered GA(3) a more effective promoter; conversely, GA(3) tended to become inhibitory under conditions that permitted only slow growth."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid. Nicotine is produced in the roots and accumulated mainly in the leaves. Jasmonates play a central signaling role in damage-induced nicotine formation. The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway. Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors. The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway. Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes. The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199. A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid.', 'Nicotine is produced in the roots and accumulated mainly in the leaves.', 'Jasmonates play a central signaling role in damage-induced nicotine formation.', 'The genome sequence of tobacco provides us an almost complete inventory of structural and regulatory genes involved in the nicotine pathway.', 'Phylogenetic and expression analyses revealed a series of structural genes of the nicotine pathway, forming a regulon, under the control of jasmonate-responsive ETHYLENE RESPONSE FACTOR (ERF) transcription factors.', 'The duplication of NAD and polyamine metabolic pathways and the subsequent recruitment of duplicated primary metabolic genes into the nicotine biosynthesis regulon were suggested to be the drivers for pyridine and pyrrolidine ring formation steps early in the pathway.', 'Transcriptional regulation by ERF and cooperatively acting MYC2 transcription factors are corroborated by the frequent occurrence of cognate cis-regulatory elements of the factors in the promoter regions of the downstream structural genes.', 'The allotetraploid tobacco has homologous clusters of ERF genes on different chromosomes, which are possibly derived from two ancestral diploids and include either nicotine-controlling ERF189 or ERF199.', 'A large chromosomal deletion was found within one allele of the nicotine-controlling NICOTINE2 locus, which is part of one of the ERF gene clusters, and which has been used to breed tobacco cultivars with a low-nicotine content.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species. HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves. Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses. The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry. The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine. Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins. The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2. We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS. Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana. Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Changes in specialized metabolites were analyzed in wheat leaves inoculated with Bipolaris sorokiniana, the causal agent of spot blotch of Poaceae species.', 'HPLC analysis detected the accumulation of six compounds in B. sorokiniana-infected leaves.', 'Of the six compounds identified by HPLC, we purified two compounds by silica gel and ODS column chromatography and preparative HPLC, and identified the two componds as cinnamic acid amides, N-cinnamoyl-9-hydroxy-8-oxotryptamine and N-cinnamoyl-8-oxotryptamine, by spectroscopic analyses.', 'The remaining four compounds were predicted to be p-coumaric acid amides of hydroxyputrescine, hydroxyagmatine, hydroxydehydroagmatine, and agmatine by mass spectrometry.', 'The accumulation of two cinnamic acid amides was also induced by Fusarium graminearum infection, and by treatment with CuCl2, jasmonic acid, and isopentenyladenine.', 'Antifungal activity of the cinnamic acid amides induced by Fusarium graminearum infection, treatment with CuCl2, jasmonic acid, and isopentenyladine was shown by inhibition of conidial germination and germ tube elongation of F. graminearum and Alternaria brassicicola, indicating that the cinnamic acid amides act as phytoalexins.', 'The accumulation of the cinnamic acid amides also detected in barley leaves treated with CuCl2.', 'We examined the accumulation of 25 phenylamides in B. sorokiniana-infected wheat leaves using LC-MS/MS.', 'Hydroxycinnamic acid amides of tryptamine, serotonin, putrescine, and agmatine, were induced after infection with B. sorokiniana.', 'Thus, the induced accumulation of two groups of phenylamides, cinnamic acid amides with indole amines, and p-coumaric acid amides with putrescine and agmatine related amines, represents a major metabolic response of wheat to pathogen infection.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Herbivore-induced plant volatiles (HIPVs) are commonly emitted from plants after herbivore attack. These HIPVs are mainly regulated by the defensive plant hormone jasmonic acid (JA) and JA’s volatile derivative methyl jasmonate (MeJA). Over the past 3 decades researchers have documented that HIPVs can repel or attract herbivores, attract the natural enemies of herbivores, and in some cases HIPVs can induce or prime plant defenses prior to herbivore attack. In a recent paper, I reported that feeding by gypsy moth caterpillars, exogenous MeJA application, and mechanical damage induce the emissions of volatiles from blueberry plants, albeit differently. In addition, blueberry branches respond to HIPVs emitted from neighboring branches of the same plant by increasing the levels of JA and resistance to herbivores (i.e., direct plant defenses), and by priming volatile emissions (i.e., indirect plant defenses). Similar findings have been reported recently for sagebrush, poplar, and lima beans. Here, I describe a push-pull method for collecting blueberry volatiles induced by herbivore (gypsy moth) feeding, exogenous MeJA application, and mechanical damage. The volatile collection unit consists of a 4 L volatile collection chamber, a 2-piece guillotine, an air delivery system that purifies incoming air, and a vacuum system connected to a trap filled with Super-Q adsorbent to collect volatiles. Volatiles collected in Super-Q traps are eluted with dichloromethane and then separated and quantified using Gas Chromatography (GC). This volatile collection method was used in my study to investigate the volatile response of undamaged branches to exposure to volatiles from herbivore-damaged branches within blueberry plants. These methods are described here. Briefly, undamaged blueberry branches are exposed to HIPVs from neighboring branches within the same plant. Using the same techniques described above, volatiles emitted from branches after exposure to HIPVs are collected and analyzed."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Herbivore-induced plant volatiles (HIPVs) are commonly emitted from plants after herbivore attack.', 'These HIPVs are mainly regulated by the defensive plant hormone jasmonic acid (JA) and JA’s volatile derivative methyl jasmonate (MeJA).', 'Over the past 3 decades researchers have documented that HIPVs can repel or attract herbivores, attract the natural enemies of herbivores, and in some cases HIPVs can induce or prime plant defenses prior to herbivore attack.', 'In a recent paper, I reported that feeding by gypsy moth caterpillars, exogenous MeJA application, and mechanical damage induce the emissions of volatiles from blueberry plants, albeit differently.', 'In addition, blueberry branches respond to HIPVs emitted from neighboring branches of the same plant by increasing the levels of JA and resistance to herbivores (i.e., direct plant defenses), and by priming volatile emissions (i.e., indirect plant defenses).', 'Similar findings have been reported recently for sagebrush, poplar, and lima beans.', 'Here, I describe a push-pull method for collecting blueberry volatiles induced by herbivore (gypsy moth) feeding, exogenous MeJA application, and mechanical damage.', 'The volatile collection unit consists of a 4 L volatile collection chamber, a 2-piece guillotine, an air delivery system that purifies incoming air, and a vacuum system connected to a trap filled with Super-Q adsorbent to collect volatiles.', 'Volatiles collected in Super-Q traps are eluted with dichloromethane and then separated and quantified using Gas Chromatography (GC).', 'This volatile collection method was used in my study to investigate the volatile response of undamaged branches to exposure to volatiles from herbivore-damaged branches within blueberry plants.', 'These methods are described here.', 'Briefly, undamaged blueberry branches are exposed to HIPVs from neighboring branches within the same plant.', 'Using the same techniques described above, volatiles emitted from branches after exposure to HIPVs are collected and analyzed.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function:  Suspension cultures were incubated in the presence and absence of gibberellic acid (GA(3)) in an attempt to define a new experimental system for study of the molecular action of gibberellins upon growth. Unlike many suspension cultures, an auxin-independent green clone from spinach (Spinacia oleracea L.) and an auxin-dependent line of \"Paul's Scarlet\" rose (Rosa sp.) were promoted in expansion growth by GA(3) at 10(-11) to 10(-6) molar. In the auxin-dependent Rosa line the cells also elongated upon GA(3) treatment whereas in the auxin-independent green clone from Spinacia the cells remained isodiametric. Attempts were made to intensify the response. The effect of GA(3) in the auxin-independent green clone from Spinacia was stronger when gas exchange between the culture and the laboratory air was facilitated. The response of the auxin-dependent Rosa line was dependent on the presence of a cytokinin, although the auxin-dependent Rosa line culture did not require exogenous cytokinin for serial subculture. GA(3) antagonized the growth retardant AMO-1618 in the auxin-dependent Rosa line culture but not in the auxin-independent green clone from Spinacia. In general, conditions that enhanced growth also rendered GA(3) a more effective promoter; conversely, GA(3) tended to become inhibitory under conditions that permitted only slow growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Suspension cultures were incubated in the presence and absence of gibberellic acid (GA(3)) in an attempt to define a new experimental system for study of the molecular action of gibberellins upon growth.', 'Unlike many suspension cultures, an auxin-independent green clone from spinach (Spinacia oleracea L.) and an auxin-dependent line of \"Paul's Scarlet\" rose (Rosa sp.) were promoted in expansion growth by GA(3) at 10(-11) to 10(-6) molar.', 'In the auxin-dependent Rosa line the cells also elongated upon GA(3) treatment whereas in the auxin-independent green clone from Spinacia the cells remained isodiametric.', 'Attempts were made to intensify the response.', 'The effect of GA(3) in the auxin-independent green clone from Spinacia was stronger when gas exchange between the culture and the laboratory air was facilitated.', 'The response of the auxin-dependent Rosa line was dependent on the presence of a cytokinin, although the auxin-dependent Rosa line culture did not require exogenous cytokinin for serial subculture.', 'GA(3) antagonized the growth retardant AMO-1618 in the auxin-dependent Rosa line culture but not in the auxin-independent green clone from Spinacia.', 'In general, conditions that enhanced growth also rendered GA(3) a more effective promoter; conversely, GA(3) tended to become inhibitory under conditions that permitted only slow growth.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: In tobacco (Nicotiana tabacum), nicotine is the predominant alkaloid."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Nicotine is the predominant alkaloid.', 'Nicotine is found in tobacco (Nicotiana tabacum).']"
+ 		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: In addition, the expression of HDA19 was induced by wounding, the pathogen Alternaria brassicicola, and the plant hormones jasmonic acid and ethylene."
+		},
+		{
+			"role": "assistant",
+			"content": "['The expression of HDA19 was induced by wounding.', 'The expression of HDA19 was induced by the pathogen Alternaria brassicicola.', 'The expression of HDA19 was induced by the plant hormone jasmonic acid.', 'The expression of HDA19 was induced by the plant hormone ethylene.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: These HIPVs are mainly regulated by the defensive plant hormone jasmonic acid (JA) and JA’s volatile derivative methyl jasmonate (MeJA)."
+		},
+		{
+			"role": "assistant",
+			"content": "['These HIPVs are mainly regulated by jasmonic acid.', 'These HIPVs are mainly regulated by JA.', 'JA is a defensive plant hormone.', 'These HIPVs are mainly regulated by methyl jasmonate.', 'These HIPVs are mainly regulated by MeJA.', 'Methyl jasmonate is a volatile derivative of JA.', 'MeJA is a volatile derivative of JA.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: The response of the auxin-dependent Rosa line was dependent on the presence of a cytokinin, although the auxin-dependent Rosa line culture did not require exogenous cytokinin for serial subculture."
+		},
+		{
+			"role": "assistant",
+			"content": "['The response of the auxin-dependent Rosa line was dependent on the presence of cytokinin.', 'The auxin-dependent Rosa line culture did not require exogenous cytokinin for serial subculture.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: A number of molecular species can function as signal molecules or elicitors of phytoalexin synthesis, including poly- and oligosaccharides, proteins and polypeptides, and fatty acids."
+		},
+		{
+			"role": "assistant",
+			"content": "['Poly- and oligosaccharides can function as signal molecules.', 'Poly- and oligosaccharides can function as elicitors of phytoalexin synthesis.', 'Proteins can function as signal molecules.', 'Proteins can function as elicitors of phytoalexin synthesis.', 'Polypeptides can function as signal molecules.', 'Polypeptides can function as elicitors of phytoalexin synthesis.', 'Fatty acids can function as signal molecules.', 'Fatty acids can function as elicitors of phytoalexin synthesis.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: We conclude that plants prioritize resistance of reproductive tissues over vegetative tissues, and that a chewing herbivore species is the main driver of responses in flowering B. nigra."
+		},
+		{
+			"role": "assistant",
+			"content": "['We conclude that plants prioritize resistance of reproductive tissues over vegetative tissues.', 'We conclude that a chewing herbivore species is the main driver of responses in flowering B. nigra.'] "
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Gibberellic acid (alone) treated animals showed the highest activity of liver aspartate aminotransferase (AST) while no significant variations were recorded among other groups."
+		},
+		{
+			"role": "assistant",
+			"content": "['Gibberellic acid (alone) treated animals showed the highest activity of liver aspartate aminotransferase.', 'Gibberellic acid (alone) treated animals showed the highest activity of liver AST.', 'No significant variations were recorded in other groups.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Among the rice (Oryza sativa) WOX proteins, a loss of OsWOX3A function in narrow leaf2 (nal2) nal3 double mutants (termed nal2/3) causes pleiotropic effects, such as narrow and curly leaves, opened spikelets, narrow grains, more tillers, and fewer lateral roots, but almost normal plant height."
+		},
+		{
+			"role": "assistant",
+			"content": "['WOX proteins are in rice.', 'WOX proteins are in Oryza sativa.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes narrow leaves.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes narrow leaves.', 'A loss of OsWOX3A function in nal2/3 mutants causes narrow leaves.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes curly leaves.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes curly leaves.', 'A loss of OsWOX3A function in nal2/3 mutants causes curly leaves.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes opened spikelets.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes opened spikelets.', 'A loss of OsWOX3A function in nal2/3 mutants causes opened spikelets.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes narrow grains.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes narrow grains.', 'A loss of OsWOX3A function in nal2/3 mutants causes narrow grains.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes more tillers.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes more tillers.', 'A loss of OsWOX3A function in nal2/3 mutants causes more tillers.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes fewer lateral roots.', 'A loss of OsWOX3A function in nal2 nal3 double mutants causes fewer lateral roots.', 'A loss of OsWOX3A function in nal2/3 mutants causes fewer lateral roots.', 'A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes almost normal plant height.', 'Among the rice WOX proteins, a loss of OsWOX3A function in nal2 nal3 double mutants causes almost normal plant height.', 'Among the rice WOX proteins, a loss of OsWOX3A function in nal2/3 mutants causes almost normal plant height.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: We sought to define JAs and OPDA functions through comparative defense susceptibility characteristics of three Arabidopsis (Arabidopsis thaliana) genotypes: aos, lacking JAs and OPDA; opda reductase3 (opr3), deficient in JA production but can accumulate OPDA; and transgenics that overexpress OPR3."
+		},
+		{
+			"role": "assistant",
+			"content": "'[We sought to define JAs functions.', 'We sought to define OPDA functions.', 'We used comparative defense susceptibility characteristics of three Arabidopsis genotypes to define JAs functions.', 'We used comparative defense susceptibility characteristics of three Arabidopsis thaliana genotypes to define JAs functions.', 'We used comparative defense susceptibility characteristics of three Arabidopsis genotypes to define OPDA functions.', 'We used comparative defense susceptibility characteristics of three Arabidopsis thaliana genotypes to define OPDA functions.', 'We used comparative defense susceptibility characteristics of aos to define JAs functions.', 'We used comparative defense susceptibility characteristics of aos to define OPDA functions.', 'aos is lacking JAs.', 'aos is lacking OPDA.', 'aos is an Arabidopsis genotype.', 'aos is an Arabidopsis thaliana genotype.', ' We used comparative defense susceptibility characteristics of opda reductase3 to define OPDA functions.', 'We used comparative defense susceptibility characteristics of opr3 to defineOPDA functions.', 'We used comparative defense susceptibility characteristics of opda reductase3 to define JAs functions.', 'We used comparative defense susceptibility characteristics of opr3 to define JAs functions.',  'opr3 is deficient in JA production.', 'opda reductase3 can accumulate OPDA.', 'opr3 is deficient in JA production.', 'opda reductase3 can accumulate OPDA.', 'opr3 is an Arabidopsis genotype.', 'opr3 is an Arabidopsis thaliana genotype.', 'We used comparative defense susceptibility characteristics of transgenics that overexpress OPR3 to define JAs functions.', 'We used comparative defense susceptibility characteristics of transgenics that overexpress OPR3 to define OPDA functions.']"
+		},
+		{
+			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Furthermore, all 18 Arabidopsis (Arabidopsis thaliana) accessions tested displayed SA-mediated suppression of JA-responsive gene expression, highlighting the potential significance of SA-mediated suppression of JA-responsive gene expression phenomenon in induced plant defenses in nature."
+		},
+		{
+			"role": "assistant",
+			"content": "['All 18 Arabidopsis accessions tested displayed SA-mediated suppression of JA-responsive gene expression.', 'All 18 Arabidopsis thaliana accessions tested displayed SA-mediated suppression of JA-responsive gene expression.', 'SA-mediated suppression of JA-responsive gene expression is potentially significant in induced plant defenses in nature.']"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: These homologous clusters of ERF genes are possibly derived from two ancestral diploids."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('homologous clusters of ERF genes', 'are possibly derived from', 'two ancestral diploids')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Jasmonates play a central signaling role in damage-induced nicotine formation."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Jasmonates', 'play a central signaling role in', 'damage-induced nicotine formation')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('Jasmonates', 'activates', 'damage-induced nicotine formation')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: These HIPVs are mainly regulated by jasmonic acid."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('HIPVs', 'regulated by', 'jasmonic acid')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('HIPVs', 'interacts', 'jasmonic acid')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: The response of the auxin-dependent Rosa line was dependent on the presence of cytokinin."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('auxin-dependent Rosa line', 'depended on', 'cytokinin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Polypeptides can function as elicitors of phytoalexin synthesis."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Polypeptides', 'can function as', 'elicitors of phytoalexin synthesis')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('Polypeptides', 'activates', 'phytoalexin synthesis')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: We conclude that plants prioritize resistance of reproductive tissues over vegetative tissues."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Plants', 'prioritize', 'resistance of reproductive tissues')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Gibberellic acid (alone) treated animals showed the highest activity of liver AST."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Gibberellic acid treated animals', 'showed the highest activity of', 'AST')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('Gibberellic acid', 'activates', 'AST')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: A loss of OsWOX3A function in narrow leaf2 nal3 double mutants causes narrow leaves."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Loss of OsWOX3A function', 'causes', 'narrow leaves')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: opda reductase3 can accumulate OPDA."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('opda reductase3', 'can accumulate', 'OPDA')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('opda reductase3', 'produces', 'OPDA')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: All 18 Arabidopsis thaliana accessions tested displayed SA-mediated suppression of JA-responsive gene expression."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('Arabidopsis thaliana', 'displays', 'SA-mediated expression of JA responsive gene expression')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('SA-mediated expression of JA responsive gene expression', 'is-in', 'Arabidopsis thaliana')"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with one of the list [activates, inhibits, produces, interacts, is-in], returning the phrase 'No relation' if none of the relations from the provided list match the semantics of the triple."
+		}
+ 	]
+ }

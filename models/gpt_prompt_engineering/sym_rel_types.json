@@ -1,0 +1,6 @@
+{
+    "scierc": "['COMPARE', 'CONJUNCTION']",
+    "cdr": "['CID']",
+    "bioinfer": "['PPI']",
+    "pickle": "['interacts']"
+}

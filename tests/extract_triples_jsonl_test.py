@@ -6,7 +6,7 @@ Author: Serena G. Lotreck
 import pytest
 import sys
 sys.path.append('../data_scripts')
-from extract_triples import get_doc_triples
+from extract_triples_jsonl import get_doc_triples
 
 
 @pytest.fixture
