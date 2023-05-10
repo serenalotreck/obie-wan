@@ -139,14 +139,14 @@ def get_doc_trip_counts(trips, gold_trips, check_rel_labels, nlp, pos_neg,
             gold_trip_list = []
             for elt in g:
                 doc = nlp(elt)
-                tok_list = [tok.text for sent in doc.sents for tok in sent]
+                tok_list = [tok.text.lower() for sent in doc.sents for tok in sent]
                 gold_trip_list.append(tok_list)
             gold_toks.append(gold_trip_list)
         else:
             gold_trip_list = []
             for elt in [g[0], g[2]]:
                 doc = nlp(elt)
-                tok_list = [tok.text for sent in doc.sents for tok in sent]
+                tok_list = [tok.text.lower() for sent in doc.sents for tok in sent]
                 gold_trip_list.append(tok_list)
             gold_toks.append(gold_trip_list)
     gold_toks = remove_trip_dups(gold_toks, check_rel_labels, sym_labs)
@@ -158,14 +158,14 @@ def get_doc_trip_counts(trips, gold_trips, check_rel_labels, nlp, pos_neg,
             trip_list = []
             for elt in t:
                 doc = nlp(elt)
-                tok_list = [tok.text for sent in doc.sents for tok in sent]
+                tok_list = [tok.text.lower() for sent in doc.sents for tok in sent]
                 trip_list.append(tok_list)
             trip_toks.append(trip_list)
         else:
             trip_list = []
             for elt in [t[0], t[2]]:
                 doc = nlp(elt)
-                tok_list = [tok.text for sent in doc.sents for tok in sent]
+                tok_list = [tok.text.lower() for sent in doc.sents for tok in sent]
                 trip_list.append(tok_list)
             trip_toks.append(trip_list)
     trip_toks = remove_trip_dups(trip_toks, check_rel_labels, sym_labs)
