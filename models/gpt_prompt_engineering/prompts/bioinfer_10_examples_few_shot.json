@@ -1,0 +1,345 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that they synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: The binding surfaces for segment 1 and profilin are different, although they peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Cofilin was identified by peptide sequencing, and cofilin recruitment and Listeria tail length were found to be pH-dependent, in agreement with its recently reported role in enhancing actin filament turnover."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "Cofilin was identified by peptide sequencing, and cofilin recruitment and Listeria tail length were found to be pH-dependent, in agreement with cofilin’s recently reported role in enhancing actin filament turnover."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells. Three-dimensional fluorescence microscopy of the fluorescent analog of actin with a high affinity for profilin revealed that it incorporated into cortical cytoplasmic fibers and was also distributed diffusely in the non-cortical cytoplasm consistent with a bias of actin assembly near the surface of the cell. To test these models in living cells using imaging techniques, we prepared a new fluorescent analog of actin that bound profilin, a protein that interacts with phosphoinositides and actin-monomers in a mutually exclusive manner, with an order of magnitude greater affinity (Kd = 3.6 microM) than cys-374-labeled actin (Kd > 30 microM), yet retained the ability to inhibit DNase I."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells. Three-dimensional fluorescence microscopy of the fluorescent analog of actin with a high affinity for profilin revealed that the fluorescent analog of actin was incorporated into cortical cytoplasmic fibers and was also distributed diffusely in the non-cortical cytoplasm consistent with a bias of actin assembly near the surface of the cell. To test models of fluorescent actin in living cells using imaging techniques, we prepared a new fluorescent analog of actin that bound profilin, a protein that interacts with phosphoinositides and actin-monomers in a mutually exclusive manner, with an order of magnitude greater affinity (Kd = 3.6 microM) than cys-374-labeled actin (Kd > 30 microM), yet retained the ability to inhibit DNase I."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin. The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin.', 'The colocalization of gelsolin and profilin in motile, microfilament rich areas supports the hypothesis that gelsolin and profilin synergistically regulate the actin dynamics that underlie neurite growth.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin. This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The binding surfaces for segment 1 and profilin are different, although the binding surfaces for segment 1 and profilin peripherally overlap on actin.', 'This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Cofilin was identified by peptide sequencing, and cofilin recruitment and Listeria tail length were found to be pH-dependent, in agreement with cofilin’s recently reported role in enhancing actin filament turnover."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Cofilin was identified by peptide sequencing, and cofilin recruitment and Listeria tail length were found to be pH-dependent, in agreement with cofilin’s recently reported role in enhancing actin filament turnover.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells. Three-dimensional fluorescence microscopy of the fluorescent analog of actin with a high affinity for profilin revealed that the fluorescent analog of actin was incorporated into cortical cytoplasmic fibers and was also distributed diffusely in the non-cortical cytoplasm consistent with a bias of actin assembly near the surface of the cell. To test models of fluorescent actin in living cells using imaging techniques, we prepared a new fluorescent analog of actin that bound profilin, a protein that interacts with phosphoinositides and actin-monomers in a mutually exclusive manner, with an order of magnitude greater affinity (Kd = 3.6 microM) than cys-374-labeled actin (Kd > 30 microM), yet retained the ability to inhibit DNase I."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells.', 'Three-dimensional fluorescence microscopy of the fluorescent analog of actin with a high affinity for profilin revealed that the fluorescent analog of actin was incorporated into cortical cytoplasmic fibers and was also distributed diffusely in the non-cortical cytoplasm consistent with a bias of actin assembly near the surface of the cell.', 'To test models of fluorescent actin in living cells using imaging techniques, we prepared a new fluorescent analog of actin that bound profilin, a protein that interacts with phosphoinositides and actin-monomers in a mutually exclusive manner, with an order of magnitude greater affinity (Kd = 3.6 microM) than cys-374-labeled actin (Kd > 30 microM), yet retained the ability to inhibit DNase I.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Motile areas of leech neurites are rich in microfilaments and two actin-binding proteins: gelsolin and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Motile areas of leech neurites are rich in microfilaments.', 'Motile areas of leech neurites are rich in actin-binding protein gelsolin.', 'Motile areas of leech neurites are rich in actin-binding protein profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: This review describes three structures of actin complexed with different monomer-binding proteins, namely with DNase I, gelsolin segment 1, and profilin."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['This review describes three structures of actin complexed with monomer-binding protein DNase I.', 'This review describes three structures of actin complexed with monomer-binding protein gelsolin segment 1.', 'This review describes three structures of actin complexed with monomer-binding protein profilin.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Cofilin was identified by peptide sequencing, and cofilin recruitment and Listeria tail length were found to be pH-dependent, in agreement with cofilin’s recently reported role in enhancing actin filament turnover."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Cofilin was identified by peptide sequencing.', 'Cofilin recruitment was found to be pH-dependent.', 'Listeria tail length was found to be pH-dependent.', 'Cofilin was recently reported to have a role in enhancing actin filament turnover.', 'pH-dependent cofilin recruitment was in agreement with cofilin’s role in enhancing actin filament turnover.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: We also analysed NHEJ in other DNA damage response mutants and showed that the checkpoint mutant rad3-d and two recombination mutants defective in rhp51 and rhp54 (homologues of S.cerevisiae RAD51 and RAD54, respectively) are not affected."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['We analysed NHEJ in other DNA damage response mutants.', 'We showed that the checkpoint mutant rad3-d is not affected.', 'We showed that a recombination mutant defective in rhp51 was not affected.', 'We showed that a recombination mutant defective in rhp54 was not affected.', 'rhp51 is a homologue of RAD51.', 'RAD51 is a protein in S. cerevisiae.', 'rhp54 is a homologue of RAD54.', 'RAD54 is a protein in S. cerevisiae.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: In contrast, alpha actin and myosin heavy chain mRNA accumulation was not enhanced in hybrid embryos."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Alpha actin accumulation was not enhanced in hybrid embryos.', 'Myosin heavy chain mRNA accumulation was not enhanced in hybrid embryos.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: The influence of these collagens on cell morphology and the distribution pattern of actin, vimentin, talin, and vinculin was analyzed by light microscopy, conventional electron microscopy, immunofluorescence, and immunogold labeling after lysis-squirting."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The influence of these collagens on cell morphology was analyzed by light microscopy.', 'The influence of these collagens on cell morphology was analyzed by conventional electron microscopy.', 'The influence of these collagens on cell morphology was analyzed by immunofluorescence.', 'The influence of these collagens on cell morphology was analyzed by immunogold labeling after lysis-squirting.', 'The influence of these collagens on  the distribution pattern of actin was analyzed by light microscopy.', 'The influence of these collagens on the distribution pattern of actin was analyzed by conventional electron microscopy.', 'The influence of these collagens on  the distribution pattern of actin was analyzed by immunofluorescence.', 'The influence of these collagens on the distribution pattern of actin was analyzed by immunogold labeling after lysis-squirting.', 'The influence of these collagens on the distribution pattern of vimentin was analyzed by light microscopy.', 'The influence of these collagens on the distribution pattern of vimentin was analyzed by conventional electron microscopy.', 'The influence of these collagens on the distribution pattern of vimentin was analyzed by immunofluorescence.', 'The influence of these collagens on the distribution pattern of vimentin was analyzed by immunogold labeling after lysis-squirting.', 'The influence of these collagens on the distribution pattern of talin was analyzed by light microscopy.', 'The influence of these collagens on the distribution pattern of talin was analyzed by conventional electron microscopy.', 'The influence of these collagens on the distribution pattern of talin was analyzed by  immunofluorescence.', 'The influence of these collagens on the distribution pattern of talin was analyzed by immunogold labeling after lysis-squirting.', 'The influence of these collagens on the distribution pattern of vinculin was analyzed by light microscopy.', 'The influence of these collagens on the distribution pattern of vinculin was analyzed by conventional electron microscopy.', 'The influence of these collagens on the distribution pattern of vinculin was analyzed by  immunofluorescence.', 'The influence of these collagens on the distribution pattern of vinculin was analyzed by immunogold labeling after lysis-squirting.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Requirement of yeast fimbrin for actin organization and morphogenesis in vivo."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Requirement of yeast fimbrin for actin organization in vivo.', 'Requirement of yeast fimbrin for actin morphogenesis in vivo.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Mutations in Saccharomyces cerevisiae RFC5, DPB11, MEC1, DDC2 MEC3, RAD53, CHK1, PDS1, and DUN1 increased the rate of genome rearrangements up to 200-fold whereas mutations in RAD9, RAD17, RAD24, BUB3, and MAD3 had little effect."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Mutations in Saccharomyces cerevisiae RFC5  increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae DPB11 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae MEC1 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae DDC2 MEC3 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae RAD53 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae CHK1 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae PDS1 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae DUN1 increased the rate of genome rearrangements up to 200-fold.', 'Mutations in Saccharomyces cerevisiae RAD9 had little effect on genome rearrangements.', 'Mutations in Saccharomyces cerevisiae RAD17 had little effect on genome rearrangements.', 'Mutations in Saccharomyces cerevisiae RAD24 had little effect on genome rearrangements.', 'Mutations in Saccharomyces cerevisiae BUB3 had little effect on genome rearrangements.', 'Mutations in Saccharomyces cerevisiae MAD3 had little effect on genome rearrangements.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: E-cadherin, alpha-catenin, beta-catenin and gamma-catenin were expressed in a normal membranous pattern in all normal bladder epithelium specimens."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['E-cadherin was expressed in a normal membranous pattern in all normal bladder epithelium specimens.', 'alpha-catenin was expressed in a normal membranous pattern in all normal bladder epithelium specimens.', 'beta-catenin was expressed in a normal membranous pattern in all normal bladder epithelium specimens.', 'gamma-catenin was expressed in a normal membranous pattern in all normal bladder epithelium specimens.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Polyacrylamide gels of platelets heated at 45 degrees C for 90 minutes showed no increase in filamentous actin."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('platelets', 'showed no increase in', 'actin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "No relation"
+ 		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: This review describes three structures of actin complexed with monomer-binding protein gelsolin segment 1."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin', 'complexes with', 'gelsolin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin', 'PPI', 'gelsolin')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Cofilin was recently reported to have a role in enhancing actin filament turnover."
+		},
+		{
+			"role": "assistant",
+			"content": "('Cofilin', 'has a role in enhancing', 'actin filament turnover')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('Cofilin', 'PPI', 'actin')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Fluorescent actin analogs with a high affinity for profilin in vitro exhibit an enhanced gradient of assembly in living cells."
+		},
+		{
+			"role": "assistant",
+			"content": "('Fluorescent actin analogs', 'exhibit', 'enhanced gradient of assembly')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: rhp51 is a homologue of RAD51."
+		},
+		{
+			"role": "assistant",
+			"content": "('rhp51', 'is homologue of', 'RAD51')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('rhp51', 'PPI', 'RAD51')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Myosin heavy chain mRNA accumulation was not enhanced in hybrid embryos."
+		},
+		{
+			"role": "assistant",
+			"content": "('Myosin heavy chain mRNA accumulation', 'was not enhanced in', 'hybrid embryos')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: The influence of these collagens on the distribution pattern of vinculin was analyzed by immunogold labeling after lysis-squirting."
+		},
+		{
+			"role": "assistant",
+			"content": "('Influence of collagens on distribution pattern of vinculin', 'was analyzed by', 'immunogold labeling after lysis-squirting')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('collagens', 'PPI', 'vinculin')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Requirement of yeast fimbrin for actin morphogenesis in vivo."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin morphogenesis', 'requires', 'yeast fimbrin')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('actin', 'PPI', 'fimbrin')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Mutations in Saccharomyces cerevisiae RFC5  increased the rate of genome rearrangements up to 200-fold."
+		},
+		{
+			"role": "assistant",
+			"content": "('Mutations in Saccharomyces cerevisiae RFC5', 'increased the rate of', 'genome arrangements')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: E-cadherin was expressed in a normal membranous pattern in all normal bladder epithelium specimens."
+		},
+		{
+			"role": "assistant",
+			"content": "('E-cadherin', 'was expressed normally in', 'normal bladder epithelium specimens')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'PPI' if the relation represents a protein-protein interaction; otherwise, return the phrase 'No relation'."		}
+ 	]
+ }

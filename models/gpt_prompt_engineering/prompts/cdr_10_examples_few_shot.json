@@ -1,0 +1,345 @@
+ {
+ 	"0": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: OBJECTIVE: To describe associations between the use of benzodiazepines or related drugs (BZDs/RDs) and health, functional abilities and cognitive function in the elderly. METHODS: A non-randomised clinical study of patients aged > or =65 years admitted to acute hospital wards during 1 month. 164 patients (mean age +/- standard deviation [SD] 81.6 +/- 6.8 years) were admitted. Of these, nearly half (n = 78) had used BZDs/RDs before admission, and the remainder (n = 86) were non-users. Cognitive ability was assessed by the Mini-Mental State Examination (MMSE). Patients scoring > or =20 MMSE sum points were interviewed (n = 79) and questioned regarding symptoms and functional abilities during the week prior to admission. Data on use of BZDs/RDs before admission, current medications and discharge diagnoses were collected from medical records. Health, physical abilities and cognitive function were compared between BZD/RD users and non-users, and adjustments were made for confounding variables. The residual serum concentrations of oxazepam, temazepam and zopiclone were analysed. RESULTS: The mean +/- SD duration of BZD/RD use was 7 +/- 7 years (range 1-31). Two or three BZDs/RDs were concomitantly taken by 26% of users (n = 20). Long-term use of these drugs was associated with female sex and use of a higher number of drugs with effects on the CNS, which tended to be related to diagnosed dementia. After adjustment for these variables as confounders, use of BZDs/RDs was not associated with cognitive function as measured by the MMSE. However, use of BZDs/RDs was associated with dizziness, inability to sleep after awaking at night and tiredness in the mornings during the week prior to admission and with stronger depressive symptoms measured at the beginning of the hospital stay. Use of BZDs/RDs tended to be associated with a reduced ability to walk and shorter night-time sleep during the week prior to admission. A higher residual serum concentration of temazepam correlated with a lower MMSE sum score after adjustment for confounding variables. CONCLUSIONS: Long-term use and concomitant use of more than one BZD/RD were common in elderly patients hospitalised because of acute illnesses. Long-term use was associated with daytime and night-time symptoms indicative of poorer health and potentially caused by the adverse effects of these drugs."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "OBJECTIVE: To describe associations between the use of benzodiazepines or related drugs (BZDs/RDs) and health, functional abilities and cognitive function in the elderly. METHODS: A non-randomised clinical study of patients aged > or =65 years admitted to acute hospital wards during 1 month. 164 patients (mean age +/- standard deviation [SD] 81.6 +/- 6.8 years) were admitted. Of the admitted patients, nearly half (n = 78) had used BZDs/RDs before admission, and the remainder (n = 86) were non-users. Cognitive ability was assessed by the Mini-Mental State Examination (MMSE). Patients scoring > or =20 MMSE sum points were interviewed (n = 79) and questioned regarding symptoms and functional abilities during the week prior to admission. Data on use of BZDs/RDs before admission, current medications and discharge diagnoses were collected from medical records. Health, physical abilities and cognitive function were compared between BZD/RD users and non-users, and adjustments were made for confounding variables. The residual serum concentrations of oxazepam, temazepam and zopiclone were analysed. RESULTS: The mean +/- SD duration of BZD/RD use was 7 +/- 7 years (range 1-31). Two or three BZDs/RDs were concomitantly taken by 26% of users (n = 20). Long-term use of BZDs was associated with female sex and use of a higher number of drugs with effects on the CNS, which tended to be related to diagnosed dementia. After adjustment for sex, drug use and dementia as confounders, use of BZDs/RDs was not associated with cognitive function as measured by the MMSE. However, use of BZDs/RDs was associated with dizziness, inability to sleep after awaking at night and tiredness in the mornings during the week prior to admission and with stronger depressive symptoms measured at the beginning of the hospital stay. Use of BZDs/RDs tended to be associated with a reduced ability to walk and shorter night-time sleep during the week prior to admission. A higher residual serum concentration of temazepam correlated with a lower MMSE sum score after adjustment for confounding variables. CONCLUSIONS: Long-term use and concomitant use of more than one BZD/RD were common in elderly patients hospitalised because of acute illnesses. Long-term use was associated with daytime and night-time symptoms indicative of poorer health and potentially caused by the adverse effects of BZDs."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: Galanthamine hydrobromide, an anticholinesterase drug capable of penetrating the blood-brain barrier, was used in a patient demonstrating central effects of scopolamine (hyoscine) overdosage. It is longer acting than physostigmine and is used in anaesthesia to reverse the non-depolarizing neuromuscular block. However, studies into the dose necessary to combating scopolamine intoxication are indicated."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "Galanthamine hydrobromide, an anticholinesterase drug capable of penetrating the blood-brain barrier, was used in a patient demonstrating central effects of scopolamine (hyoscine) overdosage. Galanthamine hydrobromide is longer acting than physostigmine and is used in anaesthesia to reverse the non-depolarizing neuromuscular block. However, studies into the dose necessary to combating scopolamine intoxication are indicated."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: We have reported a case of acute oliguric renal failure with hyperkalemia in a patient with cirrhosis, ascites, and cor pulmonale after indomethacin therapy. Prompt restoration of renal function followed drug withdrawal, while re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria. Our case supports the hypothesis that endogenous renal prostaglandins play a role in the maintenance of renal blood flow when circulating plasma volume is diminished. Since nonsteroidal anti-inflammatory agents interfere with this compensatory mechanism and may cause acute renal failure, they should be used with caution in such patients."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "We have reported a case of acute oliguric renal failure with hyperkalemia in a patient with cirrhosis, ascites, and cor pulmonale after indomethacin therapy. Prompt restoration of renal function followed drug withdrawal, while re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria. Our case supports the hypothesis that endogenous renal prostaglandins play a role in the maintenance of renal blood flow when circulating plasma volume is diminished. Since nonsteroidal anti-inflammatory agents interfere with this compensatory mechanism and may cause acute renal failure, nonsteroidal anti-inflammatory agents should be used with caution in such patients."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: The systolic pressure variation (SPV), which is the difference between the maximal and minimal values of the systolic blood pressure (SBP) after one positive-pressure breath, was studied in ventilated dogs subjected to hypotension. Mean arterial pressure was decreased to 50 mm Hg for 30 minutes either by hemorrhage (HEM, n = 7) or by continuous infusion of sodium nitroprusside (SNP, n = 7). During HEM-induced hypotension the cardiac output was significantly lower and systemic vascular resistance higher compared with that in the SNP group. The systemic, central venous, pulmonary capillary wedge pressures, and heart rates, were similar in the two groups. Analysis of the respiratory changes in the arterial pressure waveform enabled differentiation between the two groups. The SPV during hypotension was 15.7 +/- 6.7 mm Hg in the HEM group, compared with 9.1 +/- 2.0 mm Hg in the SNP group (P less than 0.02). The delta down, which is the measure of decrease of SBP after a mechanical breath, was 20.3 +/- 8.4 and 10.1 +/- 3.8 mm Hg in the HEM and SNP groups, respectively, during hypotension (P less than 0.02). It is concluded that increases in the SPV and the delta down are characteristic of a hypotensive state due to a predominant decrease in preload. They are thus more important during absolute hypovolemia than during deliberate hypotension."
+ 		},
+ 		{
+ 		    "role": "assistant",
+ 		    "content": "The systolic pressure variation (SPV), which is the difference between the maximal and minimal values of the systolic blood pressure (SBP) after one positive-pressure breath, was studied in ventilated dogs subjected to hypotension. Mean arterial pressure was decreased to 50 mm Hg for 30 minutes either by hemorrhage (HEM, n = 7) or by continuous infusion of sodium nitroprusside (SNP, n = 7). During HEM-induced hypotension the cardiac output was significantly lower and systemic vascular resistance higher compared with cardiac output and systemic vascular resistance in the SNP group. The systemic, central venous, pulmonary capillary wedge pressures, and heart rates, were similar in the HEM and SNP groups of dogs. Analysis of the respiratory changes in the arterial pressure waveform enabled differentiation between the HEM and SNP groups of dogs. The SPV during hypotension was 15.7 +/- 6.7 mm Hg in the HEM group, compared with 9.1 +/- 2.0 mm Hg in the SNP group (P less than 0.02). The delta down, which is the measure of decrease of SBP after a mechanical breath, was 20.3 +/- 8.4 and 10.1 +/- 3.8 mm Hg in the HEM and SNP groups, respectively, during hypotension (P less than 0.02). It is concluded that increases in the SPV and the delta down are characteristic of a hypotensive state due to a predominant decrease in preload. Increases in SPV are thus more important during absolute hypovolemia than during deliberate hypotension."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Use coreference resolution to replace pronouns with their full names in the following text: {text}"
+ 		}
+ 	],
+ 	"1": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: OBJECTIVE: To describe associations between the use of benzodiazepines or related drugs (BZDs/RDs) and health, functional abilities and cognitive function in the elderly. METHODS: A non-randomised clinical study of patients aged > or =65 years admitted to acute hospital wards during 1 month. 164 patients (mean age +/- standard deviation [SD] 81.6 +/- 6.8 years) were admitted. Of the admitted patients, nearly half (n = 78) had used BZDs/RDs before admission, and the remainder (n = 86) were non-users. Cognitive ability was assessed by the Mini-Mental State Examination (MMSE). Patients scoring > or =20 MMSE sum points were interviewed (n = 79) and questioned regarding symptoms and functional abilities during the week prior to admission. Data on use of BZDs/RDs before admission, current medications and discharge diagnoses were collected from medical records. Health, physical abilities and cognitive function were compared between BZD/RD users and non-users, and adjustments were made for confounding variables. The residual serum concentrations of oxazepam, temazepam and zopiclone were analysed. RESULTS: The mean +/- SD duration of BZD/RD use was 7 +/- 7 years (range 1-31). Two or three BZDs/RDs were concomitantly taken by 26% of users (n = 20). Long-term use of BZDs was associated with female sex and use of a higher number of drugs with effects on the CNS, which tended to be related to diagnosed dementia. After adjustment for sex, drug use and dementia as confounders, use of BZDs/RDs was not associated with cognitive function as measured by the MMSE. However, use of BZDs/RDs was associated with dizziness, inability to sleep after awaking at night and tiredness in the mornings during the week prior to admission and with stronger depressive symptoms measured at the beginning of the hospital stay. Use of BZDs/RDs tended to be associated with a reduced ability to walk and shorter night-time sleep during the week prior to admission. A higher residual serum concentration of temazepam correlated with a lower MMSE sum score after adjustment for confounding variables. CONCLUSIONS: Long-term use and concomitant use of more than one BZD/RD were common in elderly patients hospitalised because of acute illnesses. Long-term use was associated with daytime and night-time symptoms indicative of poorer health and potentially caused by the adverse effects of BZDs."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['OBJECTIVE: To describe associations between the use of benzodiazepines or related drugs (BZDs/RDs) and health, functional abilities and cognitive function in the elderly.', 'METHODS: A non-randomised clinical study of patients aged > or =65 years admitted to acute hospital wards during 1 month.', '164 patients (mean age +/- standard deviation [SD] 81.6 +/- 6.8 years) were admitted.', 'Of the admitted patients, nearly half (n = 78) had used BZDs/RDs before admission, and the remainder (n = 86) were non-users.', 'Cognitive ability was assessed by the Mini-Mental State Examination (MMSE).', 'Patients scoring > or =20 MMSE sum points were interviewed (n = 79) and questioned regarding symptoms and functional abilities during the week prior to admission.', 'Data on use of BZDs/RDs before admission, current medications and discharge diagnoses were collected from medical records.', 'Health, physical abilities and cognitive function were compared between BZD/RD users and non-users, and adjustments were made for confounding variables.', 'The residual serum concentrations of oxazepam, temazepam and zopiclone were analysed.', 'RESULTS: The mean +/- SD duration of BZD/RD use was 7 +/- 7 years (range 1-31).', 'Two or three BZDs/RDs were concomitantly taken by 26% of users (n = 20).', 'Long-term use of BZDs was associated with female sex and use of a higher number of drugs with effects on the CNS, which tended to be related to diagnosed dementia.', 'After adjustment for sex, drug use and dementia as confounders, use of BZDs/RDs was not associated with cognitive function as measured by the MMSE.', 'However, use of BZDs/RDs was associated with dizziness, inability to sleep after awaking at night and tiredness in the mornings during the week prior to admission and with stronger depressive symptoms measured at the beginning of the hospital stay.', 'Use of BZDs/RDs tended to be associated with a reduced ability to walk and shorter night-time sleep during the week prior to admission.', 'A higher residual serum concentration of temazepam correlated with a lower MMSE sum score after adjustment for confounding variables.', 'CONCLUSIONS: Long-term use and concomitant use of more than one BZD/RD were common in elderly patients hospitalised because of acute illnesses.', 'Long-term use was associated with daytime and night-time symptoms indicative of poorer health and potentially caused by the adverse effects of BZDs.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: Galanthamine hydrobromide, an anticholinesterase drug capable of penetrating the blood-brain barrier, was used in a patient demonstrating central effects of scopolamine (hyoscine) overdosage. Galanthamine hydrobromide is longer acting than physostigmine and is used in anaesthesia to reverse the non-depolarizing neuromuscular block. However, studies into the dose necessary to combating scopolamine intoxication are indicated."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Galanthamine hydrobromide, an anticholinesterase drug capable of penetrating the blood-brain barrier, was used in a patient demonstrating central effects of scopolamine (hyoscine) overdosage.', 'Galanthamine hydrobromide is longer acting than physostigmine and is used in anaesthesia to reverse the non-depolarizing neuromuscular block.', 'However, studies into the dose necessary to combating scopolamine intoxication are indicated.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: We have reported a case of acute oliguric renal failure with hyperkalemia in a patient with cirrhosis, ascites, and cor pulmonale after indomethacin therapy. Prompt restoration of renal function followed drug withdrawal, while re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria. Our case supports the hypothesis that endogenous renal prostaglandins play a role in the maintenance of renal blood flow when circulating plasma volume is diminished. Since nonsteroidal anti-inflammatory agents interfere with this compensatory mechanism and may cause acute renal failure, nonsteroidal anti-inflammatory agents should be used with caution in such patients."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['We have reported a case of acute oliguric renal failure with hyperkalemia in a patient with cirrhosis, ascites, and cor pulmonale after indomethacin therapy.', 'Prompt restoration of renal function followed drug withdrawal, while re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria.', 'Our case supports the hypothesis that endogenous renal prostaglandins play a role in the maintenance of renal blood flow when circulating plasma volume is diminished.', 'Since nonsteroidal anti-inflammatory agents interfere with this compensatory mechanism and may cause acute renal failure, nonsteroidal anti-inflammatory agents should be used with caution in such patients.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: The systolic pressure variation (SPV), which is the difference between the maximal and minimal values of the systolic blood pressure (SBP) after one positive-pressure breath, was studied in ventilated dogs subjected to hypotension. Mean arterial pressure was decreased to 50 mm Hg for 30 minutes either by hemorrhage (HEM, n = 7) or by continuous infusion of sodium nitroprusside (SNP, n = 7). During HEM-induced hypotension the cardiac output was significantly lower and systemic vascular resistance higher compared with cardiac output and systemic vascular resistance in the SNP group. The systemic, central venous, pulmonary capillary wedge pressures, and heart rates, were similar in the HEM and SNP groups of dogs. Analysis of the respiratory changes in the arterial pressure waveform enabled differentiation between the HEM and SNP groups of dogs. The SPV during hypotension was 15.7 +/- 6.7 mm Hg in the HEM group, compared with 9.1 +/- 2.0 mm Hg in the SNP group (P less than 0.02). The delta down, which is the measure of decrease of SBP after a mechanical breath, was 20.3 +/- 8.4 and 10.1 +/- 3.8 mm Hg in the HEM and SNP groups, respectively, during hypotension (P less than 0.02). It is concluded that increases in the SPV and the delta down are characteristic of a hypotensive state due to a predominant decrease in preload. Increases in SPV are thus more important during absolute hypovolemia than during deliberate hypotension."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The systolic pressure variation (SPV), which is the difference between the maximal and minimal values of the systolic blood pressure (SBP) after one positive-pressure breath, was studied in ventilated dogs subjected to hypotension.', 'Mean arterial pressure was decreased to 50 mm Hg for 30 minutes either by hemorrhage (HEM, n = 7) or by continuous infusion of sodium nitroprusside (SNP, n = 7).', 'During HEM-induced hypotension the cardiac output was significantly lower and systemic vascular resistance higher compared with cardiac output and systemic vascular resistance in the SNP group.', 'The systemic, central venous, pulmonary capillary wedge pressures, and heart rates, were similar in the HEM and SNP groups of dogs.', 'Analysis of the respiratory changes in the arterial pressure waveform enabled differentiation between the HEM and SNP groups of dogs.', 'The SPV during hypotension was 15.7 +/- 6.7 mm Hg in the HEM group, compared with 9.1 +/- 2.0 mm Hg in the SNP group (P less than 0.02).', 'The delta down, which is the measure of decrease of SBP after a mechanical breath, was 20.3 +/- 8.4 and 10.1 +/- 3.8 mm Hg in the HEM and SNP groups, respectively, during hypotension (P less than 0.02).', 'It is concluded that increases in the SPV and the delta down are characteristic of a hypotensive state due to a predominant decrease in preload.', 'Increases in SPV are thus more important during absolute hypovolemia than during deliberate hypotension.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Split the following text into a list of sentences that's parsable by the Python literal_eval function: {text}"
+ 		}
+ 	],
+ 	"2": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: However, use of BZDs/RDs was associated with dizziness, inability to sleep after awaking at night and tiredness in the mornings during the week prior to admission and with stronger depressive symptoms measured at the beginning of the hospital stay."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": " ['Use of BZDs/RDs was associated with dizziness during the week prior to admission.', 'Use of BZDs/RDs was associated with inability to sleep after awaking at night during the week prior to admission.', 'Use of BZDs/RDs was associated with tiredness in the mornings during the week prior to admission.', 'Use of BZDs/RDs was associated with stronger depressive symptoms measured at the beginning of the hospital stay']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Galanthamine hydrobromide, a longer acting anticholinesterase drug, in the treatment of the central effects of scopolamine (Hyoscine)."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Galanthamine hydrobromide is a longer acting anticholinesterase drug.', 'Galanthamine hydrobromide was used in the treatment of the central effects of scopolamine (Hyoscine).']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Prompt restoration of renal function followed drug withdrawal, while re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Prompt restoration of renal function followed drug withdrawal.', 'Re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: The systolic pressure variation (SPV), which is the difference between the maximal and minimal values of the systolic blood pressure (SBP) after one positive-pressure breath, was studied in ventilated dogs subjected to hypotension."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['The systolic pressure variation is the difference between the maximal and minimal values of the systolic blood pressure after one positive-pressure breath.', 'The SPV is the difference between the maximal and minimal values of the systolic blood pressure after one positive-pressure breath.', 'The systolic pressure variation is the difference between the maximal and minimal values of the SBP after one positive-pressure breath.', 'The SPV is the difference between the maximal and minimal values of the SBP after one positive-pressure breath.', 'The systolic pressure variation was studied in ventilated dogs subjected to hypotension., The SPV was studied in ventilated dogs subjected to hypotension.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Hypersensitivity myocarditis is a rare and dangerous manifestation of allergy to penicillins."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Hypersensitivity myocarditis is a rare manifestation of allergy to penicillins.', 'Hypersensitivity myocarditis is a dangerous manifestation of allergy to penicillins.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship:  The expression of arginine vasopressin (AVP) gene in the paraventricular (PVN) and supraoptic nuclei (SON) was investigated in rats with lithium (Li)-induced polyuria, using in situ hybridization histochemistry and radioimmunoassay."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": " ['The expression of arginine vasopressin gene was investigated in rats with lithium-induced polyuria.', 'The expression of AVP gene was investigated in rats with lithium-induced polyuria.', 'The expression of arginine vasopressin gene was investigated in rats with Li-induced polyuria.', 'The expression of AVP gene was investigated in rats with Li-induced polyuria.', 'The arginine vasopressin gene is expressed in the paraventricular nuclei.', 'The AVP gene is expressed in the paraventricular nuclei.', 'The arginine vasopressin gene is expressed in the PVN.', 'The AVP gene is expressed in the PVN.', 'The arginine vasopressin gene is expressed in the supraoptic nuclei.', 'The AVP gene is expressed in the supraoptic nuclei.', 'The arginine vasopressin gene is expressed in the SON.', 'The AVP gene is expressed in the SON.', 'In situ hybridization histochemistry was used.', 'In situ radioimmunoassay was used.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: TDP is a side-effect that has led to withdrawal of several drugs from the market (e.g. terfenadine and terodiline)."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['TDP is a side-effect of terfenadine.', 'TDP is a side-effect of terodiline.', 'TDP is a side-effect of several drugs.', 'Terfenadine has been withdrawn from the market.', 'Terodiline has been withdrawn from the market.', 'Several drugs have been withdrawn from the market.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: It is well known that ceftriaxone leads to pseudolithiasis in some patients."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['It is well known that ceftriaxone leads to pseudolithiasis in some patients.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: Total cumulative doses were 36 or 60 g/m2 of ifosfamide (six or 10 cycles of ifosfamide, vincristine, and dactinomycin [IVA])."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['Total cumulative doses were 36  g/m2 of ifosfamide.', 'Total cumulative doses were 60 g/m2 of ifosfamide.', 'Total doses were six cycles of ifosamide, vincristine and dactinomycin.', 'Total doses were six cycles of IVA.', 'Total doses were 10  cycles of ifosamide, vincristine and dactinomycin.', 'Total doses were 10 cycles of IVA.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: A case of acute myocarditis associated with the commencement of clozapine is described, highlighting the onset, course and possible contributing factors."
+ 		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "['A case of acute myocarditis associated with the commencement of clozapine is described.', 'The onset of myocarditis is highlighted.', 'The course of myocarditis is highlighted.', 'Possible contributing factors to myocarditis are highlighted.']"
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Rewrite the following sentence into multiple sentences, using coreference resolution to replace pronouns with their full names, such that each sentence only expresses one relationship: {text}"
+ 		}
+ 	],
+ 	"3": [{
+ 			"role": "system",
+ 			"content": "Assistant is an intelligent chatbot designed to perform tasks related to coreference resolution and information extraction on scientific text."
+ 		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Use of BZDs/RDs was associated with dizziness during the week prior to admission."
+ 		},
+		{
+			"role": "assistant",
+			"content": "('BZDs', 'were associated with', 'dizziness')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+ 		{
+ 			"role": "assistant",
+ 			"content": "('BZDs', 'CID', 'dizziness')"
+ 		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Galanthamine hydrobromide is a longer acting anticholinesterase drug."
+		},
+		{
+			"role": "assistant",
+			"content": "('Galanthamine hydrobromide', 'is a', 'anticholinoesterase drug')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Re-exposure to a single dose of indomethacin caused recurrence of acute reversible oliguria."
+		},
+		{
+			"role": "assistant",
+			"content": "('Indomethacin', 'caused recurrence of', 'acute reversible oliguria')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('Indomethacin', 'CID', 'oliguria')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: The systolic pressure variation is the difference between the maximal and minimal values of the systolic blood pressure after one positive-pressure breath."
+		},
+		{
+			"role": "assistant",
+			"content": "('systolic pressure variation', 'is', 'the difference between the maximal and minimal values of the systolic blood pressure after one positive-pressure breath')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Hypersensitivity myocarditis is a dangerous manifestation of allergy to penicillins."
+		},
+		{
+			"role": "assistant",
+			"content": "('Hypersensitivity myocarditis', 'is a dangerous manifestation of', 'allergy to penicillins')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('Hypersensitivity myocarditis', 'CID', 'penicillins')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: The AVP gene is expressed in the SON."
+		},
+		{
+			"role": "assistant",
+			"content": "('AVP gene', 'expressed in', 'SON')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: TDP is a side-effect of terfenadine."
+		},
+		{
+			"role": "assistant",
+			"content": "('TDP', 'side-effect', 'terfenadine')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('TDP', 'CID', 'terfenadine')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: It is well known that ceftriaxone leads to pseudolithiasis in some patients."
+		},
+		{
+			"role": "assistant",
+			"content": "('ceftriaxone', 'leads to', 'pseudolithiasis')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('ceftriaxone', 'CID', 'pseudolithiasis')"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: Total cumulative doses were 36  g/m2 of ifosfamide."
+		},
+		{
+			"role": "assistant",
+			"content": "('total cumulative doses', 'were', '36 g/m2 of ifosfamide')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "No relation"
+		},
+		{
+			"role": "user",
+			"content": "Extract a {'Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: A case of acute myocarditis associated with the commencement of clozapine is described."
+		},
+		{
+			"role": "assistant",
+			"content": "('acute myocarditis', 'is associated with', 'the commencement of clozapine')"
+		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."
+		},
+		{
+			"role": "assistant",
+			"content": "('myocarditis', 'CID', 'clozapine')"
+		},
+ 		{
+ 			"role": "user",
+ 			"content": "Extract a ('Subject', 'Predicate', 'Object') triple from the following sentence, excluding prepositions and specifiers: {text}"
+ 		},
+		{
+			"role": "user",
+			"content": "Regenerate the previous response, replacing the predicate of the relation with the string 'CID' if the relation represents a chemical-disease interaction; otherwise, return the phrase 'No relation'."		}
+ 	]
+ }
